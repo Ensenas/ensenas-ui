@@ -1,0 +1,32 @@
+/* src/styles/global.css */
+
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f0f0f0; /* Fondo gris claro */
+}
+
+header {
+  background-color: #f0f0f0; /* Fondo gris claro */
+  border-bottom: 1px solid #eaeaea;
+  padding: 10px 20px;
+}
+
+main {
+  padding: 20px;
+}
+
+section {
+  margin: 40px 0;
+  padding: 20px;
+  background-color: #f9f9f9; /* Fondo gris claro */
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+footer {
+  text-align: center;
+  padding: 20px;
+  background-color: #f1f1f1;
+}

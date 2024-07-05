@@ -1,4 +1,5 @@
 import Head from 'next/head'
+import Link from 'next/link'
 import React from 'react'
 
 import Footer from '../components/Footer'
@@ -20,7 +21,9 @@ const LandingPage: React.FC = () => {
           <LeftSide>
             <strong>La plataforma ideal para aprender lenguaje de señas</strong>
             <p>Descubrí este fascinante mundo con la ayuda de la Inteligencia Artificial</p>
-            <button>¡Comenzar ya!</button>
+            <Link href="/register" passHref>
+              <button>¡Registrate ya!</button>
+            </Link>
           </LeftSide>
           <RightSide>
             <img src="/signs.png" alt="Imagen de señas"/>

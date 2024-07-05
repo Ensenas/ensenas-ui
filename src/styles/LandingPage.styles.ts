@@ -118,6 +118,16 @@ export const SectionTitle = styled.h2`
   font-size: 35px;
   margin-left: 30px;
   margin-bottom: 20px;
+
+  &::after {
+    content: '';
+    display: block;
+    width: 40%; /* Puedes ajustar este valor para cambiar la longitud de la línea */
+    height: 2px; /* Ajusta el grosor de la línea */
+    background-color: #0070f3; /* Color de la línea */
+    margin-right: 60%; /* Ajusta el espacio alrededor de la línea */
+    margin-top: 10px;
+  }
 `
 
 export const Section2Content = styled.div`

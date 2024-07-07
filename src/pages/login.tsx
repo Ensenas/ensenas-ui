@@ -1,22 +1,10 @@
-import { NextPage } from 'next'
+import React from 'react'
+import LoginForm from '../components/Form/LoginForm'
 
-const LoginPage: NextPage = () => {
+const login = () => {
   return (
-    <div>
-      <h1>Login</h1>
-      <form>
-        <label>
-          Username:
-          <input type="text" name="username" />
-        </label>
-        <label>
-          Password:
-          <input type="password" name="password" />
-        </label>
-        <button type="submit">Login</button>
-      </form>
-    </div>
+    <LoginForm />
   )
 }
 
-export default LoginPage
+export default login

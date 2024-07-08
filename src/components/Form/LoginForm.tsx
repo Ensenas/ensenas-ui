@@ -12,6 +12,7 @@ import {
     Link
 } from './FormElements'
 import InputField from './InputField'
+import Head from 'next/head'
 
 const LoginForm = () => {
     const [email, setEmail] = useState("")
@@ -31,7 +32,9 @@ const LoginForm = () => {
 
     return (
         <Container>
-
+            <Head>
+                <title>Enseñas - Iniciar Sesión</title>
+            </Head>
             <Form onSubmit={handleLogin}>
                 <AppLogoTitle />
                 <FormTitle> ¡La mejor forma para aprender lengua de señas! </FormTitle>

@@ -1,5 +1,5 @@
-import styled from "styled-components";
 import NextLink from 'next/link'
+import styled from 'styled-components'
 
 export const Container = styled.div`
     display: flex;
@@ -18,11 +18,11 @@ export const Form = styled.form`
     flex-direction: column;
     align-items: center;
     justify-content: space-evenly;
-    padding:  0 1.5rem;
+    padding:  1rem 1.5rem;
     transition:  all 0.5s;
     background-color: #f7f9fa;
     width: 25%;
-    height: 100%;
+    height: 90%;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
     border-radius: 5px;
 

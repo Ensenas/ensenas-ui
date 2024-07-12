@@ -2,8 +2,8 @@ import Head from 'next/head'
 import Link from 'next/link'
 import React from 'react'
 
-import Footer from '../components/Footer'
-import Header from '../components/Header'
+import LandingFooter from '../components/LandingFooter'
+import LandingHeader from '../components/LandingHeader'
 import { FirstSection, ImpactContent, ImpactDescription, ImpactStats, ImpactSubtitle, 
   LandingPageContainer, LeftSide, RightSide, Section, Section2Content, Section3Content, SectionTitle, 
   StatBox, StatLabel, StatNumber, Subsection  } from '../styles/LandingPage.styles'
@@ -15,7 +15,7 @@ const LandingPage: React.FC = () => {
         <title>Enseñas - Landing Page</title>
         <meta name="description" content="Bienvenido a Enseñas, la mejor plataforma para aprender lenguaje de señas." />
       </Head>
-      <Header />
+      <LandingHeader />
       <LandingPageContainer>
         <FirstSection>
           <LeftSide>
@@ -127,7 +127,7 @@ const LandingPage: React.FC = () => {
           </ImpactContent>
         </Section>
       </LandingPageContainer>
-      <Footer />
+      <LandingFooter />
     </div>
   )
 }

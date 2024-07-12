@@ -1,3 +1,19 @@
+body {
+  margin: 0;
+}
+
+:root {
+  --primary-color: #0567b1;
+  --secondary-color: #41c7c5;
+  --tertiary-color: #febc8e;
+  --dark-color: #0d112a;
+  --light-color: #faead5;
+}
+
+p, h1, h2, h3, h4, h5, span, a {
+  color: var(--dark-color)
+}
+
 .main {
   display: flex;
   flex-direction: column;

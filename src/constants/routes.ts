@@ -2,5 +2,8 @@ export const ROUTES = {
     LANDING: '/',
     LOGIN: '/login',
     REGISTER: '/register',
-    HOME: '/home'
+    HOME: '/home',
+    LEARNING: '/laerning',
+    PROFILE: '/profile',
+    ACHIEVEMENTS: '/achievements'
   }

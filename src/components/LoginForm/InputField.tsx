@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+
 import { InputProps } from '../../types/propTypes'
 import {
     Container,
@@ -8,7 +9,7 @@ import {
 } from './InputFieldElements'
 
 const InputField = ({ placeholder, icon, type, required, value, onChange }: InputProps) => {
-    const [showPassword, setShowPassword] = useState(false);
+    const [showPassword, setShowPassword] = useState(false)
 
     const togglePasswordIcon = () => {
         setShowPassword(!showPassword)
@@ -27,7 +28,7 @@ const InputField = ({ placeholder, icon, type, required, value, onChange }: Inpu
         }
     }
 
-    const inputType = type === 'password' && showPassword ? 'text' : type;
+    const inputType = type === 'password' && showPassword ? 'text' : type
 
     return (
         <Container>

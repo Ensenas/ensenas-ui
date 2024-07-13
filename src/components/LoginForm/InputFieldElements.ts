@@ -1,5 +1,5 @@
-import styled, { css } from "styled-components";
-import { BsEye, BsEyeSlash } from 'react-icons/bs';
+import { BsEye, BsEyeSlash } from 'react-icons/bs'
+import styled, { css } from 'styled-components'
 
 export const Container = styled.div`
     display: flex;
@@ -24,7 +24,7 @@ export const Input = styled.input`
 
 const EyeIcon = css`
     position: absolute;
-    right: 25px;
+    right: 30px;
     color: rgba(0, 0, 0, 0.65);
 `
 

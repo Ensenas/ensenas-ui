@@ -7,11 +7,12 @@ export interface NavLinkProps {
 }
 
 export interface InputProps {
-    placeholder: string;
-    icon: React.ReactNode;
-    type: string;
-    value: string;
-    onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    label?: string;
+    placeholder?: string;
+    icon?: React.ReactNode;
+    type?: string;
+    value?: string;
+    onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
     required?: boolean;
 }
 

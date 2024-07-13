@@ -4,7 +4,7 @@ export const HeaderContainer = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 20px;
+  padding: 0px 20px;
   background-color: #f0f0f0; /* Color de fondo gris claro */
   color: #333; /* Color del texto */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -15,7 +15,7 @@ export const Logo = styled.div`
   align-items: center;
 
   img {
-    height: 40px;
+    height: 80px;
     margin-right: 10px;
   }
 
@@ -57,16 +57,16 @@ export const LoginButton = styled.div`
 
   a {
     text-decoration: none;
-    color: #0070f3; /* Color del texto azul */
+    color: #0567b1; /* Color del texto azul */
     background-color: #fff; /* Fondo blanco */
     padding: 10px 20px;
-    border: 1px solid #0070f3; /* Borde azul */
+    border: 1px solid #0567b1; /* Borde azul */
     border-radius: 5px;
     font-size: 18px;
     transition: background-color 0.3s, color 0.3s;
 
     &:hover {
-      background-color: #0070f3; /* Fondo azul al hacer hover */
+      background-color: #0567b1; /* Fondo azul al hacer hover */
       color: #fff; /* Color del texto blanco */
     }
   }

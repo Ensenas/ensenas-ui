@@ -2,8 +2,8 @@ import Head from 'next/head'
 import Link from 'next/link'
 import React from 'react'
 
-import LandingFooter from '../components/LandingFooter'
-import LandingHeader from '../components/LandingHeader'
+import LandingFooter from '../components/LandingFooter/LandingFooter'
+import LandingHeader from '../components/LandingHeader/LandingHeader'
 import { FirstSection, ImpactContent, ImpactDescription, ImpactStats, ImpactSubtitle, 
   LandingPageContainer, LeftSide, RightSide, Section, Section2Content, Section3Content, SectionTitle, 
   StatBox, StatLabel, StatNumber, Subsection  } from '../styles/LandingPage.styles'

@@ -1,13 +1,33 @@
 import NextLink from 'next/link'
 import styled from 'styled-components'
 
-export const Container = styled.div`
+export const MainContainer = styled.div`
+    display: flex;
+    justify-content: space-between;
+    height: 100vh;
+    width: 100%;
+`
+
+export const SignImage = styled.div`
+    background-image: url('/señasLogin.gif'); /* Ruta de la imagen */
+    background-position: center; /* Centra la imagen en el contenedor */
+
+    width: 40%; /* 50% del ancho total del contenedor */
+    height: 100%; /* 100% de la altura del contenedor */
+
+    @media (max-width: 768px) {
+        display: none; /* Oculta la imagen en pantallas más pequeñas */
+    }
+`
+
+export const FormContainer = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     height: 100vh;
     background-color: #f9f9f9;
+    width: 70%; /* 50% del ancho total del contenedor */
 
     @media (max-width: 768px) {
         background-color: #fff;
@@ -21,7 +41,7 @@ export const Form = styled.form`
     padding:  1rem 1.5rem;
     transition:  all 0.5s;
     background-color: #f7f9fa;
-    width: 25%;
+    width: 60%;
     height: 90%;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
     border-radius: 5px;

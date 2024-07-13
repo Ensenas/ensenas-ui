@@ -1,6 +1,6 @@
-import styled from "styled-components";
-import Image from "next/image";
-import Link from "next/link";
+import Image from 'next/image'
+import Link from 'next/link'
+import styled from 'styled-components'
 
 export const Container = styled(Link)`
     display: flex;

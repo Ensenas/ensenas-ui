@@ -1,5 +1,5 @@
-import React from 'react';
-import styled from 'styled-components';
+import React from 'react'
+import styled from 'styled-components'
 
 const ImageButton = styled.button`
   display: flex;
@@ -16,17 +16,17 @@ const ImageButton = styled.button`
   &:hover {
     background-color: rgba(45,60,73,0.3);
   }
-`;
+`
 
 const Image = styled.img`
   width: 1rem; /* Adjust image width as needed */
   height: 1rem; /* Adjust image height as needed */
   margin-right: 1.5rem; /* Adjust margin as needed */
-`;
+`
 
 const ButtonText = styled.span`
   font-size: 1rem; /* Adjust font size as needed */
-`;
+`
 
 const GoogleSignInButton = ({ }) => {
     return (
@@ -34,7 +34,7 @@ const GoogleSignInButton = ({ }) => {
             <Image src={'/google-logo.png'} alt={'Google'} />
             <ButtonText>Inicia sesión con Google</ButtonText>
         </ImageButton>
-    );
-};
+    )
+}
 
-export default GoogleSignInButton;
+export default GoogleSignInButton

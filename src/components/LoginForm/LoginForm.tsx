@@ -7,13 +7,14 @@ import AppLogoTitle from '../AppLogoTitle'
 import Button from '../Button'
 import GoogleSignInButton from '../Button/GoogleButton'
 import {
-    Container,
     Form,
+    FormContainer,
     FormTitle,
     InfoText,
     InfoTextContainer,
-    Link
-} from './FormElements'
+    Link,
+    MainContainer,
+    SignImage} from './FormElements'
 import InputField from './InputField'
 
 const LoginForm = () => {
@@ -57,54 +58,59 @@ const LoginForm = () => {
     }
 
     return (
-        <Container>
-            <Head>
-                <title>Enseñas - Iniciar Sesión</title>
-            </Head>
-            <Form onSubmit={handleLogin}>
-                <AppLogoTitle />
-                <FormTitle> ¡La mejor forma para aprender lengua de señas! </FormTitle>
+        <MainContainer>
+            <SignImage />
+            <FormContainer>
+                <Head>
+                    <title>Enseñas - Iniciar Sesión</title>
+                </Head>
+                <Form onSubmit={handleLogin}>
+                    <AppLogoTitle />
+                    <FormTitle> ¡La mejor forma para aprender lengua de señas! </FormTitle>
 
-                <InputField
-                    placeholder='Usuario'
-                    type='email'
-                    icon={<AiOutlineUser />}
-                    value={email}
-                    onChange={handleEmailChange}
-                    required
-                />
+                    <InputField
+                        placeholder='Usuario'
+                        type='email'
+                        icon={<AiOutlineUser />}
+                        value={email}
+                        onChange={handleEmailChange}
+                        required
+                    />
 
-                <InputField
-                    placeholder='Contraseña'
-                    type='password'
-                    icon={<AiOutlineUnlock />}
-                    value={password}
-                    onChange={handlePasswordChange}
-                    required
-                />
+                    <InputField
+                        placeholder='Contraseña'
+                        type='password'
+                        icon={<AiOutlineUnlock />}
+                        value={password}
+                        onChange={handlePasswordChange}
+                        required
+                    />
 
-                <Link href="/forgot-password">
-                    ¿Olvidaste tu contraseña?
-                </Link>
-
-                <Button
-                    type='submit'
-                    title='Iniciar Sesión'
-                />
-                <span>ó</span>
-                <GoogleSignInButton />
-
-                <InfoTextContainer>
-                    <InfoText>
-                        ¿No tenes tu cuenta?
-                    </InfoText>
-
-                    <Link href='/signup'>
-                        ¡Registrate!
+                    <Link href="/forgot-password">
+                        ¿Olvidaste tu contraseña?
                     </Link>
-                </InfoTextContainer>
-            </Form>
-        </Container>
+
+                    <Button
+                        type='submit'
+                        title='Iniciar Sesión'
+                    />
+                    <span>ó</span>
+                    <GoogleSignInButton />
+
+                    <InfoTextContainer>
+                        <InfoText>
+                            ¿No tenes tu cuenta?
+                        </InfoText>
+
+                        <Link href='/signup'>
+                            ¡Registrate!
+                        </Link>
+                    </InfoTextContainer>
+                </Form>
+            </FormContainer>
+            <SignImage />
+        </MainContainer>
+        
     )
 }
 

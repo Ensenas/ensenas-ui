@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-import HomeHeader from '../components/HomeHeader'
+import HomeHeader from '../components/HomeHeader/HomeHeader'
 import { ContentContainer, HomePageWrapper,NavIcon, NavItem, SidebarContainer, SidebarNav } from '../styles/HomePage.styles'
 
 const navItems = [

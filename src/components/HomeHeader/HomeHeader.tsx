@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import React from 'react'
 
-import { HeaderContainer, Logo, LogoutButton, SearchButton, SearchInput } from '../styles/HomeHeader.styles'
+import { HeaderContainer, Logo, LogoutButton, SearchButton, SearchInput } from './HomeHeader.styles'
 
 const HomeHeader: React.FC = () => {
   return (

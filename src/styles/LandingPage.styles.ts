@@ -43,7 +43,7 @@ export const LeftSide = styled.div`
 
   button {
     padding: 10px 20px;
-    background-color: #0070f3;
+    background-color: #0567b1;
     color: #fff;
     border: none;
     border-radius: 5px;
@@ -52,7 +52,7 @@ export const LeftSide = styled.div`
     transition: background-color 0.3s;
 
     &:hover {
-      background-color: #005bb5;
+      background-color: #02365d;
     }
   }
 `
@@ -89,11 +89,11 @@ export const RightSide = styled.div`
       content: '';
       position: absolute;
       left: 0;
-      top: 50%;
+      top: 12px;
       transform: translateY(-50%);
       width: 10px;
       height: 10px;
-      border: 2px solid #0070f3;
+      border: 2px solid #0567b1;
       background-color: transparent;
       border-radius: 2px;
     }
@@ -114,7 +114,7 @@ export const Section = styled.section`
 `
 
 export const SectionTitle = styled.h2`
-  color: #0070f3;
+  color: #0567b1;
   font-size: 35px;
   margin-left: 30px;
   margin-bottom: 20px;
@@ -124,7 +124,7 @@ export const SectionTitle = styled.h2`
     display: block;
     width: 40%; /* Puedes ajustar este valor para cambiar la longitud de la línea */
     height: 2px; /* Ajusta el grosor de la línea */
-    background-color: #0070f3; /* Color de la línea */
+    background-color: #0567b1; /* Color de la línea */
     margin-right: 60%; /* Ajusta el espacio alrededor de la línea */
     margin-top: 10px;
   }
@@ -281,7 +281,7 @@ export const StatBox = styled.div`
 
 export const StatNumber = styled.span`
   font-size: 50px;
-  color: #0070f3;
+  color: #0567b1;
 `
 
 export const StatLabel = styled.p`

@@ -3,6 +3,7 @@ import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { AiOutlineMail, AiOutlineUnlock, AiOutlineUser } from 'react-icons/ai'
 
+
 import AppLogoTitle from '../AppLogoTitle'
 import Button from '../Button'
 import GoogleSignInButton from '../Button/GoogleButton'
@@ -14,12 +15,15 @@ import {
     InfoTextContainer,
     Link,
     MainContainer,
-    SignImage} from './FormElements'
+    SignImage
+} from './FormElements'
 import InputField from './InputField'
-
+import { signIn, signOut, useSession } from "next-auth/react"
+import { redirect } from 'next/navigation'
 const LoginForm = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [error, setError] = useState<string | null>(null);
     const router = useRouter()
 
     const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,8 +34,22 @@ const LoginForm = () => {
         setPassword(event.target.value)
     }
 
+    const handleGoogleClick = async (e) => {
+
+        const signInResponse = await signIn('google', {
+            redirect: false, // Prevent automatic redirection
+        });
+        console.log("sign", signInResponse)
+        if (signInResponse && !signInResponse.error) {
+
+            router.push('/home');
+        } else {
+            setError("Your Email or Password is wrong!");
+        }
+    }
+
     const handleLogin = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault()
+        //event.preventDefault()
         try {
             // Lógica de autenticación (reemplaza este bloque con tu lógica real)
             // Ejemplo de llamada a una API para verificar credenciales
@@ -95,7 +113,7 @@ const LoginForm = () => {
                         title='Iniciar Sesión'
                     />
                     <span>ó</span>
-                    <GoogleSignInButton />
+                    <GoogleSignInButton onClick={handleGoogleClick} />
 
                     <InfoTextContainer>
                         <InfoText>
@@ -106,11 +124,17 @@ const LoginForm = () => {
                             ¡Registrate!
                         </Link>
                     </InfoTextContainer>
+                    {error && (
+                        <span className="p-4 mb-2 text-lg font-semibold text-white bg-red-500 rounded-md">
+                            {error}
+                        </span>
+                    )}
+
                 </Form>
             </FormContainer>
             <SignImage />
         </MainContainer>
-        
+
     )
 }
 

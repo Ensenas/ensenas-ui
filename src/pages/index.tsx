@@ -105,14 +105,14 @@ const LandingPage: React.FC = () => {
               Enseñas está comprometido a facilitar el aprendizaje del lenguaje de señas, 
               promoviendo la inclusión y accesibilidad para personas sordas o con dificultades auditivas.
             </ImpactDescription>
-            <ImpactSubtitle>Nuestra objetivo para los próximos 5 años</ImpactSubtitle>
+            <ImpactSubtitle>Nuestro objetivo para los próximos 5 años</ImpactSubtitle>
             <ImpactStats>
               <StatBox>
-                <StatNumber>100K+</StatNumber>
+                <StatNumber>10K+</StatNumber>
                 <StatLabel>Usuarios felices</StatLabel>
               </StatBox>
               <StatBox>
-                <StatNumber>500+</StatNumber>
+                <StatNumber>50+</StatNumber>
                 <StatLabel>Horas de contenido educativo</StatLabel>
               </StatBox>
               <StatBox>

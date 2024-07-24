@@ -111,7 +111,7 @@ export const RegisterButton = styled.button`
     transition: all 0.5s;
     border-radius: 5px;
     cursor: pointer;
-    border: 1px solid #0070f3;
+    border: 1px solid #0567b1;
     width: 20%;
    
 

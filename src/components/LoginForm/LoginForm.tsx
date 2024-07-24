@@ -1,8 +1,9 @@
 import Head from 'next/head'
+import { redirect } from 'next/navigation'
 import { useRouter } from 'next/router'
+import { signIn, signOut, useSession } from 'next-auth/react'
 import React, { useState } from 'react'
 import { AiOutlineMail, AiOutlineUnlock, AiOutlineUser } from 'react-icons/ai'
-
 
 import AppLogoTitle from '../AppLogoTitle'
 import Button from '../Button'
@@ -18,12 +19,10 @@ import {
     SignImage
 } from './FormElements'
 import InputField from './InputField'
-import { signIn, signOut, useSession } from "next-auth/react"
-import { redirect } from 'next/navigation'
 const LoginForm = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    const [error, setError] = useState<string | null>(null);
+    const [error, setError] = useState<string | null>(null)
     const router = useRouter()
 
     const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,19 +36,19 @@ const LoginForm = () => {
     const handleGoogleClick = async (e) => {
 
         const signInResponse = await signIn('google', {
-            redirect: false, // Prevent automatic redirection
-        });
-        console.log("sign", signInResponse)
+            redirect: false // Prevent automatic redirection
+        })
+        console.log('sign', signInResponse)
         if (signInResponse && !signInResponse.error) {
 
-            router.push('/home');
+            router.push('/home')
         } else {
-            setError("Your Email or Password is wrong!");
+            setError('Your Email or Password is wrong!')
         }
     }
 
     const handleLogin = (event: React.FormEvent<HTMLFormElement>) => {
-        //event.preventDefault()
+        event.preventDefault()
         try {
             // Lógica de autenticación (reemplaza este bloque con tu lógica real)
             // Ejemplo de llamada a una API para verificar credenciales

@@ -1,8 +1,10 @@
+import { signIn, signOut, useSession } from 'next-auth/react'
 import React, { useState } from 'react'
-import { signIn, signOut, useSession } from "next-auth/react"
 
 import HomeHeader from '../components/HomeHeader/HomeHeader'
 import { ContentContainer, HomePageWrapper, NavIcon, NavItem, SidebarContainer, SidebarNav } from '../styles/HomePage.styles'
+import HomeMain from './homeMain'
+import MyLearning from './learning'
 
 const navItems = [
   { label: 'Inicio', icon: '/icons/home-icon.png', href: '/' },
@@ -37,8 +39,8 @@ const HomePage: React.FC = () => {
           </SidebarNav>
         </SidebarContainer>
         <ContentContainer>
-          {activePage === '/' && <div>{session?.user?.email}</div>}
-          {activePage === '/learning' && <div>Mi Aprendizaje Content</div>}
+          {activePage === '/' && <HomeMain />}
+          {activePage === '/learning' && <MyLearning />}
           {activePage === '/profile' && <div>Perfil Content</div>}
           {activePage === '/achievements' && <div>Mis Logros Content</div>}
         </ContentContainer>

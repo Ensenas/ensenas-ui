@@ -64,7 +64,7 @@ export const LogoutButton = styled.div`
 
   a {
     text-decoration: none;
-    color: #0070f3; /* Color del texto azul */
+    color: #0567b1; /* Color del texto azul */
     background-color: #fff; /* Fondo blanco */
     padding: 15px 20px;
     font-size: 16px;

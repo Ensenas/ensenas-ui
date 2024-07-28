@@ -3,8 +3,10 @@ import React, { useState } from 'react'
 
 import HomeHeader from '../components/HomeHeader/HomeHeader'
 import { ContentContainer, HomePageWrapper, NavIcon, NavItem, SidebarContainer, SidebarNav } from '../styles/HomePage.styles'
+import Achievements from './achievements'
 import HomeMain from './homeMain'
 import MyLearning from './learning'
+import Profile from './profile'
 
 const navItems = [
   { label: 'Inicio', icon: '/icons/home-icon.png', href: '/' },
@@ -41,8 +43,8 @@ const HomePage: React.FC = () => {
         <ContentContainer>
           {activePage === '/' && <HomeMain />}
           {activePage === '/learning' && <MyLearning />}
-          {activePage === '/profile' && <div>Perfil Content</div>}
-          {activePage === '/achievements' && <div>Mis Logros Content</div>}
+          {activePage === '/profile' && <Profile />}
+          {activePage === '/achievements' && <Achievements />}
         </ContentContainer>
       </HomePageWrapper>
     </div>

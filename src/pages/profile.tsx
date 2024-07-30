@@ -42,7 +42,8 @@ const FormSection = styled.div`
 const FormSectionTitle = styled.h3`
   margin-bottom: 30px;
   font-size: 1.2em;
-  border-bottom: 2px solid #000;
+  color: #0567b1;
+  border-bottom: 2px solid #0567b1;
   padding-bottom: 0.5rem;
 `
 

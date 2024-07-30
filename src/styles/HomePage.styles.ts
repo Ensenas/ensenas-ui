@@ -3,7 +3,7 @@ import styled from 'styled-components'
 // Contenedor principal que aloja la barra lateral y el contenido
 export const HomePageWrapper = styled.div`
   display: flex;
-  height: 100vh;
+  height: 100%;
   background: #f4f4f4;
 `
 

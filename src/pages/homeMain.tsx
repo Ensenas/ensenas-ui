@@ -78,7 +78,7 @@ import React from 'react'
 import styled from 'styled-components'
 
 const Section = styled.div`
-  margin: 20px;
+ margin: 0px;
 
 `
 
@@ -89,16 +89,11 @@ const WelcomeTitle = styled.h1`
 `
 
 const ContentContainer = styled.div`
-  text-align: center;
-  max-width: 800px;
-  margin: 0 auto;
-`
-
-const ImageContainer = styled.div`
   width: 100%;
   background: white;
   margin-top: 20px;
-  display: flex;
+  text-align: center;
+  align-items: center;
   justify-content: center;
   padding: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -145,7 +140,7 @@ const HomeMain: React.FC = () => {
       <WelcomeTitle>¡Bienvenido, {session?.user?.name}!</WelcomeTitle>
       <ContentContainer>
         <p style={{ fontSize: '1.2em', color: '#666' }}>
-          Te damos la bienvenida a nuestra plataforma de aprendizaje de lenguaje de señas! 
+          ¡Te damos la bienvenida a nuestra plataforma de aprendizaje de lenguaje de señas! 
         </p>
         <p style={{ fontSize: '1.2em', color: '#666' }}>
           Estamos emocionados de que te hayas unido a nosotros en esta jornada para aprender y 
@@ -154,9 +149,7 @@ const HomeMain: React.FC = () => {
         <p style={{ fontSize: '1.2em', color: '#666' }}>
           ¡Buena suerte y disfruta del proceso de aprendizaje!
         </p>
-        <ImageContainer>
-          <Image src="/signs.gif" alt="Welcome Image" />
-        </ImageContainer>
+        <Image src="/signs.gif" alt="Welcome Image" />
       </ContentContainer>
       <Recommendations>
         <RecommendationsTitle>Recomendaciones para ti</RecommendationsTitle>

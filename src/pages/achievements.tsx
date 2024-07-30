@@ -16,9 +16,12 @@ const Title = styled.h2`
 `
 
 const AchievementsGrid = styled.div`
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
   flex-direction: column;
   gap: 20px;
+  align-items: center;
 `
 
 const AchievementCard = styled.div`
@@ -27,7 +30,9 @@ const AchievementCard = styled.div`
   border-radius: 10px;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
   text-align: center;
-  width: 80%;
+  align-items: center;
+  justify-content: center;
+  height: 80%;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 
   &:hover {
@@ -46,24 +51,6 @@ const CardContent = styled.p`
   font-size: 1.2em;
   color: #555;
   margin-bottom: 10px;
-`
-
-const BadgeContainer = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  margin-top: 10px;
-`
-
-const BadgeItem = styled.div`
-  margin: 5px;
-  text-align: center;
-`
-
-const BadgeImage = styled.img`
-  width: 50px;
-  height: 50px;
-  margin-bottom: 5px;
 `
 
 // Componente principal
@@ -114,19 +101,6 @@ const MisLogros: React.FC = () => {
               <CardContent>Tiempo Total Dedicado: 20 horas</CardContent>
               <CardContent>Días Consecutivos de Uso: 10 días</CardContent>
               <CardContent>Nuevos Signos Aprendidos: 50 signos</CardContent>
-            </AchievementCard><AchievementCard>
-              <CardTitle>Insignias</CardTitle>
-              <BadgeContainer>
-                <BadgeItem>
-                  <BadgeImage src="/path/to/badge1.png" alt="Badge 1" />
-                  <CardContent>Primera Lección</CardContent>
-                </BadgeItem>
-                <BadgeItem>
-                  <BadgeImage src="/path/to/badge2.png" alt="Badge 2" />
-                  <CardContent>Semana Consecutiva</CardContent>
-                </BadgeItem>
-                {/* Agrega más insignias según sea necesario */}
-              </BadgeContainer>
             </AchievementCard></>
         {/* } */}
       </AchievementsGrid>

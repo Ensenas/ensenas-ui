@@ -3,15 +3,21 @@ import styled from 'styled-components'
 
 const Section = styled.div`
   margin: 20px;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 `
 
 const Title = styled.h2`
-  margin-bottom: 20px;
+  margin: 0;  
+  margin-bottom: 2rem;
 `
 
 const LessonList = styled.div`
   display: flex;
   flex-direction: column;
+  margin-bottom: 3rem;
 `
 
 const LessonItem = styled.div`

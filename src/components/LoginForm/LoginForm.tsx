@@ -1,7 +1,6 @@
 import Head from 'next/head'
-import { redirect } from 'next/navigation'
 import { useRouter } from 'next/router'
-import { signIn, signOut, useSession } from 'next-auth/react'
+import { signIn, useSession } from 'next-auth/react'
 import React, { useState } from 'react'
 import { AiOutlineMail, AiOutlineUnlock, AiOutlineUser } from 'react-icons/ai'
 
@@ -19,11 +18,18 @@ import {
     SignImage
 } from './FormElements'
 import InputField from './InputField'
+
 const LoginForm = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [error, setError] = useState<string | null>(null)
     const router = useRouter()
+    const { data: session, status } = useSession()
+
+    if (status === 'authenticated') {
+        router.push('/home')
+        return null
+    }
 
     const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setEmail(event.target.value)
@@ -33,44 +39,36 @@ const LoginForm = () => {
         setPassword(event.target.value)
     }
 
-    const handleGoogleClick = async (e) => {
-
-        const signInResponse = await signIn('google', {
-            redirect: false // Prevent automatic redirection
-        })
-        console.log('sign', signInResponse)
-        if (signInResponse && !signInResponse.error) {
-
-            router.push('/home')
-        } else {
-            setError('Your Email or Password is wrong!')
+    const handleGoogleClick = async () => {
+        try {
+            const signInResponse = await signIn('google', {
+                redirect: false // Prevent automatic redirection
+            })
+            if (signInResponse && !signInResponse.error) {
+                router.push('/home')
+            }
+        } catch (error) {
+            console.error('Error en la autenticación con Google:', error)
+            setError('Error en la autenticación con Google')
         }
     }
 
-    const handleLogin = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
         try {
-            // Lógica de autenticación (reemplaza este bloque con tu lógica real)
-            // Ejemplo de llamada a una API para verificar credenciales
-            // const response = await fetch('/api/login', {
-            //     method: 'POST',
-            //     body: JSON.stringify({ email, password }),
-            //     headers: { 'Content-Type': 'application/json' }
-            // })
-            // const data = await response.json()
-            // if (data.success) {
-            //     router.push('/home')
-            // } else {
-            //     throw new Error(data.message)
-            // }
-
-            // Simulación de autenticación exitosa
-            console.log(`Email: ${email}, Password: ${password}`)  // Imprime en consola para prueba
-            router.push('/home')  // Redirige a la página de inicio
-
+            const response = await signIn('credentials', {
+                redirect: false,
+                email,
+                password
+            })
+            if (response && !response.error) {
+                router.push('/home')
+            } else {
+                setError('Tu email o contraseña son incorrectos')
+            }
         } catch (error) {
             console.error('Error de autenticación:', error)
-            // Aquí podrías mostrar un mensaje de error al usuario
+            setError('Error de autenticación')
         }
     }
 
@@ -83,7 +81,7 @@ const LoginForm = () => {
                 </Head>
                 <Form onSubmit={handleLogin}>
                     <AppLogoTitle />
-                    <FormTitle> ¡La mejor forma para aprender lengua de señas! </FormTitle>
+                    <FormTitle>¡La mejor forma para aprender lengua de señas!</FormTitle>
 
                     <InputField
                         placeholder='Usuario'
@@ -116,11 +114,11 @@ const LoginForm = () => {
 
                     <InfoTextContainer>
                         <InfoText>
-                            ¿No tenes tu cuenta?
+                            ¿No tienes tu cuenta?
                         </InfoText>
 
                         <Link href='/signup'>
-                            ¡Registrate!
+                            ¡Regístrate!
                         </Link>
                     </InfoTextContainer>
                     {error && (
@@ -128,12 +126,10 @@ const LoginForm = () => {
                             {error}
                         </span>
                     )}
-
                 </Form>
             </FormContainer>
             <SignImage />
         </MainContainer>
-
     )
 }
 

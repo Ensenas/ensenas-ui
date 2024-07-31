@@ -7,6 +7,7 @@ import Providers from '../app/providers'
 const inter = Inter({ subsets: ['latin'] })
 
 export default function MyApp({ Component, pageProps: { session, ...pageProps } }) {
+    
     return (
         <main className={inter.className}>
             <SessionProvider session={session}>

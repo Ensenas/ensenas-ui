@@ -57,21 +57,21 @@ export const SearchButton = styled.button`
   }
 `
 
-export const LogoutButton = styled.div`
+export const LogoutButton = styled.button`
   margin-left: 20px;
   display: flex;
   align-items: center;
+  text-decoration: none;
+  color: #0567b1; /* Color del texto azul */
+  background-color: #fff; /* Fondo blanco */
+  padding: 15px 20px;
+  font-size: 16px;
+  transition: background-color 0.3s, color 0.3s;
+  cursor: pointer;
+  border: none;
 
-  a {
-    text-decoration: none;
-    color: #0567b1; /* Color del texto azul */
-    background-color: #fff; /* Fondo blanco */
-    padding: 15px 20px;
-    font-size: 16px;
-    transition: background-color 0.3s, color 0.3s;
-
-    &:hover {
-      color: #00397a; /* Color del texto blanco */
-    }
+  &:hover {
+    color: #00397a; /* Color del texto blanco */
   }
+
 `

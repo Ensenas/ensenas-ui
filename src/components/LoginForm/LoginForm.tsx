@@ -7,6 +7,7 @@ import { AiOutlineMail, AiOutlineUnlock, AiOutlineUser } from 'react-icons/ai'
 import AppLogoTitle from '../AppLogoTitle'
 import Button from '../Button'
 import GoogleSignInButton from '../Button/GoogleButton'
+import ErrorModal from '../ErrorModal/ErrorModal'
 import {
     Form,
     FormContainer,
@@ -122,9 +123,11 @@ const LoginForm = () => {
                         </Link>
                     </InfoTextContainer>
                     {error && (
-                        <span className="p-4 mb-2 text-lg font-semibold text-white bg-red-500 rounded-md">
-                            {error}
-                        </span>
+                        <ErrorModal
+                            isOpen={!!error}
+                            onRequestClose={() => setError(null)}
+                            message={error}
+                        />
                     )}
                 </Form>
             </FormContainer>

@@ -1,9 +1,13 @@
-import Link from 'next/link'
+import { signOut } from 'next-auth/react'
 import React from 'react'
 
 import { HeaderContainer, Logo, LogoutButton, SearchButton, SearchInput } from './HomeHeader.styles'
 
 const HomeHeader: React.FC = () => {
+  const handleSignOut = () => {
+    signOut({ callbackUrl: '/' })
+  }
+
   return (
     <HeaderContainer>
       <Logo>
@@ -16,10 +20,8 @@ const HomeHeader: React.FC = () => {
         </SearchButton>
         <input type="text" placeholder="Buscar lección" />
       </SearchInput>
-      <LogoutButton>
-        <Link href="/" legacyBehavior>
-          <a>Cerrar Sesión</a>
-        </Link>
+      <LogoutButton onClick={handleSignOut}>
+        Cerrar Sesión
       </LogoutButton>
     </HeaderContainer>
   )

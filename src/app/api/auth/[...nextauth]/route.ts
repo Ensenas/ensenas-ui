@@ -1,5 +1,6 @@
 // pages/api/auth/[...nextauth].js
 import NextAuth from 'next-auth'
+import CredentialsProvider from 'next-auth/providers/credentials'
 import GoogleProvider from 'next-auth/providers/google'
 
 const handler = NextAuth({
@@ -7,33 +8,31 @@ const handler = NextAuth({
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string
+    }),
+    CredentialsProvider({
+      name: 'Credentials',
+      credentials: {
+        email: { label: 'Email', type: 'email' },
+        password: {  label: 'Password', type: 'password' }
+      },
+      authorize: async (credentials) => {
+        const res = await fetch(`${process.env.BACKEND_URL}/api/auth/login`, {
+          method: 'POST',
+          body: JSON.stringify(credentials),
+          headers: { 'Content-Type': 'application/json' }
+        })
+        const user = await res.json()
+
+        if (res.ok && user) {
+          return user
+        }
+        return null
+      }
     })
   ],
-  // Otras configuraciones
   pages: {
-    signIn: '/login' // Página de inicio de sesión personalizada
+    signIn: '/login'
   }
-  // callbacks: {
-  //   async signIn(user, account, profile) {
-  //     if (account.provider === 'google') {
-  //       // Lógica adicional si es necesario
-  //     }
-  //     return true
-  //   },
-  //   async redirect(url, baseUrl) {
-  //     return baseUrl
-  //   },
-  //   async session(session, user) {
-  //     session.user.id = user.id
-  //     return session
-  //   },
-  //   async jwt(token, user, account, profile, isNewUser) {
-  //     if (user) {
-  //       token.id = user.id
-  //     }
-  //     return token
-  //   }
-  // }
 })
 
 export { handler as GET, handler as POST }

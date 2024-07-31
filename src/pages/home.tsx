@@ -1,7 +1,9 @@
+import { useRouter } from 'next/router'
 import { signIn, signOut, useSession } from 'next-auth/react'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import HomeHeader from '../components/HomeHeader/HomeHeader'
+import ProtectedRoute from '../components/ProtectedRoute'
 import { ContentContainer, HomePageWrapper, NavIcon, NavItem, SidebarContainer, SidebarNav } from '../styles/HomePage.styles'
 import Achievements from './achievements'
 import HomeMain from './homeMain'
@@ -19,35 +21,37 @@ const navItems = [
 
 const HomePage: React.FC = () => {
   const [activePage, setActivePage] = useState('/')
-  const { data: session } = useSession()
+
   return (
-    <div>
-      <HomeHeader />
-      <HomePageWrapper>
-        <SidebarContainer>
-          <SidebarNav>
-            {navItems.map((item) => (
-              <NavItem
-                key={item.label}
-                isActive={activePage === item.href}
-                onClick={() => setActivePage(item.href)}
-              >
-                <NavIcon>
-                  <img src={item.icon} alt={`${item.label} Icon`} />
-                </NavIcon>
-                <span>{item.label}</span>
-              </NavItem>
-            ))}
-          </SidebarNav>
-        </SidebarContainer>
-        <ContentContainer>
-          {activePage === '/' && <HomeMain />}
-          {activePage === '/learning' && <MyLearning />}
-          {activePage === '/profile' && <Profile />}
-          {activePage === '/achievements' && <Achievements />}
-        </ContentContainer>
-      </HomePageWrapper>
-    </div>
+    <ProtectedRoute>  
+      <div>
+        <HomeHeader />
+        <HomePageWrapper>
+          <SidebarContainer>
+            <SidebarNav>
+              {navItems.map((item) => (
+                <NavItem
+                  key={item.label}
+                  isActive={activePage === item.href}
+                  onClick={() => setActivePage(item.href)}
+                >
+                  <NavIcon>
+                    <img src={item.icon} alt={`${item.label} Icon`} />
+                  </NavIcon>
+                  <span>{item.label}</span>
+                </NavItem>
+              ))}
+            </SidebarNav>
+          </SidebarContainer>
+          <ContentContainer>
+            {activePage === '/' && <HomeMain />}
+            {activePage === '/learning' && <MyLearning />}
+            {activePage === '/profile' && <Profile />}
+            {activePage === '/achievements' && <Achievements />}
+          </ContentContainer>
+        </HomePageWrapper>
+      </div>
+    </ ProtectedRoute>
   )
 }
 

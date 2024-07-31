@@ -1,5 +1,6 @@
 import React from 'react'
 
+import ProtectedRoute from '../components/ProtectedRoute'
 import { CompletedLessonDescription, CompletedLessonItem, CompletedLessonPreview, 
   CompletedLessonsList, CompletedLessonTitle, LessonDescription, LessonDetails, LessonInfo, 
   LessonItem, LessonList, LessonTitle, ProgressBar, ProgressBarContainer, ProgressContainer, 
@@ -41,39 +42,41 @@ const completedLessons = [
 
 const MyLearning: React.FC = () => {
   return (
-    <Section>
-      <Title>Continuar Viendo</Title>
-      <LessonList>
-        {lessons.map((lesson) => (
-          <LessonItem key={lesson.id}>
-            <VideoPreview src={lesson.videoSrc} alt={`Preview de ${lesson.title}`} />
-            <LessonInfo>
-              <LessonDetails>
-                <LessonTitle>{lesson.title}</LessonTitle>
-                <LessonDescription>{lesson.description}</LessonDescription>
-              </LessonDetails>
-              <ProgressContainer>
-                <ProgressBarContainer>
-                  <ProgressBar progress={lesson.progress} />
-                </ProgressBarContainer>
-                <ProgressPercentage>{lesson.progress}%</ProgressPercentage>
-              </ProgressContainer>
-            </LessonInfo>
-          </LessonItem>
-        ))}
-      </LessonList>
-      <Title>Volver a Ver</Title>
-      <CompletedLessonsList>
-        {completedLessons.map((lesson) => (
-          <CompletedLessonItem key={lesson.id}>
-            <CompletedLessonPreview src={lesson.videoSrc} alt={`Preview de ${lesson.title}`} />
-            <CompletedLessonTitle>{lesson.title}</CompletedLessonTitle>
-            <CompletedLessonDescription>{lesson.description}</CompletedLessonDescription>
-          </CompletedLessonItem>
-        ))}
-      </CompletedLessonsList>
+    <ProtectedRoute>
+      <Section>
+        <Title>Continuar Viendo</Title>
+        <LessonList>
+          {lessons.map((lesson) => (
+            <LessonItem key={lesson.id}>
+              <VideoPreview src={lesson.videoSrc} alt={`Preview de ${lesson.title}`} />
+              <LessonInfo>
+                <LessonDetails>
+                  <LessonTitle>{lesson.title}</LessonTitle>
+                  <LessonDescription>{lesson.description}</LessonDescription>
+                </LessonDetails>
+                <ProgressContainer>
+                  <ProgressBarContainer>
+                    <ProgressBar progress={lesson.progress} />
+                  </ProgressBarContainer>
+                  <ProgressPercentage>{lesson.progress}%</ProgressPercentage>
+                </ProgressContainer>
+              </LessonInfo>
+            </LessonItem>
+          ))}
+        </LessonList>
+        <Title>Volver a Ver</Title>
+        <CompletedLessonsList>
+          {completedLessons.map((lesson) => (
+            <CompletedLessonItem key={lesson.id}>
+              <CompletedLessonPreview src={lesson.videoSrc} alt={`Preview de ${lesson.title}`} />
+              <CompletedLessonTitle>{lesson.title}</CompletedLessonTitle>
+              <CompletedLessonDescription>{lesson.description}</CompletedLessonDescription>
+            </CompletedLessonItem>
+          ))}
+        </CompletedLessonsList>
 
-    </Section>
+      </Section>
+    </ProtectedRoute>
   )
 }
 

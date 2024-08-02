@@ -22,9 +22,9 @@ const CloseButton = styled.button`
 `
 
 interface ErrorModalProps {
-  isOpen: boolean;
-  onRequestClose: () => void;
-  message: string;
+  isOpen: boolean
+  onRequestClose: () => void
+  message: string
 }
 
 const ErrorModal: React.FC<ErrorModalProps> = ({ isOpen, onRequestClose, message }) => {

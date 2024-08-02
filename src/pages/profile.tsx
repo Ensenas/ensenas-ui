@@ -1,8 +1,20 @@
 import React, { useState } from 'react'
 import { FaEdit, FaSave } from 'react-icons/fa' // Para el icono del lápiz
 
-import { EditButton, Form, FormColumn, FormGroup, FormRow, FormSection, FormSectionTitle, 
-  Header, Input, Label, Section, Title } from '../styles/Profile.Styles'
+import {
+  EditButton,
+  Form,
+  FormColumn,
+  FormGroup,
+  FormRow,
+  FormSection,
+  FormSectionTitle,
+  Header,
+  Input,
+  Label,
+  Section,
+  Title
+} from '../styles/Profile.Styles'
 
 const Profile: React.FC = () => {
   const [isEditing, setIsEditing] = useState(false)
@@ -22,7 +34,11 @@ const Profile: React.FC = () => {
       <Header>
         <Title>Mi Perfil</Title>
         <EditButton onClick={isEditing ? handleSave : toggleEdit}>
-          {isEditing ? <FaSave style={{ marginRight: '5px' }} /> : <FaEdit style={{ marginRight: '5px' }} />}
+          {isEditing ? (
+            <FaSave style={{ marginRight: '5px' }} />
+          ) : (
+            <FaEdit style={{ marginRight: '5px' }} />
+          )}
           {isEditing ? 'Guardar' : 'Editar'}
         </EditButton>
       </Header>

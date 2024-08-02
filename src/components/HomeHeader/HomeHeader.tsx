@@ -20,9 +20,7 @@ const HomeHeader: React.FC = () => {
         </SearchButton>
         <input type="text" placeholder="Buscar lección" />
       </SearchInput>
-      <LogoutButton onClick={handleSignOut}>
-        Cerrar Sesión
-      </LogoutButton>
+      <LogoutButton onClick={handleSignOut}>Cerrar Sesión</LogoutButton>
     </HeaderContainer>
   )
 }

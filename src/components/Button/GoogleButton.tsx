@@ -1,9 +1,9 @@
-"use client";
+'use client'
 
 import { getSession, signIn, useSession } from 'next-auth/react'
 import React from 'react'
 import styled from 'styled-components'
-import { ButtonProps } from '../../types/propTypes';
+import { ButtonProps } from '../../types/propTypes'
 
 const ImageButton = styled.button`
   display: flex;
@@ -18,7 +18,7 @@ const ImageButton = styled.button`
   width: 70%;
 
   &:hover {
-    background-color: rgba(45,60,73,0.3);
+    background-color: rgba(45, 60, 73, 0.3);
   }
 `
 
@@ -32,13 +32,11 @@ const ButtonText = styled.span`
   font-size: 1rem; /* Adjust font size as needed */
 `
 
-
 const GoogleSignInButton = ({ onClick }) => {
-
   return (
-    <ImageButton onClick={onClick} type='button'>
+    <ImageButton onClick={onClick} type="button">
       <Image src={'/google-logo.png'} alt={'Google'} />
-      <ButtonText >Inicia sesión con Google</ButtonText>
+      <ButtonText>Inicia sesión con Google</ButtonText>
     </ImageButton>
   )
 }

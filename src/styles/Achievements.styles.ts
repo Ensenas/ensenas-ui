@@ -32,7 +32,9 @@ export const AchievementCard = styled.div`
   align-items: center;
   justify-content: center;
   height: 80%;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 
   &:hover {
     transform: translateY(-5px);

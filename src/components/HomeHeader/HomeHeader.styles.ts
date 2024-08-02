@@ -66,12 +66,13 @@ export const LogoutButton = styled.button`
   background-color: #fff; /* Fondo blanco */
   padding: 15px 20px;
   font-size: 16px;
-  transition: background-color 0.3s, color 0.3s;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
   cursor: pointer;
   border: none;
 
   &:hover {
     color: #00397a; /* Color del texto blanco */
   }
-
 `

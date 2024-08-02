@@ -13,7 +13,7 @@ const handler = NextAuth({
       name: 'Credentials',
       credentials: {
         email: { label: 'Email', type: 'email' },
-        password: {  label: 'Password', type: 'password' }
+        password: { label: 'Password', type: 'password' }
       },
       authorize: async (credentials) => {
         const res = await fetch(`${process.env.BACKEND_URL}/api/auth/login`, {

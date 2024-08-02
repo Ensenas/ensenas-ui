@@ -1,8 +1,8 @@
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { signIn, useSession } from 'next-auth/react'
-import React, { useState } from 'react'
-import { AiOutlineMail, AiOutlineUnlock, AiOutlineUser } from 'react-icons/ai'
+import React, { useEffect,useState } from 'react'
+import { AiOutlineUnlock, AiOutlineUser } from 'react-icons/ai'
 
 import AppLogoTitle from '../AppLogoTitle'
 import Button from '../Button'
@@ -27,10 +27,12 @@ const LoginForm = () => {
     const router = useRouter()
     const { data: session, status } = useSession()
 
-    if (status === 'authenticated') {
-        router.push('/home')
-        return null
-    }
+    useEffect(() => {
+        console.log('Session data:', session)
+        if (status === 'authenticated') {
+            router.push('/home')
+        }
+    }, [status, session, router])
 
     const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setEmail(event.target.value)
@@ -47,6 +49,8 @@ const LoginForm = () => {
             })
             if (signInResponse && !signInResponse.error) {
                 router.push('/home')
+            } else if (signInResponse.error) {
+                setError('Error en la autenticación con Google')
             }
         } catch (error) {
             console.error('Error en la autenticación con Google:', error)
@@ -57,13 +61,16 @@ const LoginForm = () => {
     const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
         try {
+            console.log(status)
             const response = await signIn('credentials', {
                 redirect: false,
                 email,
                 password
             })
+            console.log(response)
             if (response && !response.error) {
-                router.push('/home')
+                router.reload()
+                console.log(status)
             } else {
                 setError('Tu email o contraseña son incorrectos')
             }

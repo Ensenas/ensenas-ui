@@ -1,7 +1,6 @@
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
-import { AiOutlineMail, AiOutlineUnlock, AiOutlineUser } from 'react-icons/ai'
 
 import { FormColumn, FormRow, Subtitle } from './FormElements'
 import {
@@ -13,6 +12,10 @@ import {
 import InputField from './InputField'
 
 const RegisterForm = () => {
+    const [name, setName] = useState('')
+    const [surname, setSurname] = useState('')
+    const [birthDate, setBirthDate] = useState('')
+    const [country, setCountry] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const router = useRouter()
@@ -25,26 +28,41 @@ const RegisterForm = () => {
         setPassword(event.target.value)
     }
 
-    const handleRegister = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setName(event.target.value)
+    }
+    const handleSurnameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setSurname(event.target.value)
+    }
+    const handleBirthDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setBirthDate(event.target.value)
+    }
+    const handleCountryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setCountry(event.target.value)
+    }
+
+    const handleRegister = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
         try {
-            // Lógica de autenticación (reemplaza este bloque con tu lógica real)
-            // Ejemplo de llamada a una API para verificar credenciales
-            // const response = await fetch('/api/login', {
-            //     method: 'POST',
-            //     body: JSON.stringify({ email, password }),
-            //     headers: { 'Content-Type': 'application/json' }
-            // })
-            // const data = await response.json()
-            // if (data.success) {
-            //     router.push('/home')
-            // } else {
-            //     throw new Error(data.message)
-            // }
-
-            // Simulación de autenticación exitosa
-            console.log(`Email: ${email}, Password: ${password}`)  // Imprime en consola para prueba
-            router.push('/login')  // Redirige a la página de inicio
+            const response = await fetch('http://54.241.26.30:3001/auth/sign-up', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    mail: email,
+                    password,
+                    name,
+                    surname,
+                    birthDate,
+                    country
+                })
+            })
+            
+            const data = await response.json()
+            if (data.success) {
+                router.push('/login') 
+            } else {
+                throw new Error(data.message)
+            }
 
         } catch (error) {
             console.error('Error de autenticación:', error)
@@ -66,21 +84,29 @@ const RegisterForm = () => {
                         <InputField
                             label='Nombre'
                             type='text'
+                            value={name}
+                            onChange={handleNameChange}
                             required
                         />
                         <InputField
                             label='Apellido'
                             type='text'
+                            value={surname}
+                            onChange={handleSurnameChange}
                             required
                         />
                         <InputField
                             label='Fecha de nacimiento'
                             type='date'
+                            value={birthDate}
+                            onChange={handleBirthDateChange}
                             required
                         />
                         <InputField
                             label='País'
                             type='text'
+                            value={country}
+                            onChange={handleCountryChange}
                             required
                         />
                     </FormColumn>
@@ -88,7 +114,7 @@ const RegisterForm = () => {
                     <FormColumn>
                         <Subtitle>Información de la cuenta</Subtitle>
                         <InputField
-                            label='Usuario'
+                            label='Email'
                             type='email'
                             value={email}
                             onChange={handleEmailChange}

@@ -4,16 +4,34 @@ import React from 'react'
 
 import LandingFooter from '../components/LandingFooter/LandingFooter'
 import LandingHeader from '../components/LandingHeader/LandingHeader'
-import { FirstSection, ImpactContent, ImpactDescription, ImpactStats, ImpactSubtitle, 
-  LandingPageContainer, LeftSide, RightSide, Section, Section2Content, Section3Content, SectionTitle, 
-  StatBox, StatLabel, StatNumber, Subsection  } from '../styles/LandingPage.styles'
+import {
+  FirstSection,
+  ImpactContent,
+  ImpactDescription,
+  ImpactStats,
+  ImpactSubtitle,
+  LandingPageContainer,
+  LeftSide,
+  RightSide,
+  Section,
+  Section2Content,
+  Section3Content,
+  SectionTitle,
+  StatBox,
+  StatLabel,
+  StatNumber,
+  Subsection
+} from '../styles/LandingPage.styles'
 
 const LandingPage: React.FC = () => {
   return (
     <div>
       <Head>
         <title>Enseñas - Landing Page</title>
-        <meta name="description" content="Bienvenido a Enseñas, la mejor plataforma para aprender lenguaje de señas." />
+        <meta
+          name="description"
+          content="Bienvenido a Enseñas, la mejor plataforma para aprender lenguaje de señas."
+        />
       </Head>
       <LandingHeader />
       <LandingPageContainer>
@@ -26,7 +44,7 @@ const LandingPage: React.FC = () => {
             </Link>
           </LeftSide>
           <RightSide>
-            <img src="/signs.png" alt="Imagen de señas"/>
+            <img src="/signs.png" alt="Imagen de señas" />
             <ul>
               <li>Mejora tu comunicación con la comunidad sorda.</li>
               <li>Aumenta tus oportunidades laborales en sectores donde la inclusión es clave.</li>
@@ -37,9 +55,12 @@ const LandingPage: React.FC = () => {
         <Section id="about">
           <SectionTitle>¿Qué es Enseñas?</SectionTitle>
           <Section2Content>
-            <p>Enseñas es una innovadora plataforma diseñada para enseñarte lenguaje de señas de manera efectiva y divertida.
-               Utilizamos la última tecnología en inteligencia artificial para ofrecerte una experiencia de aprendizaje 
-               personalizada y accesible desde cualquier lugar.</p>
+            <p>
+              Enseñas es una innovadora plataforma diseñada para enseñarte lenguaje de señas de
+              manera efectiva y divertida. Utilizamos la última tecnología en inteligencia
+              artificial para ofrecerte una experiencia de aprendizaje personalizada y accesible
+              desde cualquier lugar.
+            </p>
             <div className="video-wrapper">
               <img src="/logo.png" alt="Logo de Enseñas" />
               <iframe
@@ -52,8 +73,11 @@ const LandingPage: React.FC = () => {
               ></iframe>
             </div>
             <p className="start-today">¡Comienza hoy mismo!</p>
-            <p>Únete a miles de estudiantes que ya están transformando su forma de comunicarse. Regístrate ahora y comienza 
-              tu viaje para dominar el lenguaje de señas con la ayuda de la inteligencia artificial.</p>
+            <p>
+              Únete a miles de estudiantes que ya están transformando su forma de comunicarse.
+              Regístrate ahora y comienza tu viaje para dominar el lenguaje de señas con la ayuda de
+              la inteligencia artificial.
+            </p>
           </Section2Content>
         </Section>
         <Section id="how-it-works">
@@ -63,7 +87,10 @@ const LandingPage: React.FC = () => {
               <div className="text">
                 <h3>Lecciones Interactivas</h3>
                 <ul>
-                  <li>Aprende a tu propio ritmo con lecciones diseñadas para principiantes y avanzados.</li>
+                  <li>
+                    Aprende a tu propio ritmo con lecciones diseñadas para principiantes y
+                    avanzados.
+                  </li>
                   <li>Accede a videos, ejercicios prácticos y actividades interactivas.</li>
                 </ul>
               </div>
@@ -78,8 +105,10 @@ const LandingPage: React.FC = () => {
               <div className="text" data-number="2">
                 <h3>Inteligencia Artificial</h3>
                 <ul>
-                  <li>Nuestro sistema de IA analiza tus gestos y movimientos para corregir 
-                    y perfeccionar tu técnica en tiempo real.</li>
+                  <li>
+                    Nuestro sistema de IA analiza tus gestos y movimientos para corregir y
+                    perfeccionar tu técnica en tiempo real.
+                  </li>
                   <li>Recibe retroalimentación instantánea para mejorar continuamente.</li>
                 </ul>
               </div>
@@ -102,8 +131,9 @@ const LandingPage: React.FC = () => {
           <SectionTitle>Impacto Social</SectionTitle>
           <ImpactContent>
             <ImpactDescription>
-              Enseñas está comprometido a facilitar el aprendizaje del lenguaje de señas, 
-              promoviendo la inclusión y accesibilidad para personas sordas o con dificultades auditivas.
+              Enseñas está comprometido a facilitar el aprendizaje del lenguaje de señas,
+              promoviendo la inclusión y accesibilidad para personas sordas o con dificultades
+              auditivas.
             </ImpactDescription>
             <ImpactSubtitle>Nuestro objetivo para los próximos 5 años</ImpactSubtitle>
             <ImpactStats>
@@ -121,8 +151,9 @@ const LandingPage: React.FC = () => {
               </StatBox>
             </ImpactStats>
             <ImpactDescription>
-              A través de nuestra plataforma, buscamos impactar positivamente la vida de miles de personas alrededor del mundo, 
-              proporcionando herramientas educativas efectivas y accesibles.
+              A través de nuestra plataforma, buscamos impactar positivamente la vida de miles de
+              personas alrededor del mundo, proporcionando herramientas educativas efectivas y
+              accesibles.
             </ImpactDescription>
           </ImpactContent>
         </Section>

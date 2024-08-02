@@ -22,44 +22,44 @@ export const BackLink = styled.a`
 `
 
 export const Container = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: #f9f9f9;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f9f9f9;
 
-    @media (max-width: 768px) {
-        background-color: #fff;
-    }
+  @media (max-width: 768px) {
+    background-color: #fff;
+  }
 `
 export const Form = styled.form`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding:  1rem 1.5rem;
-    transition:  all 0.5s;
-    background-color: #f7f9fa;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  transition: all 0.5s;
+  background-color: #f7f9fa;
+  width: 100%;
+  height: 90%;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+  border-radius: 5px;
+
+  @media (max-width: 1024px) {
+    width: 50%;
+  }
+
+  @media (max-width: 768px) {
     width: 100%;
-    height: 90%;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
-    border-radius: 5px;
-
-    @media (max-width: 1024px) {
-        width: 50%;
-    }
-
-    @media (max-width: 768px) {
-        width: 100%;
-        box-shadow: none;
-    }
+    box-shadow: none;
+  }
 `
 
 export const FormTitle = styled.h2`
-    font-size: 2rem;
-    color: #2d3c49;
-    text-align: center;
-    padding: 0.2rem;
+  font-size: 2rem;
+  color: #2d3c49;
+  text-align: center;
+  padding: 0.2rem;
 `
 export const Subtitle = styled.h2`
   color: #555;
@@ -93,30 +93,29 @@ export const FormColumn = styled.div`
   }
 `
 export const Link = styled(NextLink)`
-    color: #2b3a47;
-    align-self: flex-end;
-    transition: all 0.5s;
-    font-size: 0.8rem;
+  color: #2b3a47;
+  align-self: flex-end;
+  transition: all 0.5s;
+  font-size: 0.8rem;
 
-    &:hover {
-        color: #010606;
-    }
+  &:hover {
+    color: #010606;
+  }
 `
 
 export const RegisterButton = styled.button`
-    background-color: #fff;
-    color: #0567b1;
-    font-size: 1rem;
-    padding: 0.8rem;
-    transition: all 0.5s;
-    border-radius: 5px;
-    cursor: pointer;
-    border: 1px solid #0567b1;
-    width: 20%;
-   
+  background-color: #fff;
+  color: #0567b1;
+  font-size: 1rem;
+  padding: 0.8rem;
+  transition: all 0.5s;
+  border-radius: 5px;
+  cursor: pointer;
+  border: 1px solid #0567b1;
+  width: 20%;
 
-    &:hover {
-        background-color: #0567b1;
-        color: #fff;
-    }
+  &:hover {
+    background-color: #0567b1;
+    color: #fff;
+  }
 `

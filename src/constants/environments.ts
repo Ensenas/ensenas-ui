@@ -27,5 +27,3 @@ const isVercelDeployment = process.env.VERCEL === '1'
 if (NEXTAUTH_URL === undefined && !isVercelDeployment) {
   throw new Error('NEXTAUTH_URL is undefined, please set it in .env.local')
 }
-
-

@@ -37,7 +37,7 @@ export const NavItem = styled.div<{ isActive: boolean }>`
     font-size: 14px;
     font-weight: ${({ isActive }) => (isActive ? 'bold' : 'normal')};
   }
-  
+
   &:hover {
     background: #e0e0e0;
   }

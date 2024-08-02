@@ -12,13 +12,10 @@ const FooterText = styled.p`
   color: #666;
 `
 
-
 const LandingFooter = () => {
   return (
     <FooterContainer>
-      <FooterText>
-        © {new Date().getFullYear()} Enseñas. Todos los derechos reservados. 
-      </FooterText>
+      <FooterText>© {new Date().getFullYear()} Enseñas. Todos los derechos reservados.</FooterText>
     </FooterContainer>
   )
 }

@@ -1,8 +1,7 @@
 import styled from 'styled-components'
 
 export const Section = styled.div`
- margin: 0px;
-
+  margin: 0px;
 `
 
 export const WelcomeTitle = styled.h1`

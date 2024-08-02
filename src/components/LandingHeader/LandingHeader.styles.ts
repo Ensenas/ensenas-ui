@@ -63,7 +63,9 @@ export const LoginButton = styled.div`
     border: 1px solid #0567b1; /* Borde azul */
     border-radius: 5px;
     font-size: 18px;
-    transition: background-color 0.3s, color 0.3s;
+    transition:
+      background-color 0.3s,
+      color 0.3s;
 
     &:hover {
       background-color: #0567b1; /* Fondo azul al hacer hover */

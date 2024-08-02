@@ -4,7 +4,14 @@ import React, { useEffect, useState } from 'react'
 
 import HomeHeader from '../components/HomeHeader/HomeHeader'
 import ProtectedRoute from '../components/ProtectedRoute'
-import { ContentContainer, HomePageWrapper, NavIcon, NavItem, SidebarContainer, SidebarNav } from '../styles/HomePage.styles'
+import {
+  ContentContainer,
+  HomePageWrapper,
+  NavIcon,
+  NavItem,
+  SidebarContainer,
+  SidebarNav
+} from '../styles/HomePage.styles'
 import Achievements from './achievements'
 import HomeMain from './homeMain'
 import MyLearning from './learning'
@@ -17,13 +24,11 @@ const navItems = [
   { label: 'Mis Logros', icon: '/icons/achievement-icon.png', href: '/achievements' }
 ]
 
-
-
 const HomePage: React.FC = () => {
   const [activePage, setActivePage] = useState('/')
 
   return (
-    <ProtectedRoute>  
+    <ProtectedRoute>
       <div>
         <HomeHeader />
         <HomePageWrapper>
@@ -51,7 +56,7 @@ const HomePage: React.FC = () => {
           </ContentContainer>
         </HomePageWrapper>
       </div>
-    </ ProtectedRoute>
+    </ProtectedRoute>
   )
 }
 

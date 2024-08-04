@@ -1,13 +1,13 @@
+/* eslint-disable no-console */
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { signIn, useSession } from 'next-auth/react'
 import React, { useState } from 'react'
-import { AiOutlineMail, AiOutlineUnlock, AiOutlineUser } from 'react-icons/ai'
+import { AiOutlineUnlock, AiOutlineUser } from 'react-icons/ai'
 
 import AppLogoTitle from '../AppLogoTitle'
 import Button from '../Button'
 import GoogleSignInButton from '../Button/GoogleButton'
-import ErrorModal from '../ErrorModal/ErrorModal'
 import {
   Form,
   FormContainer,
@@ -25,7 +25,7 @@ const LoginForm = () => {
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
   const router = useRouter()
-  const { data: session, status } = useSession()
+  const { status } = useSession()
 
   if (status === 'authenticated') {
     router.push('/home')
@@ -114,7 +114,8 @@ const LoginForm = () => {
             <Link href="/signup">¡Regístrate!</Link>
           </InfoTextContainer>
           {error && (
-            <ErrorModal isOpen={!!error} onRequestClose={() => setError(null)} message={error} />
+            //<!---<ErrorModal isOpen={!!error} onRequestClose={() => setError(null)} message={error} />--!>
+            <div>TODO: AGREGAR ERRORMODAL</div>
           )}
         </Form>
       </FormContainer>

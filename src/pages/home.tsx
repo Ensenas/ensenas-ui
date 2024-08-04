@@ -1,6 +1,5 @@
-import { useRouter } from 'next/router'
-import { signIn, signOut, useSession } from 'next-auth/react'
-import React, { useEffect, useState } from 'react'
+/* eslint-disable @next/next/no-img-element */
+import React, { useState } from 'react'
 
 import HomeHeader from '../components/HomeHeader/HomeHeader'
 import ProtectedRoute from '../components/ProtectedRoute'

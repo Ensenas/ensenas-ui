@@ -72,7 +72,7 @@ const MyLearning: React.FC = () => {
                 </LessonDetails>
                 <ProgressContainer>
                   <ProgressBarContainer>
-                    <ProgressBar progress={lesson.progress} />
+                    <ProgressBar />
                   </ProgressBarContainer>
                   <ProgressPercentage>{lesson.progress}%</ProgressPercentage>
                 </ProgressContainer>

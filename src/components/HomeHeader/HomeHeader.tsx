@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { signOut } from 'next-auth/react'
 import React from 'react'
 

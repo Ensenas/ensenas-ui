@@ -1,9 +1,7 @@
 'use client'
 
-import { getSession, signIn, useSession } from 'next-auth/react'
 import React from 'react'
 import styled from 'styled-components'
-import { ButtonProps } from '../../types/propTypes'
 
 const ImageButton = styled.button`
   display: flex;

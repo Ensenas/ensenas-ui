@@ -1,7 +1,7 @@
+/* eslint-disable no-console */
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
-import { AiOutlineMail, AiOutlineUnlock, AiOutlineUser } from 'react-icons/ai'
 
 import { FormColumn, FormRow, Subtitle } from './FormElements'
 import { Container, Form, FormTitle, RegisterButton } from './FormElements'

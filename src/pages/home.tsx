@@ -1,5 +1,4 @@
 import { useRouter } from 'next/router'
-import { signIn, signOut, useSession } from 'next-auth/react'
 import React, { useEffect, useState } from 'react'
 
 import HomeHeader from '../components/HomeHeader/HomeHeader'
@@ -16,8 +15,6 @@ const navItems = [
   { label: 'Perfil', icon: '/icons/profile-icon.png', href: '/profile' },
   { label: 'Mis Logros', icon: '/icons/achievement-icon.png', href: '/achievements' }
 ]
-
-
 
 const HomePage: React.FC = () => {
   const [activePage, setActivePage] = useState('/')

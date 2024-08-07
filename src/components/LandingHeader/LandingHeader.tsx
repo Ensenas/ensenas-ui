@@ -1,7 +1,15 @@
+/* eslint-disable @next/next/no-img-element */
 import Link from 'next/link'
 import React from 'react'
 
-import { HeaderContainer, LoginButton,Logo, Nav, NavContainer, NavItem } from './LandingHeader.styles'
+import {
+  HeaderContainer,
+  LoginButton,
+  Logo,
+  Nav,
+  NavContainer,
+  NavItem
+} from './LandingHeader.styles'
 
 const LandingHeader: React.FC = () => {
   return (

@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 
 interface SubsectionProps {
-  num: string;
+  num: string
 }
 
 export const LandingPageContainer = styled.div`
@@ -97,7 +97,6 @@ export const RightSide = styled.div`
       background-color: transparent;
       border-radius: 2px;
     }
-
   }
 `
 
@@ -136,7 +135,6 @@ export const Section2Content = styled.div`
   align-items: center;
   text-align: center;
   margin: 40px;
-  
 
   p {
     font-size: 20px;
@@ -203,7 +201,7 @@ export const Subsection = styled.div<SubsectionProps>`
       position: relative;
 
       &::before {
-        content: '${props => props.num}';
+        content: '${(props) => props.num}';
         font-size: 40px;
         margin-right: 10px;
         position: absolute;
@@ -222,7 +220,6 @@ export const Subsection = styled.div<SubsectionProps>`
               return 'black'
           }
         }};
-        
       }
     }
 

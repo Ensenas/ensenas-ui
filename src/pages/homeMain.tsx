@@ -1,8 +1,16 @@
 import { useSession } from 'next-auth/react'
 import React from 'react'
 
-import { ContentContainer, Image, Recommendations, RecommendationsTitle, Section, VideoItem, 
-  VideoList, WelcomeTitle } from '../styles/HomeMain.styles'
+import {
+  ContentContainer,
+  Image,
+  Recommendations,
+  RecommendationsTitle,
+  Section,
+  VideoItem,
+  VideoList,
+  WelcomeTitle
+} from '../styles/HomeMain.styles'
 
 const HomeMain: React.FC = () => {
   const { data: session } = useSession()
@@ -12,10 +20,10 @@ const HomeMain: React.FC = () => {
       <WelcomeTitle>¡Bienvenido, {session?.user?.name}!</WelcomeTitle>
       <ContentContainer>
         <p style={{ fontSize: '1.2em', color: '#666' }}>
-          ¡Te damos la bienvenida a nuestra plataforma de aprendizaje de lenguaje de señas! 
+          ¡Te damos la bienvenida a nuestra plataforma de aprendizaje de lenguaje de señas!
         </p>
         <p style={{ fontSize: '1.2em', color: '#666' }}>
-          Estamos emocionados de que te hayas unido a nosotros en esta jornada para aprender y 
+          Estamos emocionados de que te hayas unido a nosotros en esta jornada para aprender y
           conectar a través de este hermoso y esencial lenguaje.
         </p>
         <p style={{ fontSize: '1.2em', color: '#666' }}>

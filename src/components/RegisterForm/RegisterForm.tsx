@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import axios from 'axios'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
@@ -44,9 +45,9 @@ const RegisterForm = () => {
         fetchCountries()
     }, [])
 
-    const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setEmail(event.target.value)
-    }
+  const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(event.target.value)
+  }
 
     const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setPassword(event.target.value)
@@ -231,3 +232,4 @@ const RegisterForm = () => {
 }
 
 export default RegisterForm
+

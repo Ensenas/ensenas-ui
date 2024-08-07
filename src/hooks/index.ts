@@ -1,7 +1,7 @@
 import { useSession } from 'next-auth/react'
 import { useEffect, useState } from 'react'
 
-import { delay } from '@/utils'
+import { delay } from '../utils'
 
 export const useLoadingView = () => {
   const [loadingView, setLoadingView] = useState(true)

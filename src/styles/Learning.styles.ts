@@ -9,7 +9,7 @@ export const Section = styled.div`
 `
 
 export const Title = styled.h2`
-  margin: 0;  
+  margin: 0;
   margin-bottom: 2rem;
 `
 
@@ -61,7 +61,7 @@ export const ProgressContainer = styled.div`
 `
 
 export const ProgressBarContainer = styled.div`
-  width: 60%; 
+  width: 60%;
   background: #e0e0e0;
   border-radius: 10px;
   overflow: hidden;
@@ -71,7 +71,6 @@ export const ProgressBarContainer = styled.div`
 export const ProgressBar = styled.div`
   height: 20px;
   background: #0567b1;
-  width: ${({ progress }) => progress}%;
 `
 
 export const ProgressPercentage = styled.span`

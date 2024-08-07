@@ -1,32 +1,33 @@
+/* eslint-disable no-console */
 import axios from 'axios'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { signIn, useSession } from 'next-auth/react'
-import React, { useEffect,useState } from 'react'
-import { AiOutlineUnlock, AiOutlineUser } from 'react-icons/ai'
+import React, { useEffect, useState } from 'react'
+import { AiOutlineMail, AiOutlineUnlock, AiOutlineUser } from 'react-icons/ai'
 
 import AppLogoTitle from '../AppLogoTitle'
 import Button from '../Button'
 import GoogleSignInButton from '../Button/GoogleButton'
 import ErrorModal from '../ErrorModal/ErrorModal'
 import {
-    Form,
-    FormContainer,
-    FormTitle,
-    InfoText,
-    InfoTextContainer,
-    Link,
-    MainContainer,
-    SignImage
+  Form,
+  FormContainer,
+  FormTitle,
+  InfoText,
+  InfoTextContainer,
+  Link,
+  MainContainer,
+  SignImage
 } from './FormElements'
 import InputField from './InputField'
 
 const LoginForm = () => {
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-    const [error, setError] = useState<string | null>(null)
-    const router = useRouter()
-    const { data: session, status } = useSession()
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState<string | null>(null)
+  const router = useRouter()
+  const { status, session } = useSession()
 
     useEffect(() => {
         console.log('Session data:', session)
@@ -36,13 +37,13 @@ const LoginForm = () => {
         }
     }, [])
 
-    const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setEmail(event.target.value)
-    }
+  const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(event.target.value)
+  }
 
-    const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setPassword(event.target.value)
-    }
+  const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(event.target.value)
+  }
 
     const handleGoogleClick = async () => {
         try {
@@ -86,67 +87,54 @@ const LoginForm = () => {
         }
     }
 
-    return (
-        <MainContainer>
-            <SignImage />
-            <FormContainer>
-                <Head>
-                    <title>Enseñas - Iniciar Sesión</title>
-                </Head>
-                <Form onSubmit={handleLogin}>
-                    <AppLogoTitle />
-                    <FormTitle>¡La mejor forma para aprender lengua de señas!</FormTitle>
+  return (
+    <MainContainer>
+      <SignImage />
+      <FormContainer>
+        <Head>
+          <title>Enseñas - Iniciar Sesión</title>
+        </Head>
+        <Form onSubmit={handleLogin}>
+          <AppLogoTitle />
+          <FormTitle>¡La mejor forma para aprender lengua de señas!</FormTitle>
 
-                    <InputField
-                        placeholder='Usuario'
-                        type='email'
-                        icon={<AiOutlineUser />}
-                        value={email}
-                        onChange={handleEmailChange}
-                        required
-                    />
+          <InputField
+            placeholder="Usuario"
+            type="email"
+            icon={<AiOutlineUser />}
+            value={email}
+            onChange={handleEmailChange}
+            required
+          />
 
-                    <InputField
-                        placeholder='Contraseña'
-                        type='password'
-                        icon={<AiOutlineUnlock />}
-                        value={password}
-                        onChange={handlePasswordChange}
-                        required
-                    />
+          <InputField
+            placeholder="Contraseña"
+            type="password"
+            icon={<AiOutlineUnlock />}
+            value={password}
+            onChange={handlePasswordChange}
+            required
+          />
 
-                    <Link href="/forgot-password">
-                        ¿Olvidaste tu contraseña?
-                    </Link>
+          <Link href="/forgot-password">¿Olvidaste tu contraseña?</Link>
 
-                    <Button
-                        type='submit'
-                        title='Iniciar Sesión'
-                    />
-                    <span>ó</span>
-                    <GoogleSignInButton onClick={handleGoogleClick} />
+          <Button type="submit" title="Iniciar Sesión" />
+          <span>ó</span>
+          <GoogleSignInButton onClick={handleGoogleClick} />
 
-                    <InfoTextContainer>
-                        <InfoText>
-                            ¿No tienes tu cuenta?
-                        </InfoText>
+          <InfoTextContainer>
+            <InfoText>¿No tienes tu cuenta?</InfoText>
 
-                        <Link href='/signup'>
-                            ¡Regístrate!
-                        </Link>
-                    </InfoTextContainer>
-                    {error && (
-                        <ErrorModal
-                            isOpen={!!error}
-                            onRequestClose={() => setError(null)}
-                            message={error}
-                        />
-                    )}
-                </Form>
-            </FormContainer>
-            <SignImage />
-        </MainContainer>
-    )
+            <Link href="/signup">¡Regístrate!</Link>
+          </InfoTextContainer>
+          {error && (
+            <ErrorModal isOpen={!!error} onRequestClose={() => setError(null)} message={error} />
+          )}
+        </Form>
+      </FormContainer>
+      <SignImage />
+    </MainContainer>
+  )
 }
 
 export default LoginForm

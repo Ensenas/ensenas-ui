@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { signOut } from 'next-auth/react'
 import React from 'react'
 
@@ -21,9 +22,7 @@ const HomeHeader: React.FC = () => {
         </SearchButton>
         <input type="text" placeholder="Buscar lección" />
       </SearchInput>
-      <LogoutButton onClick={handleSignOut}>
-        Cerrar Sesión
-      </LogoutButton>
+      <LogoutButton onClick={handleSignOut}>Cerrar Sesión</LogoutButton>
     </HeaderContainer>
   )
 }

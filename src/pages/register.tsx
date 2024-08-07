@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { BackLink, RegisterContainer } from '../components/RegisterForm/FormElements'
 import RegisterForm from '../components/RegisterForm/RegisterForm'
 
-const RegisterPage: NextPage = () =>  {
+const RegisterPage: NextPage = () => {
   return (
     <RegisterContainer>
       <Link href="/" passHref>

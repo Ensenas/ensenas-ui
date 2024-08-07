@@ -1,10 +1,26 @@
 import React from 'react'
 
 import ProtectedRoute from '../components/ProtectedRoute'
-import { CompletedLessonDescription, CompletedLessonItem, CompletedLessonPreview, 
-  CompletedLessonsList, CompletedLessonTitle, LessonDescription, LessonDetails, LessonInfo, 
-  LessonItem, LessonList, LessonTitle, ProgressBar, ProgressBarContainer, ProgressContainer, 
-  ProgressPercentage, Section, Title, VideoPreview } from '../styles/Learning.styles'
+import {
+  CompletedLessonDescription,
+  CompletedLessonItem,
+  CompletedLessonPreview,
+  CompletedLessonsList,
+  CompletedLessonTitle,
+  LessonDescription,
+  LessonDetails,
+  LessonInfo,
+  LessonItem,
+  LessonList,
+  LessonTitle,
+  ProgressBar,
+  ProgressBarContainer,
+  ProgressContainer,
+  ProgressPercentage,
+  Section,
+  Title,
+  VideoPreview
+} from '../styles/Learning.styles'
 
 const lessons = [
   {
@@ -56,7 +72,7 @@ const MyLearning: React.FC = () => {
                 </LessonDetails>
                 <ProgressContainer>
                   <ProgressBarContainer>
-                    <ProgressBar progress={lesson.progress} />
+                    <ProgressBar />
                   </ProgressBarContainer>
                   <ProgressPercentage>{lesson.progress}%</ProgressPercentage>
                 </ProgressContainer>
@@ -74,7 +90,6 @@ const MyLearning: React.FC = () => {
             </CompletedLessonItem>
           ))}
         </CompletedLessonsList>
-
       </Section>
     </ProtectedRoute>
   )

@@ -1,3 +1,4 @@
+import { useSession } from 'next-auth/react'
 import React, { useEffect,useState } from 'react'
 import { FaEdit, FaSave } from 'react-icons/fa' // Para el icono del lápiz
 
@@ -22,12 +23,13 @@ const Profile: React.FC = () => {
   useEffect(() => {
     const fetchProfileData = async () => {
       try {
-        const response = await fetch('/api/auth/profile', {
+        const response = await fetch('/ens-api/auth/profile', {
           method: 'GET',
           headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}` // Asumiendo que el token está almacenado en localStorage
+            'Authorization': `Bearer ${localStorage.getItem('authToken')}`
           }
         })
+        console.log(`Bearer ${localStorage.getItem('authToken')}`)
         if (!response.ok) {
           throw new Error('Error al obtener los datos del perfil')
         }
@@ -46,27 +48,27 @@ const Profile: React.FC = () => {
     setIsEditing(!isEditing)
   }
 
-  const handleSave = async (e) => {
-    e.preventDefault()
-    try {
-      const response = await fetch('http://54.241.26.30:3001/profile', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-        body: JSON.stringify(profileData)
-      })
-      if (!response.ok) {
-        throw new Error('Error al guardar los datos del perfil')
-      }
-      const data = await response.json()
-      setProfileData(data)
-      setIsEditing(false)
-    } catch (error) {
-      setError(error.message)
-    }
-  }
+  // const handleSave = async (e) => {
+  //   e.preventDefault()
+  //   try {
+  //     const response = await fetch('http://54.241.26.30:3001/profile', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         'Authorization': `Bearer ${localStorage.getItem('token')}`
+  //       },
+  //       body: JSON.stringify(profileData)
+  //     })
+  //     if (!response.ok) {
+  //       throw new Error('Error al guardar los datos del perfil')
+  //     }
+  //     const data = await response.json()
+  //     setProfileData(data)
+  //     setIsEditing(false)
+  //   } catch (error) {
+  //     setError(error.message)
+  //   }
+  // }
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -84,7 +86,8 @@ const Profile: React.FC = () => {
       <Section>
         <Header>
           <Title>Mi Perfil</Title>
-          <EditButton onClick={isEditing ? handleSave : toggleEdit}>
+          {/* <EditButton onClick={isEditing ? handleSave : toggleEdit}> */}
+          <EditButton>
             {isEditing ? <FaSave style={{ marginRight: '5px' }} /> : <FaEdit style={{ marginRight: '5px' }} />}
             {isEditing ? 'Guardar' : 'Editar'}
           </EditButton>

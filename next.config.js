@@ -5,7 +5,7 @@ const nextConfig = {
     async rewrites() {
         return [
             {
-                source: '/api/:path',
+                source: '/ens-api/:path*',
                 destination: `${process.env.BACKEND_URL}/:path*`
             }
         ]

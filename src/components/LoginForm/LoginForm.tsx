@@ -1,3 +1,4 @@
+import axios from 'axios'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { signIn, useSession } from 'next-auth/react'
@@ -29,10 +30,11 @@ const LoginForm = () => {
 
     useEffect(() => {
         console.log('Session data:', session)
-        if (status === 'authenticated') {
-            router.push('/home')
+        const token = localStorage.getItem('authToken')
+        if (status === 'authenticated' || token ) {
+            router.replace('/home')
         }
-    }, [status, session, router])
+    }, [])
 
     const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setEmail(event.target.value)
@@ -48,7 +50,7 @@ const LoginForm = () => {
                 redirect: false // Prevent automatic redirection
             })
             if (signInResponse && !signInResponse.error) {
-                router.push('/home')
+                router.replace('/home')
             } else if (signInResponse.error) {
                 setError('Error en la autenticación con Google')
             }
@@ -60,23 +62,27 @@ const LoginForm = () => {
 
     const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
+
         try {
-            console.log(status)
-            const response = await signIn('credentials', {
-                redirect: false,
-                email,
+            const response = await axios.post('/ens-api/auth/login', {
+                mail: email,
                 password
             })
+            const { access_token } = response.data
+
+            console.log(access_token)
+            localStorage.setItem('authToken', access_token)
+
             console.log(response)
-            if (response && !response.error) {
+            if (response) {
+                router.replace('/home')
                 router.reload()
-                console.log(status)
             } else {
-                setError('Tu email o contraseña son incorrectos')
+                setError(response)
             }
         } catch (error) {
-            console.error('Error de autenticación:', error)
-            setError('Error de autenticación')
+            console.error('Error de inicio de sesión:', error)
+            setError('Credenciales incorrectas.')
         }
     }
 

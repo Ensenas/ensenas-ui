@@ -22,15 +22,17 @@ const RegisterForm = () => {
     const [countryError, setCountryError] = useState('')
     const [birthDateError, setBirthDateError] = useState('') // Nuevo estado para el error de fecha
     const [countries, setCountries] = useState<SelectOption[]>([])
+    const [successMessage, setSuccessMessage] = useState<string | null>(null)
+
     const router = useRouter()
 
     useEffect(() => {
         const fetchCountries = async () => {
             try {
-                const response = await axios.get('https://restcountries.com/v3.1/all')
+                const response = await axios.get('/ens-api/countries')
                 const countryList = response.data.map((country: any) => ({
-                    value: country.cca2, // Usamos el código de país como valor
-                    label: country.name.common
+                    value: country.name, // Usamos el código de país como valor
+                    label: country.name
                 }))
                 countryList.sort((a, b) => a.label.localeCompare(b.label))
                 setCountries(countryList)
@@ -66,6 +68,7 @@ const RegisterForm = () => {
     
     const handleBirthDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setBirthDate(event.target.value)
+        validateBirthDate(event.target.value)
     }
     
     const handleCountryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -102,41 +105,47 @@ const RegisterForm = () => {
 
     const handleRegister = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
-
-        // Validación de fecha de nacimiento
+    
+        validatePassword(password, confirmPassword)
         validateBirthDate(birthDate)
-
+    
         if (passwordError || confirmPasswordError || countryError || birthDateError) {
             // No enviar el formulario si hay errores de validación
             return
         }
-
+    
         try {
-            const response = await fetch('/api/auth/sign-up', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    mail: email,
-                    password,
-                    name,
-                    surname,
-                    birthDate,
-                    country
-                })
+            const response = await axios.post('/ens-api/auth/sign-up', {
+                mail: email,
+                password,
+                name,
+                surname,
+                birthDate,
+                country
             })
-            
-            const data = await response.json()
-            if (data.success) {
-                router.push('/login') 
+    
+            console.log(response)
+    
+            const data = response.data
+            const status = response.status
+    
+            if (status === 200) {
+                // Mostrar mensaje de éxito
+                setSuccessMessage('Registro exitoso. Redirigiendo al inicio de sesión...')
+    
+                // Redirigir después de 2 segundos
+                setTimeout(() => {
+                    router.replace('/login')
+                }, 2000)
             } else {
                 throw new Error(data.message)
             }
-
         } catch (error) {
             console.error('Error de autenticación:', error)
             // Aquí podrías mostrar un mensaje de error al usuario
         }
     }
+    
 
     return (
         <Container>
@@ -144,6 +153,11 @@ const RegisterForm = () => {
                 <title>Enseñas - Registrate</title>
             </Head>
             <Form onSubmit={handleRegister}>
+                {successMessage && (
+                    <div style={{ color: 'green', marginBottom: '10px' }}>
+                        {successMessage}
+                    </div>
+                )}
                 <FormTitle>Crea tu cuenta</FormTitle>
 
                 <FormRow>

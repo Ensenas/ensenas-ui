@@ -6,6 +6,7 @@ import { HeaderContainer, Logo, LogoutButton, SearchButton, SearchInput } from '
 
 const HomeHeader: React.FC = () => {
   const handleSignOut = () => {
+    localStorage.removeItem('authToken')
     signOut({ callbackUrl: '/' })
   }
 

@@ -1,13 +1,15 @@
 /* eslint-disable no-console */
+import axios from 'axios'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { signIn, useSession } from 'next-auth/react'
-import React, { useState } from 'react'
-import { AiOutlineUnlock, AiOutlineUser } from 'react-icons/ai'
+import React, { useEffect, useState } from 'react'
+import { AiOutlineMail, AiOutlineUnlock, AiOutlineUser } from 'react-icons/ai'
 
 import AppLogoTitle from '../AppLogoTitle'
 import Button from '../Button'
 import GoogleSignInButton from '../Button/GoogleButton'
+import ErrorModal from '../ErrorModal/ErrorModal'
 import {
   Form,
   FormContainer,
@@ -25,12 +27,15 @@ const LoginForm = () => {
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
   const router = useRouter()
-  const { status } = useSession()
+  const { status, session } = useSession()
 
-  if (status === 'authenticated') {
-    router.push('/home')
-    return null
-  }
+    useEffect(() => {
+        console.log('Session data:', session)
+        const token = localStorage.getItem('authToken')
+        if (status === 'authenticated' || token ) {
+            router.replace('/home')
+        }
+    }, [])
 
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value)
@@ -40,38 +45,47 @@ const LoginForm = () => {
     setPassword(event.target.value)
   }
 
-  const handleGoogleClick = async () => {
-    try {
-      const signInResponse = await signIn('google', {
-        redirect: false // Prevent automatic redirection
-      })
-      if (signInResponse && !signInResponse.error) {
-        router.push('/home')
-      }
-    } catch (error) {
-      console.error('Error en la autenticación con Google:', error)
-      setError('Error en la autenticación con Google')
+    const handleGoogleClick = async () => {
+        try {
+            const signInResponse = await signIn('google', {
+                redirect: false // Prevent automatic redirection
+            })
+            if (signInResponse && !signInResponse.error) {
+                router.replace('/home')
+            } else if (signInResponse.error) {
+                setError('Error en la autenticación con Google')
+            }
+        } catch (error) {
+            console.error('Error en la autenticación con Google:', error)
+            setError('Error en la autenticación con Google')
+        }
     }
-  }
 
-  const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    try {
-      const response = await signIn('credentials', {
-        redirect: false,
-        email,
-        password
-      })
-      if (response && !response.error) {
-        router.push('/home')
-      } else {
-        setError('Tu email o contraseña son incorrectos')
-      }
-    } catch (error) {
-      console.error('Error de autenticación:', error)
-      setError('Error de autenticación')
+    const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault()
+
+        try {
+            const response = await axios.post('/ens-api/auth/login', {
+                mail: email,
+                password
+            })
+            const { access_token } = response.data
+
+            console.log(access_token)
+            localStorage.setItem('authToken', access_token)
+
+            console.log(response)
+            if (response) {
+                router.replace('/home')
+                router.reload()
+            } else {
+                setError(response)
+            }
+        } catch (error) {
+            console.error('Error de inicio de sesión:', error)
+            setError('Credenciales incorrectas.')
+        }
     }
-  }
 
   return (
     <MainContainer>
@@ -114,8 +128,7 @@ const LoginForm = () => {
             <Link href="/signup">¡Regístrate!</Link>
           </InfoTextContainer>
           {error && (
-            //<!---<ErrorModal isOpen={!!error} onRequestClose={() => setError(null)} message={error} />--!>
-            <div>TODO: AGREGAR ERRORMODAL</div>
+            <ErrorModal isOpen={!!error} onRequestClose={() => setError(null)} message={error} />
           )}
         </Form>
       </FormContainer>

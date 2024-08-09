@@ -2,16 +2,16 @@ import React, { useState } from 'react'
 
 import { InputProps } from '../../types/propTypes'
 import {
-  Container,
-  HidePassIcon,
-  Input,
-  InputContainer,
-  Label,
-  ShowPassIcon
-} from './InputFieldElements'
+    Container,
+    ErrorText, // Asegúrate de que este estilo esté definido en InputFieldElements
+    HidePassIcon,
+    Input,
+    InputContainer,
+    Label,
+    ShowPassIcon} from './InputFieldElements'
 
-const InputField = ({ label, placeholder, icon, type, required, value, onChange }: InputProps) => {
-  const [showPassword, setShowPassword] = useState(false)
+const InputField = ({ label, placeholder, icon, type, required, value, onChange, error }: InputProps) => {
+    const [showPassword, setShowPassword] = useState(false)
 
   const togglePasswordIcon = () => {
     setShowPassword(!showPassword)
@@ -41,10 +41,16 @@ const InputField = ({ label, placeholder, icon, type, required, value, onChange 
           onChange={onChange}
         />
 
-        {type === 'password' && renderPasswordIcon()}
-      </InputContainer>
-    </Container>
-  )
+                {
+                    type === 'password' &&
+                    renderPasswordIcon()
+                }
+            </InputContainer>
+            
+            {/* Mostrar el mensaje de error si existe */}
+            {error && <ErrorText>{error}</ErrorText>}
+        </Container>
+    )
 }
 
 export default InputField

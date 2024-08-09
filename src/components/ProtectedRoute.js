@@ -9,8 +9,8 @@ const ProtectedRoute = ({ children }) => {
   const router = useRouter()
 
   useEffect(() => {
-    if (status === 'unauthenticated') {
-      router.push('/login')
+    if (status === 'unauthenticated' && !localStorage.getItem('authToken')) {
+      router.replace('/login')
     }
   }, [status])
 
@@ -18,7 +18,7 @@ const ProtectedRoute = ({ children }) => {
     return <div>Cargando...</div>
   }
 
-  if (status === 'unauthenticated') {
+  if (status === 'unauthenticated' && !localStorage.getItem('authToken')) {
     return null
   }
 

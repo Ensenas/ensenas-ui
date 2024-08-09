@@ -44,3 +44,9 @@ export const ShowPassIcon = styled(BsEye)`
 export const HidePassIcon = styled(BsEyeSlash)`
   ${EyeIcon}
 `
+
+export const ErrorText = styled.span`
+    color: red;
+    font-size: 0.875rem; // Ajusta el tamaño del texto según sea necesario
+    margin-top: 0.25rem;
+`

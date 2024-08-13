@@ -1,13 +1,13 @@
 import React from 'react'
 
 import ProtectedRoute from '../components/ProtectedRoute'
+import VideoRecorder from '../components/Recorder/VideoRecorder'
 import {
     CompletedLessonDescription, CompletedLessonItem, CompletedLessonPreview,
     CompletedLessonsList, CompletedLessonTitle, LessonDescription, LessonDetails, LessonInfo,
     LessonItem, LessonList, LessonTitle, ProgressBar, ProgressBarContainer, ProgressContainer,
     ProgressPercentage, Section, Title, VideoPreview
 } from '../styles/Learning.styles'
-import VideoRecorder from '../components/Recorder/VideoRecorder'
 
 const lessons = [
     {
@@ -43,7 +43,7 @@ const completedLessons = [
     // Agrega más lecciones completadas según sea necesario
 ]
 
-const MyLearning: React.FC = () => {
+const Lesson: React.FC = () => {
     return (
         <ProtectedRoute>
             <Section>
@@ -66,4 +66,4 @@ const MyLearning: React.FC = () => {
     )
 }
 
-export default MyLearning
+export default Lesson

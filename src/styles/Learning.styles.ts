@@ -1,3 +1,4 @@
+/*
 import styled from 'styled-components'
 
 export const Section = styled.div`
@@ -38,7 +39,7 @@ export const LessonInfo = styled.div`
   flex: 1;
   display: flex;
   align-items: center;
-  justify-content: space-between; /* Ajusta la distribución horizontal */
+  justify-content: space-between;
 `
 
 export const LessonDetails = styled.div`
@@ -80,12 +81,12 @@ export const ProgressPercentage = styled.span`
 
 export const CompletedLessonsList = styled.div`
   display: flex;
-  flex-wrap: wrap; /* Permite que los elementos se ajusten en varias filas si es necesario */
-  gap: 20px; /* Espacio entre los elementos */
+  flex-wrap: wrap;
+  gap: 20px; 
 `
 
 export const CompletedLessonItem = styled.div`
-  width: 150px; /* Ajusta el ancho según el diseño */
+  width: 150px;
 `
 
 export const CompletedLessonPreview = styled.img`
@@ -102,4 +103,58 @@ export const CompletedLessonDescription = styled.p`
   margin: 0;
   font-size: 0.8em;
   color: #666;
+`
+
+*/
+
+// styles/Learning.styles.ts
+
+import styled from 'styled-components'
+
+export const Section = styled.section`
+  padding: 20px;
+`
+
+export const Title = styled.h1`
+  font-size: 2rem;
+  margin-bottom: 20px;
+`
+
+export const LevelCard = styled.a`
+  display: block;
+  background: #f0f0f0;
+  padding: 20px;
+  margin: 10px;
+  border-radius: 8px;
+  text-align: center;
+  cursor: pointer;
+  transition: background 0.3s;
+
+  &:hover {
+    background: #e0e0e0;
+  }
+`
+
+export const UnitCard = styled.a`
+  display: block;
+  background: #f9f9f9;
+  padding: 15px;
+  margin: 10px;
+  border-radius: 8px;
+  text-align: center;
+  cursor: pointer;
+  transition: background 0.3s;
+
+  &:hover {
+    background: #f0f0f0;
+  }
+`
+
+export const LessonItem = styled.div`
+  margin: 10px 0;
+`
+
+export const LessonTitle = styled.h2`
+  font-size: 1.5rem;
+  cursor: pointer;
 `

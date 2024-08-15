@@ -1,4 +1,6 @@
+/*
 import React from 'react'
+import Link from 'next/link'
 
 import ProtectedRoute from '../components/ProtectedRoute'
 import {
@@ -64,10 +66,14 @@ const MyLearning: React.FC = () => {
         <LessonList>
           {lessons.map((lesson) => (
             <LessonItem key={lesson.id}>
-              <VideoPreview src={lesson.videoSrc} alt={`Preview de ${lesson.title}`} />
+              <Link href={`/lessons/${lesson.id}`} passHref>
+                <VideoPreview src={lesson.videoSrc} alt={`Preview de ${lesson.title}`} />
+              </Link>
               <LessonInfo>
                 <LessonDetails>
-                  <LessonTitle>{lesson.title}</LessonTitle>
+                  <Link href={`/lessons/${lesson.id}`} passHref>
+                    <LessonTitle>{lesson.title}</LessonTitle>
+                  </Link>
                   <LessonDescription>{lesson.description}</LessonDescription>
                 </LessonDetails>
                 <ProgressContainer>
@@ -92,6 +98,62 @@ const MyLearning: React.FC = () => {
         </CompletedLessonsList>
       </Section>
     </ProtectedRoute>
+  )
+}
+
+export default MyLearning
+*/
+
+import React, { useEffect, useState } from 'react'
+import Link from 'next/link'
+import ProtectedRoute from '../components/ProtectedRoute'
+import {
+  LevelCard,
+  Section,
+  Title
+} from '../styles/Learning.styles'
+
+const MyLearning: React.FC = () => {
+  const [levels, setLevels] = useState<any[]>([])
+
+  /*
+useEffect(() => {
+  // Simula una llamada al backend para obtener los niveles
+  fetch('/api/levels')
+    .then(response => response.json())
+    .then(data => setLevels(data))
+    .catch(error => console.error('Error fetching levels:', error))
+}, [])
+*/
+  useEffect(() => {
+    // Simula una llamada al backend para obtener los niveles
+    const mockLevels = [
+      { id: 1, title: 'Nivel 1: Introducción' },
+      { id: 2, title: 'Nivel 2: Intermedio' },
+      { id: 3, title: 'Nivel 3: Avanzado' }
+    ]
+
+    // Simula un pequeño retraso para imitar la llamada a una API
+    setTimeout(() => {
+      setLevels(mockLevels)
+    }, 500) // Retraso de 500ms
+  }, [])
+
+  return (
+    <ProtectedRoute>
+      <Section>
+        <Title>Niveles de Aprendizaje</Title>
+        <div>
+          {levels.map(level => (
+            <Link key={level.id} href={`/myLearning/levels/${level.id}`} passHref>
+              <LevelCard>
+                <h3>{level.title}</h3>
+              </LevelCard>
+            </Link>
+          ))}
+        </div>
+      </Section>
+    </ProtectedRoute >
   )
 }
 

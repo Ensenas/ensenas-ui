@@ -1,3 +1,4 @@
+/*
 import React from 'react'
 
 import ProtectedRoute from '../components/ProtectedRoute'
@@ -67,3 +68,69 @@ const Lesson: React.FC = () => {
 }
 
 export default Lesson
+
+*/
+
+// pages/myLearning/levels/[levelId]/units/[unitId].tsx
+
+import React, { useEffect, useState } from 'react'
+import { useRouter } from 'next/router'
+import ProtectedRoute from '../components/ProtectedRoute'
+import {
+    LessonItem,
+    LessonTitle,
+    Section,
+    Title
+} from '../styles/Learning.styles'
+import Link from 'next/link'
+
+const UnitLessons: React.FC = () => {
+    const router = useRouter()
+    const { levelId, unitId } = router.query
+    const [lessons, setLessons] = useState<any[]>([])
+
+    /*
+    useEffect(() => {
+      if (levelId && unitId) {
+        // Simula una llamada al backend para obtener las lecciones de la unidad
+        fetch(`/api/levels/${levelId}/units/${unitId}/lessons`)
+          .then(response => response.json())
+          .then(data => setLessons(data))
+          .catch(error => console.error('Error fetching lessons:', error))
+      }
+    }, [levelId, unitId])
+    */
+
+    useEffect(() => {
+        // Simula una llamada al backend para obtener los niveles
+        const mockLessons = [
+            { id: 1, title: 'Unidad 1: A' },
+            { id: 2, title: 'Unidad 2: B' },
+            { id: 3, title: 'Unidad 3: C' }
+        ]
+
+        // Simula un pequeño retraso para imitar la llamada a una API
+        setTimeout(() => {
+            setLessons(mockLessons)
+        }, 500) // Retraso de 500ms
+    }, [])
+
+    return (
+        <ProtectedRoute>
+            <Section>
+                <Title>Lecciones de la Unidad</Title>
+                <div>
+                    {lessons.map(lesson => (
+                        <LessonItem key={lesson.id}>
+                            <Link href={`/myLearning/levels/${levelId}/units/${unitId}/lessons/${lesson.id}`} passHref>
+                                <LessonTitle>{lesson.title}</LessonTitle>
+                            </Link>
+                        </LessonItem>
+                    ))}
+                </div>
+            </Section>
+        </ProtectedRoute>
+    )
+}
+
+export default UnitLessons

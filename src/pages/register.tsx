@@ -7,9 +7,7 @@ import RegisterForm from '../components/RegisterForm/RegisterForm'
 const RegisterPage: NextPage = () => {
   return (
     <RegisterContainer>
-      <Link href="/" passHref>
-        <BackLink>&lt; Volver Atrás</BackLink>
-      </Link>
+      <BackLink href="/" passHref>&lt; Volver Atrás</BackLink>
       <RegisterForm />
     </RegisterContainer>
   )

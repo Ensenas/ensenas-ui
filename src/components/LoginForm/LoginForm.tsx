@@ -16,7 +16,7 @@ import {
     FormTitle,
     InfoText,
     InfoTextContainer,
-    Link,
+    NLink,
     MainContainer,
     SignImage
 } from './FormElements'
@@ -134,9 +134,9 @@ const LoginForm = () => {
                         required
                     />
 
-                    <Link href="/forgot-password">
+                    <NLink href="/forgot-password">
                         ¿Olvidaste tu contraseña?
-                    </Link>
+                    </NLink>
 
                     <Button
                         type='submit'
@@ -150,9 +150,9 @@ const LoginForm = () => {
                             ¿No tienes tu cuenta?
                         </InfoText>
 
-                        <Link href='/signup'>
+                        <NLink href='/signup'>
                             ¡Regístrate!
-                        </Link>
+                        </NLink>
                     </InfoTextContainer>
                     {error && (
                         <ErrorModal

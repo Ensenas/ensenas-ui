@@ -1,4 +1,5 @@
 import NextLink from 'next/link'
+import Link from 'next/link'
 import styled from 'styled-components'
 
 export const RegisterContainer = styled.div`
@@ -7,7 +8,7 @@ export const RegisterContainer = styled.div`
   background-color: #f9f9f9;
 `
 
-export const BackLink = styled.a`
+export const BackLink = styled(Link)`
   display: inline-block;
   color: #0567b1;
   text-decoration: none;
@@ -15,6 +16,7 @@ export const BackLink = styled.a`
   font-size: 1em;
   cursor: pointer;
   transition: color 0.3s;
+  margin-bottom: 20px;
 
   &:hover {
     color: #02365d;
@@ -26,7 +28,7 @@ export const Container = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  height: 100%;
   background-color: #f9f9f9;
 
   @media (max-width: 768px) {
@@ -41,7 +43,7 @@ export const Form = styled.form`
   transition: all 0.5s;
   background-color: #f7f9fa;
   width: 100%;
-  height: 90%;
+  height: 100%;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
   border-radius: 5px;
 
@@ -92,7 +94,7 @@ export const FormColumn = styled.div`
     margin-right: 20px;
   }
 `
-export const Link = styled(NextLink)`
+export const NLink = styled(NextLink)`
   color: #2b3a47;
   align-self: flex-end;
   transition: all 0.5s;

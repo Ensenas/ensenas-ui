@@ -1,13 +1,17 @@
 import styled from 'styled-components'
 
 export const HeaderContainer = styled.header`
+  position: fixed; /* Fija el header en la parte superior */
+  top: 0;
+  left: 0;
+  width: 100%; /* Asegura que el header ocupe el ancho completo */
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0px 20px;
   background-color: #f0f0f0; /* Color de fondo gris claro */
   color: #333; /* Color del texto */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 1000; 
 `
 
 export const Logo = styled.div`

@@ -3,7 +3,7 @@ import axios from 'axios'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { signIn, useSession } from 'next-auth/react'
-import React, { useEffect,useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { AiOutlineUnlock, AiOutlineUser } from 'react-icons/ai'
 
 import AppLogoTitle from '../AppLogoTitle'
@@ -32,10 +32,12 @@ const LoginForm = () => {
     useEffect(() => {
         console.log('Session data:', session)
         const token = localStorage.getItem('authToken')
-        if (status === 'authenticated' || token ) {
+        console.log(status)
+        if (status === 'authenticated' || token) {
             router.replace('/home')
+            console.log('Session data:', session)
         }
-    }, [])
+    }, [session, status])
 
     const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setEmail(event.target.value)
@@ -50,8 +52,6 @@ const LoginForm = () => {
             const signInResponse = await signIn('google', {
                 redirect: false // Prevent automatic redirection
             })
-            console.log('PRUEBA')
-            console.log(signInResponse)
             if (signInResponse && !signInResponse.error) {
                 router.replace('/home')
             } else if (signInResponse.error) {
@@ -70,22 +70,38 @@ const LoginForm = () => {
             const response = await axios.post('/ens-api/auth/login', {
                 mail: email,
                 password
-            })
-            const { access_token } = response.data
+            });
 
-            console.log(access_token)
-            localStorage.setItem('authToken', access_token)
+            const { access_token } = response.data;
 
             console.log(response)
-            if (response) {
-                router.replace('/home')
-                router.reload()
+            if (access_token) {
+
+                localStorage.setItem('authToken', access_token);
+
+                // Inicia sesión con next-auth usando credenciales
+                const signInResponse = await signIn('credentials', {
+                    redirect: false,
+                    email,
+                    password
+                });
+
+                console.log(signInResponse)
+                if (signInResponse?.error) {
+                    setError(signInResponse.error)
+                } else if (signInResponse?.ok) {
+                    router.replace('/home')
+                    router.reload()
+                    console.log(session)
+                } else {
+                    setError('Error desconocido.');
+                }
             } else {
-                setError(response)
+                setError('Error al obtener el token.');
             }
         } catch (error) {
-            console.error('Error de inicio de sesión:', error)
-            setError('Credenciales incorrectas.')
+            console.error('Error de inicio de sesión:', error);
+            setError('Credenciales incorrectas.');
         }
     }
 

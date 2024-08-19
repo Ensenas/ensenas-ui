@@ -150,6 +150,20 @@ export const UnitCard = styled.a`
   }
 `
 
+export const LessonCard = styled.a`
+  display: block;
+  background: #f9f9f9;
+  padding: 15px;
+  margin: 10px;
+  border-radius: 8px;
+  text-align: center;
+  cursor: pointer;
+  transition: background 0.3s;
+
+  &:hover {
+    background: #f0f0f0;
+  }
+`
 export const LessonItem = styled.div`
   margin: 10px 0;
 `

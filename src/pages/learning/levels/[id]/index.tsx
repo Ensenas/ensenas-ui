@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react'
+import axios from 'axios'
 import { useRouter } from 'next/router'
+import React, { useEffect, useState } from 'react'
+
 import ProtectedRoute from '../../../../components/ProtectedRoute'
 import {
-    UnitCard,
     Section,
-    Title
-} from '../../../../styles/Learning.styles'
-import axios from 'axios';
+    Title,
+    UnitCard} from '../../../../styles/Learning.styles'
 
 interface LevelUnitsProps {
     currentLevel: number;
@@ -44,7 +44,10 @@ const LevelUnits: React.FC<LevelUnitsProps> = ({ currentLevel, setCurrentUnit })
             let filteredUnits: any[] = []
             switch (currentLevel) {
                 case 2:
+                    console.log('Paso por E')
                     filteredUnits = allUnits.filter(unit => unit.title.startsWith('E'))
+                    console.log('allUnits ', allUnits)
+                    console.log('filteredUnits', filteredUnits)
                     break
                 case 3:
                     filteredUnits = allUnits.filter(unit => unit.title.startsWith('I'))
@@ -54,9 +57,10 @@ const LevelUnits: React.FC<LevelUnitsProps> = ({ currentLevel, setCurrentUnit })
                     break
 
             }
+            console.log(filteredUnits)
             setUnits(filteredUnits)
         }
-    }, [currentLevel])
+    }, [currentLevel, allUnits])
 
     const handleUnitClick = (unitId: number) => {
         setCurrentUnit(unitId) // Actualiza el estado de la unidad actual

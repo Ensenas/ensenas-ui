@@ -87,9 +87,9 @@ import {
 import Achievements from './achievements'
 import HomeMain from './homeMain'
 import MyLearning from './learning'
-import Profile from './profile'
 import LevelUnits from './learning/levels/[id]/index'
 import UnitLessons from './learning/levels/[id]/units/[unitId]'
+import Profile from './profile'
 
 const navItems = [
   { label: 'Inicio', icon: '/icons/home-icon.png', href: '/home' },
@@ -108,20 +108,25 @@ const HomePage: React.FC = () => {
 
   useEffect(() => {
 
-    console.log('home', currentLevel)
-    console.log('home', currentUnit)
+    console.log('home Level', currentLevel)
+    console.log('home Unit', currentUnit)
+    console.log(activePage)
     if (activePage.startsWith('/learning') && currentLevel) {
-      if (currentUnit)
+      if (currentUnit){
         setActivePage(`/learning/levels/${currentLevel}/units/${currentUnit}`)
-      setActivePage(`/learning/levels/${currentLevel}`)
+      }else{
+        setActivePage(`/learning/levels/${currentLevel}`)
+      }
     }
   }), [currentLevel, currentUnit]
 
 
   const handleNavigation = (href: string) => {
     setActivePage(href)
-    setCurrentLevel(null) // Reset level when navigating away from learning
-    setCurrentUnit(null)
+    if(!activePage.startsWith('/learning)')){
+      setCurrentLevel(null) // Reset level when navigating away from learning
+      setCurrentUnit(null)
+    }
   }
 
   return (
@@ -150,8 +155,10 @@ const HomePage: React.FC = () => {
             {activePage === '/learning' && <MyLearning setCurrentLevel={setCurrentLevel} />}
             {activePage === '/profile' && <Profile />}
             {activePage === '/achievements' && <Achievements />}
-            {activePage.startsWith('/learning/levels/') && currentLevel && !currentUnit && <LevelUnits currentLevel={currentLevel} setCurrentUnit={setCurrentUnit} />}
-            {activePage.startsWith(`/learning/levels/${currentLevel}/units/`) && currentUnit && <UnitLessons levelId={currentLevel} unitId={currentUnit} />}
+            {activePage.startsWith('/learning/levels/') && currentLevel && !currentUnit && 
+              <LevelUnits currentLevel={currentLevel} setCurrentUnit={setCurrentUnit} />}
+            {activePage.startsWith(`/learning/levels/${currentLevel}`) && currentUnit && 
+              <UnitLessons levelId={currentLevel} unitId={currentUnit} />}
           </ContentContainer>
         </HomePageWrapper>
       </div>

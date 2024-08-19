@@ -1,7 +1,8 @@
-/*
+// styles/Learning.styles.ts
+
 import styled from 'styled-components'
 
-export const Section = styled.div`
+export const Section = styled.section`
   margin: 20px;
   padding: 20px;
   background-color: #f9f9f9;
@@ -11,120 +12,13 @@ export const Section = styled.div`
 
 export const Title = styled.h2`
   margin: 0;
-  margin-bottom: 2rem;
-`
-
-export const LessonList = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 3rem;
-`
-
-export const LessonItem = styled.div`
-  display: flex;
-  align-items: center;
-  margin-bottom: 20px;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-`
-
-export const VideoPreview = styled.img`
-  width: 150px;
-  height: auto;
-  margin-right: 20px;
-`
-
-export const LessonInfo = styled.div`
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-`
-
-export const LessonDetails = styled.div`
-  flex: 1;
-`
-
-export const LessonTitle = styled.h3`
-  margin: 0;
-  font-size: 1em;
-`
-
-export const LessonDescription = styled.p`
-  margin: 5px 0 10px;
-`
-
-export const ProgressContainer = styled.div`
-  display: flex;
-  align-items: center;
-  width: 30%;
-`
-
-export const ProgressBarContainer = styled.div`
-  width: 60%;
-  background: #e0e0e0;
-  border-radius: 10px;
-  overflow: hidden;
-  margin-right: 10%;
-`
-
-export const ProgressBar = styled.div`
-  height: 20px;
-  background: #0567b1;
-`
-
-export const ProgressPercentage = styled.span`
-  font-size: 1em;
-  color: #0567b1;
-`
-
-export const CompletedLessonsList = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px; 
-`
-
-export const CompletedLessonItem = styled.div`
-  width: 150px;
-`
-
-export const CompletedLessonPreview = styled.img`
-  width: 100%;
-  height: auto;
-`
-
-export const CompletedLessonTitle = styled.h4`
-  margin: 10px 0 5px;
-  font-size: 0.9em;
-`
-
-export const CompletedLessonDescription = styled.p`
-  margin: 0;
-  font-size: 0.8em;
-  color: #666;
-`
-
-*/
-
-// styles/Learning.styles.ts
-
-import styled from 'styled-components'
-
-export const Section = styled.section`
-  padding: 20px;
-`
-
-export const Title = styled.h1`
-  font-size: 2rem;
-  margin-bottom: 20px;
 `
 
 export const LevelCard = styled.a`
   display: block;
   background: #f0f0f0;
   padding: 20px;
-  margin: 10px;
+  margin: 20px;
   border-radius: 8px;
   text-align: center;
   cursor: pointer;
@@ -137,7 +31,7 @@ export const LevelCard = styled.a`
 
 export const UnitCard = styled.a`
   display: block;
-  background: #f9f9f9;
+  background: #f0f0f0;
   padding: 15px;
   margin: 10px;
   border-radius: 8px;
@@ -146,13 +40,13 @@ export const UnitCard = styled.a`
   transition: background 0.3s;
 
   &:hover {
-    background: #f0f0f0;
+    background: #e0e0e0;
   }
 `
 
 export const LessonCard = styled.a`
   display: block;
-  background: #f9f9f9;
+  background: #f0f0f0;
   padding: 15px;
   margin: 10px;
   border-radius: 8px;
@@ -161,7 +55,7 @@ export const LessonCard = styled.a`
   transition: background 0.3s;
 
   &:hover {
-    background: #f0f0f0;
+    background: #e0e0e0;
   }
 `
 export const LessonItem = styled.div`

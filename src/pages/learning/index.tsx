@@ -7,6 +7,7 @@ import {
 } from '../../styles/Learning.styles'
 import axios from 'axios';
 import router from 'next/router';
+import LoadingSpinner from '../../components/Spinner/Spinner';
 
 interface MyLearningProps {
   setCurrentLevel: (levelId: number) => void;
@@ -14,21 +15,8 @@ interface MyLearningProps {
 
 const MyLearning: React.FC<MyLearningProps> = ({ setCurrentLevel }) => {
   const [levels, setLevels] = useState<any[]>([])
-  /*
-    useEffect(() => {
-      // Simula una llamada al backend para obtener los niveles
-      const mockLevels = [
-        { id: 1, title: 'Nivel 1: Introducción' },
-        { id: 2, title: 'Nivel 2: Intermedio' },
-        { id: 3, title: 'Nivel 3: Avanzado' }
-      ]
-  
-      // Simula un pequeño retraso para imitar la llamada a una API
-      setTimeout(() => {
-        setLevels(mockLevels)
-      }, 500) // Retraso de 500ms
-    }, [])
-  */
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     const fetchLevels = async () => {
       try {
@@ -38,10 +26,14 @@ const MyLearning: React.FC<MyLearningProps> = ({ setCurrentLevel }) => {
           title: level.title,
           description: level.description
         }))
-        levelList.sort((a, b) => a.id < b.id)
+        console.log(levelList)
+        levelList.sort((a, b) => b.id - a.id)
+        console.log(levelList)
         setLevels(levelList)
       } catch (error) {
         console.error('Error fetching levels:', error)
+      } finally {
+        setIsLoading(false); // Termina la carga, incluso si hay error
       }
     }
     fetchLevels()
@@ -57,15 +49,18 @@ const MyLearning: React.FC<MyLearningProps> = ({ setCurrentLevel }) => {
       <Section>
         <Title>Niveles de Aprendizaje</Title>
         <div>
-          {levels.map(level => (
-            <div key={level.id} onClick={() => handleLevelClick(level.id)}>
-              <LevelCard>
-                <h1>{level.id}</h1>
-                <h3>{level.title}</h3>
-                <h5>{level.description}</h5>
-              </LevelCard>
-            </div>
-          ))}
+          {isLoading ? (
+            <LoadingSpinner /> // Muestra el spinner mientras se está cargando
+          ) : (
+            levels.map(level => (
+              <div key={level.id} onClick={() => handleLevelClick(level.id)}>
+                <LevelCard>
+                  <h1>{level.title}</h1>
+                  <h3>{level.description}</h3>
+                </LevelCard>
+              </div>
+            ))
+          )}
         </div>
       </Section>
     </ProtectedRoute>

@@ -6,7 +6,9 @@ import ProtectedRoute from '../../../../components/ProtectedRoute'
 import {
     Section,
     Title,
-    UnitCard} from '../../../../styles/Learning.styles'
+    UnitCard
+} from '../../../../styles/Learning.styles'
+import LoadingSpinner from '../../../../components/Spinner/Spinner'
 
 interface LevelUnitsProps {
     currentLevel: number;
@@ -16,6 +18,7 @@ interface LevelUnitsProps {
 const LevelUnits: React.FC<LevelUnitsProps> = ({ currentLevel, setCurrentUnit }) => {
     const [units, setUnits] = useState<any[]>([])
     const [allUnits, setAllUnits] = useState<any[]>([])
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         console.log(currentLevel)
@@ -32,6 +35,8 @@ const LevelUnits: React.FC<LevelUnitsProps> = ({ currentLevel, setCurrentUnit })
                 setAllUnits(unitsList)
             } catch (error) {
                 console.error('Error fetching units:', error)
+            } finally {
+                setIsLoading(false); // Termina la carga, incluso si hay error
             }
         }
         fetchUnits()
@@ -71,16 +76,18 @@ const LevelUnits: React.FC<LevelUnitsProps> = ({ currentLevel, setCurrentUnit })
             <Section>
                 <Title>Unidades del Nivel</Title>
                 <div>
-                    {units.map(unit => (
-                        <div key={unit.id} onClick={() => handleUnitClick(unit.id)}>
-                            <UnitCard>
-                                <h1>{unit.id}</h1>
-                                <h3>{unit.title}</h3>
-                                <h5>{unit.description}</h5>
-                                <h6>{unit.order}</h6>
-                            </UnitCard>
-                        </div>
-                    ))}
+                    {isLoading ? (
+                        <LoadingSpinner /> // Muestra el spinner mientras se está cargando
+                    ) : (
+                        units.map(unit => (
+                            <div key={unit.id} onClick={() => handleUnitClick(unit.id)}>
+                                <UnitCard>
+                                    <h1>{unit.title}</h1>
+                                    <h3>{unit.description}</h3>
+                                    <h5>{unit.order}</h5>
+                                </UnitCard>
+                            </div>
+                        )))}
                 </div>
             </Section>
         </ProtectedRoute>

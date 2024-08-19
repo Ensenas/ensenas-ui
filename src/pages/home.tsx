@@ -88,7 +88,7 @@ import Achievements from './achievements'
 import HomeMain from './homeMain'
 import MyLearning from './learning'
 import LevelUnits from './learning/levels/[id]/index'
-import UnitLessons from './learning/levels/[id]/units/[unitId]'
+import UnitLessons from './learning/levels/[id]/units'
 import Profile from './profile'
 
 const navItems = [
@@ -112,9 +112,9 @@ const HomePage: React.FC = () => {
     console.log('home Unit', currentUnit)
     console.log(activePage)
     if (activePage.startsWith('/learning') && currentLevel) {
-      if (currentUnit){
+      if (currentUnit) {
         setActivePage(`/learning/levels/${currentLevel}/units/${currentUnit}`)
-      }else{
+      } else {
         setActivePage(`/learning/levels/${currentLevel}`)
       }
     }
@@ -123,7 +123,7 @@ const HomePage: React.FC = () => {
 
   const handleNavigation = (href: string) => {
     setActivePage(href)
-    if(!activePage.startsWith('/learning)')){
+    if (!activePage.startsWith('/learning)')) {
       setCurrentLevel(null) // Reset level when navigating away from learning
       setCurrentUnit(null)
     }
@@ -155,10 +155,10 @@ const HomePage: React.FC = () => {
             {activePage === '/learning' && <MyLearning setCurrentLevel={setCurrentLevel} />}
             {activePage === '/profile' && <Profile />}
             {activePage === '/achievements' && <Achievements />}
-            {activePage.startsWith('/learning/levels/') && currentLevel && !currentUnit && 
+            {activePage.startsWith('/learning/levels/') && currentLevel && !currentUnit &&
               <LevelUnits currentLevel={currentLevel} setCurrentUnit={setCurrentUnit} />}
-            {activePage.startsWith(`/learning/levels/${currentLevel}`) && currentUnit && 
-              <UnitLessons levelId={currentLevel} unitId={currentUnit} />}
+            {activePage.startsWith(`/learning/levels/${currentLevel}`) && currentUnit &&
+              <UnitLessons currentLevel={currentLevel} currentUnit={currentUnit} />}
           </ContentContainer>
         </HomePageWrapper>
       </div>

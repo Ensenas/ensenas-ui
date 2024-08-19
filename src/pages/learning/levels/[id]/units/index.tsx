@@ -10,6 +10,7 @@ import {
     Section,
     Title
 } from '../../../../../styles/Learning.styles'
+import LoadingSpinner from '../../../../../components/Spinner/Spinner'
 
 interface UnitLessonsProps {
     currentLevel: number | null;
@@ -19,6 +20,7 @@ interface UnitLessonsProps {
 const UnitLessons: React.FC<UnitLessonsProps> = ({ currentLevel, currentUnit }) => {
     const [lessons, setLessons] = useState<any[]>([])
     const [allLessons, setAllLessons] = useState<any[]>([])
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         const fetchLessons = async () => {
@@ -34,6 +36,8 @@ const UnitLessons: React.FC<UnitLessonsProps> = ({ currentLevel, currentUnit }) 
                 setAllLessons(lessonsList)
             } catch (error) {
                 console.error('Error fetching units:', error)
+            } finally {
+                setIsLoading(false); // Termina la carga, incluso si hay error
             }
         }
         fetchLessons()
@@ -76,13 +80,17 @@ const UnitLessons: React.FC<UnitLessonsProps> = ({ currentLevel, currentUnit }) 
             <Section>
                 <Title>Lecciones de la Unidad</Title>
                 <div>
-                    {lessons.map(lesson => (
-                        <LessonItem key={lesson.id}>
-                            <LessonCard>
-                                <LessonTitle>{lesson.title}</LessonTitle>
-                            </LessonCard>
-                        </LessonItem>
-                    ))}
+                    {isLoading ? (
+                        <LoadingSpinner /> // Muestra el spinner mientras se está cargando
+                    ) : (
+                        lessons.map(lesson => (
+                            <LessonItem key={lesson.id}>
+                                <LessonCard>
+                                    <LessonTitle>{lesson.title}</LessonTitle>
+                                    <h3>{lesson.description}</h3>
+                                </LessonCard>
+                            </LessonItem>
+                        )))}
                 </div>
             </Section>
         </ProtectedRoute>

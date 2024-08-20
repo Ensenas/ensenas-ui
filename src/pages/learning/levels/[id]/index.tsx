@@ -3,12 +3,12 @@ import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 
 import ProtectedRoute from '../../../../components/ProtectedRoute'
+import LoadingSpinner from '../../../../components/Spinner/Spinner'
 import {
     Section,
     Title,
     UnitCard
 } from '../../../../styles/Learning.styles'
-import LoadingSpinner from '../../../../components/Spinner/Spinner'
 
 interface LevelUnitsProps {
     currentLevel: number;
@@ -18,7 +18,7 @@ interface LevelUnitsProps {
 const LevelUnits: React.FC<LevelUnitsProps> = ({ currentLevel, setCurrentUnit }) => {
     const [units, setUnits] = useState<any[]>([])
     const [allUnits, setAllUnits] = useState<any[]>([])
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(true)
 
     useEffect(() => {
         console.log(currentLevel)
@@ -36,7 +36,7 @@ const LevelUnits: React.FC<LevelUnitsProps> = ({ currentLevel, setCurrentUnit })
             } catch (error) {
                 console.error('Error fetching units:', error)
             } finally {
-                setIsLoading(false); // Termina la carga, incluso si hay error
+                setIsLoading(false) // Termina la carga, incluso si hay error
             }
         }
         fetchUnits()
@@ -84,7 +84,6 @@ const LevelUnits: React.FC<LevelUnitsProps> = ({ currentLevel, setCurrentUnit })
                                 <UnitCard>
                                     <h1>{unit.title}</h1>
                                     <h3>{unit.description}</h3>
-                                    <h5>{unit.order}</h5>
                                 </UnitCard>
                             </div>
                         )))}

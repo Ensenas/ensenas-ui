@@ -19,16 +19,18 @@ const HomeMain: React.FC = () => {
     <Section>
       <WelcomeTitle>¡Bienvenido, {session?.user?.name}!</WelcomeTitle>
       <ContentContainer>
-        <p style={{ fontSize: '1.2em', color: '#666' }}>
-          ¡Te damos la bienvenida a nuestra plataforma de aprendizaje de lenguaje de señas!
-        </p>
-        <p style={{ fontSize: '1.2em', color: '#666' }}>
-          Estamos emocionados de que te hayas unido a nosotros en esta jornada para aprender y
-          conectar a través de este hermoso y esencial lenguaje.
-        </p>
-        <p style={{ fontSize: '1.2em', color: '#666' }}>
-          ¡Buena suerte y disfruta del proceso de aprendizaje!
-        </p>
+        <div style={{ width: '70%', display: 'inline-block'}}>
+          <p style={{ fontSize: '1.2em', color: '#666' }}>
+            ¡Te damos la bienvenida a nuestra plataforma de aprendizaje de lenguaje de señas!
+          </p>
+          <p style={{ fontSize: '1.2em', color: '#666' }}>
+            Estamos emocionados de que te hayas unido a nosotros en esta jornada para aprender y
+            conectar a través de este hermoso y esencial lenguaje.
+          </p>
+          <p style={{ fontSize: '1.2em', color: '#666' }}>
+            ¡Buena suerte y disfruta del proceso de aprendizaje!
+          </p>
+        </div>
         <Image src="/signs.gif" alt="Welcome Image" />
       </ContentContainer>
       <Recommendations>

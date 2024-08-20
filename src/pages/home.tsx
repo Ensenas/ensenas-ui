@@ -90,12 +90,15 @@ import MyLearning from './learning'
 import LevelUnits from './learning/levels/[id]/index'
 import UnitLessons from './learning/levels/[id]/units'
 import Profile from './profile'
+import Statistics from './statistics'
 
 const navItems = [
   { label: 'Inicio', icon: '/icons/home-icon.png', href: '/home' },
   { label: 'Mi Aprendizaje', icon: '/icons/learning-icon.png', href: '/learning' },
   { label: 'Perfil', icon: '/icons/profile-icon.png', href: '/profile' },
-  { label: 'Mis Logros', icon: '/icons/achievement-icon.png', href: '/achievements' }
+  { label: 'Mis Logros', icon: '/icons/achievement-icon.png', href: '/achievements' },
+  { label: 'Estadísticas', icon: '/icons/statistics-icon.png', href: '/statistics' }
+
 ]
 
 const HomePage: React.FC = () => {
@@ -155,6 +158,7 @@ const HomePage: React.FC = () => {
             {activePage === '/learning' && <MyLearning setCurrentLevel={setCurrentLevel} />}
             {activePage === '/profile' && <Profile />}
             {activePage === '/achievements' && <Achievements />}
+            {activePage === '/statistics' && <Statistics />}
             {activePage.startsWith('/learning/levels/') && currentLevel && !currentUnit &&
               <LevelUnits currentLevel={currentLevel} setCurrentUnit={setCurrentUnit} />}
             {activePage.startsWith(`/learning/levels/${currentLevel}`) && currentUnit &&

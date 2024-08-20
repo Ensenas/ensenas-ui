@@ -1,6 +1,5 @@
 import styled from 'styled-components'
 
-// Estilos
 export const Section = styled.div`
   margin: 20px;
   padding: 20px;
@@ -16,9 +15,7 @@ export const Title = styled.h2`
 
 export const AchievementsGrid = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr 1fr;
-  flex-direction: column;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 20px;
   align-items: center;
 `
@@ -29,12 +26,7 @@ export const AchievementCard = styled.div`
   border-radius: 10px;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
   text-align: center;
-  align-items: center;
-  justify-content: center;
-  height: 80%;
-  transition:
-    transform 0.3s ease,
-    box-shadow 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 
   &:hover {
     transform: translateY(-5px);
@@ -52,4 +44,28 @@ export const CardContent = styled.p`
   font-size: 1.2em;
   color: #555;
   margin-bottom: 10px;
+`
+
+export const Medal = styled.div<{ completed: boolean }>`
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: ${({ completed }) => (completed ? '#ffd700' : '#ccc')};
+  border: 3px solid ${({ completed }) => (completed ? '#ffd700' : '#999')};
+  margin: 0 auto;
+  position: relative;
+  margin-bottom: 10px;
+
+  &::after {
+    content: '';
+    display: block;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: ${({ completed }) => (completed ? '#ffd700' : '#ccc')};
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
 `

@@ -1,13 +1,14 @@
+import axios from 'axios'
+import router from 'next/router'
 import React, { useEffect, useState } from 'react'
+
 import ProtectedRoute from '../../components/ProtectedRoute'
+import LoadingSpinner from '../../components/Spinner/Spinner'
 import {
   LevelCard,
   Section,
   Title
 } from '../../styles/Learning.styles'
-import axios from 'axios';
-import router from 'next/router';
-import LoadingSpinner from '../../components/Spinner/Spinner';
 
 interface MyLearningProps {
   setCurrentLevel: (levelId: number) => void;
@@ -15,7 +16,7 @@ interface MyLearningProps {
 
 const MyLearning: React.FC<MyLearningProps> = ({ setCurrentLevel }) => {
   const [levels, setLevels] = useState<any[]>([])
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     const fetchLevels = async () => {
@@ -33,7 +34,7 @@ const MyLearning: React.FC<MyLearningProps> = ({ setCurrentLevel }) => {
       } catch (error) {
         console.error('Error fetching levels:', error)
       } finally {
-        setIsLoading(false); // Termina la carga, incluso si hay error
+        setIsLoading(false) // Termina la carga, incluso si hay error
       }
     }
     fetchLevels()

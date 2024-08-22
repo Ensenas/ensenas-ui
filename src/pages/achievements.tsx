@@ -28,43 +28,27 @@ const MisLogros: React.FC = () => {
     // Agrega más medallas mockeadas si lo deseas
   ]
 
-  // useEffect(() => {
-  //   // Función para obtener los logros del backend
-  //   const fetchAchievements = async () => {
-  //     try {
-  //       // const response = await fetch('/api/achievements') // URL de la API
-  //       // const data = await response.json()
-  //       setAchievements(mockAchievements)
-  //     } catch (error) {
-  //       console.error('Error al obtener los logros:', error)
-  //     } finally {
-  //       setLoading(false)
-  //     }
-  //   }
-
-  //   fetchAchievements()
-  // }, [])
-
   useEffect(() => {
     const fetchAchievements = async () => {
-        try {
-            const response = await axios.get('/ens-api/lessons')
-            const achievementsList = response.data.map((lesson: any) => ({
-                id: lesson.id,
-                title: lesson.title,
-                description: lesson.description,
-                order: lesson.order
-            }))
-            achievementsList.sort((a, b) => a.order < b.order)
-            setAchievements(achievementsList)
-        } catch (error) {
-            console.error('Error fetching units:', error)
-        } finally {
-            setLoading(false) // Termina la carga, incluso si hay error
-        }
+      try {
+        const response = await axios.get('/ens-api/lessons')
+        const achievementsList = response.data.map((lesson: any) => ({
+          id: lesson.id,
+          title: lesson.title,
+          description: lesson.description,
+          order: lesson.order
+        }))
+        achievementsList.sort((a, b) => a.order < b.order)
+        achievementsList[0].completed = true
+        setAchievements(achievementsList)
+      } catch (error) {
+        console.error('Error fetching units:', error)
+      } finally {
+        setLoading(false) // Termina la carga, incluso si hay error
+      }
     }
     fetchAchievements()
-}, [])
+  }, [])
 
   if (loading) {
     return <Section>Cargando...</Section>

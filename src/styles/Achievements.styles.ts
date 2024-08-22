@@ -47,25 +47,19 @@ export const CardContent = styled.p`
 `
 
 export const Medal = styled.div<{ completed: boolean }>`
-  width: 60px;
-  height: 60px;
+  width: 80px;
+  height: 80px;
+  background-image: url('/medal.png');  /* Ruta desde la raíz de la carpeta public */
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
   border-radius: 50%;
-  background-color: ${({ completed }) => (completed ? '#ffd700' : '#ccc')};
-  border: 3px solid ${({ completed }) => (completed ? '#ffd700' : '#999')};
+  border: 4px solid ${({ completed }) => (completed ? '#ffd700' : '#999')};
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
   margin: 0 auto;
   position: relative;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 
-  &::after {
-    content: '';
-    display: block;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    background-color: ${({ completed }) => (completed ? '#ffd700' : '#ccc')};
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
-`
+  /* Aplicar filtro para cambiar el color a gris si no está completada */
+  filter: ${({ completed }) => (completed ? 'none' : 'grayscale(100%)')};
+`;

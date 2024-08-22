@@ -1,5 +1,5 @@
 import axios from 'axios'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import ProtectedRoute from '../../../../../../components/ProtectedRoute'
 import VideoRecorder from '../../../../../../components/Recorder/VideoRecorder'
@@ -52,7 +52,9 @@ interface LessonProps {
 }
 
 const Lesson: React.FC<LessonProps> = ({ currentLevel, currentUnit, currentLesson }) => {
-    
+
+    const [isLoading, setIsLoading] = useState(true)
+
     useEffect(() => {
         const fetchLessons = async () => {
             try {
@@ -63,7 +65,7 @@ const Lesson: React.FC<LessonProps> = ({ currentLevel, currentUnit, currentLesso
                     description: lesson.description,
                     order: lesson.order
                 }))
-    
+
             } catch (error) {
                 console.error('Error fetching units:', error)
             } finally {
@@ -72,7 +74,7 @@ const Lesson: React.FC<LessonProps> = ({ currentLevel, currentUnit, currentLesso
         }
         fetchLessons()
     }, [])
-    
+
     return (
         <ProtectedRoute>
             <Section>
@@ -89,7 +91,6 @@ const Lesson: React.FC<LessonProps> = ({ currentLevel, currentUnit, currentLesso
                         </CompletedLessonItem>
                     ))}
                 </CompletedLessonsList>
-
             </Section>
         </ProtectedRoute>
     )

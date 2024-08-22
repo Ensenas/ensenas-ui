@@ -10,8 +10,8 @@ const SpinnerContainer = styled.div`
 `;
 
 const Spinner = styled.div`
-  border: 16px solid #f3f3f3; /* Light grey */
-  border-top: 16px solid #0567b1; /* Blue */
+  border: 8px solid #f3f3f3; /* Light grey */
+  border-top: 8px solid #0567b1; /* Blue */
   border-radius: 50%;
   width: 120px;
   height: 120px;
@@ -24,9 +24,9 @@ const Spinner = styled.div`
 `;
 
 const LoadingSpinner: React.FC = () => (
-    <SpinnerContainer>
-        <Spinner />
-    </SpinnerContainer>
+  <SpinnerContainer>
+    <Spinner />
+  </SpinnerContainer>
 );
 
 export default LoadingSpinner;

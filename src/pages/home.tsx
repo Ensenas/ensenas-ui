@@ -89,7 +89,7 @@ import HomeMain from './homeMain'
 import MyLearning from './learning'
 import LevelUnits from './learning/levels/[id]/index'
 import UnitLessons from './learning/levels/[id]/units'
-import Lesson from './learning/levels/[id]/units/lessons'
+import Lesson from './learning/levels/[id]/units/lessons/index'
 import Profile from './profile'
 import Statistics from './statistics'
 
@@ -162,7 +162,7 @@ const HomePage: React.FC = () => {
             {activePage.startsWith(`/learning/levels/${currentLevel}`) && currentUnit && !currentLesson &&
               <UnitLessons currentLevel={currentLevel} currentUnit={currentUnit} setCurrentLesson={setCurrentLesson} />}
             {activePage.startsWith(`/learning/levels/${currentLevel}`) && currentUnit && currentLesson &&
-              <Lesson currentLevel={currentLevel} currentUnit={currentUnit}  currentLesson={currentLesson}/>}
+              <Lesson currentLevel={currentLevel} currentUnit={currentUnit} currentLesson={currentLesson} />}
           </ContentContainer>
         </HomePageWrapper>
       </div>

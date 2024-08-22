@@ -89,6 +89,7 @@ import HomeMain from './homeMain'
 import MyLearning from './learning'
 import LevelUnits from './learning/levels/[id]/index'
 import UnitLessons from './learning/levels/[id]/units'
+import Lesson from './learning/levels/[id]/units/lessons'
 import Profile from './profile'
 import Statistics from './statistics'
 
@@ -110,10 +111,6 @@ const HomePage: React.FC = () => {
   const [activePage, setActivePage] = useState('/home')
 
   useEffect(() => {
-
-    console.log('home Level', currentLevel)
-    console.log('home Unit', currentUnit)
-    console.log(activePage)
     if (activePage.startsWith('/learning') && currentLevel) {
       if (currentUnit) {
         setActivePage(`/learning/levels/${currentLevel}/units/${currentUnit}`)
@@ -121,7 +118,7 @@ const HomePage: React.FC = () => {
         setActivePage(`/learning/levels/${currentLevel}`)
       }
     }
-  }), [currentLevel, currentUnit]
+  }), [activePage, currentLevel, currentUnit, currentLesson]
 
 
   const handleNavigation = (href: string) => {
@@ -129,6 +126,7 @@ const HomePage: React.FC = () => {
     if (!activePage.startsWith('/learning)')) {
       setCurrentLevel(null) // Reset level when navigating away from learning
       setCurrentUnit(null)
+      setCurrentLesson(null)
     }
   }
 
@@ -161,8 +159,10 @@ const HomePage: React.FC = () => {
             {activePage === '/statistics' && <Statistics />}
             {activePage.startsWith('/learning/levels/') && currentLevel && !currentUnit &&
               <LevelUnits currentLevel={currentLevel} setCurrentUnit={setCurrentUnit} />}
-            {activePage.startsWith(`/learning/levels/${currentLevel}`) && currentUnit &&
-              <UnitLessons currentLevel={currentLevel} currentUnit={currentUnit} />}
+            {activePage.startsWith(`/learning/levels/${currentLevel}`) && currentUnit && !currentLesson &&
+              <UnitLessons currentLevel={currentLevel} currentUnit={currentUnit} setCurrentLesson={setCurrentLesson} />}
+            {activePage.startsWith(`/learning/levels/${currentLevel}`) && currentUnit && currentLesson &&
+              <Lesson currentLevel={currentLevel} currentUnit={currentUnit}  currentLesson={currentLesson}/>}
           </ContentContainer>
         </HomePageWrapper>
       </div>

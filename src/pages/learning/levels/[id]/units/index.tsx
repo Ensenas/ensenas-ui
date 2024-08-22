@@ -15,9 +15,10 @@ import {
 interface UnitLessonsProps {
     currentLevel: number | null;
     currentUnit: number | null;
+    setCurrentLesson: (lessonId: number) => void;
 }
 
-const UnitLessons: React.FC<UnitLessonsProps> = ({ currentLevel, currentUnit }) => {
+const UnitLessons: React.FC<UnitLessonsProps> = ({ currentLevel, currentUnit, setCurrentLesson }) => {
     const [lessons, setLessons] = useState<any[]>([])
     const [allLessons, setAllLessons] = useState<any[]>([])
     const [isLoading, setIsLoading] = useState(true)
@@ -61,19 +62,9 @@ const UnitLessons: React.FC<UnitLessonsProps> = ({ currentLevel, currentUnit }) 
         }
     }, [currentUnit, allLessons])
 
-    // useEffect(() => {
-    //     if (levelId && unitId) {
-    //         // Simula una llamada al backend para obtener las lecciones de la unidad
-    //         const mockLessons = [
-    //             { id: 1, title: 'Lección 1: Introducción' },
-    //             { id: 2, title: 'Lección 2: Avanzado' }
-    //         ]
-
-    //         setTimeout(() => {
-    //             setLessons(mockLessons)
-    //         }, 500)
-    //     }
-    // }, [levelId, unitId])
+    const handleLessonClick = (lessonId: number) => {
+        setCurrentLesson(lessonId) // Actualiza el estado de la unidad actual
+    }
 
     return (
         <ProtectedRoute>
@@ -84,7 +75,7 @@ const UnitLessons: React.FC<UnitLessonsProps> = ({ currentLevel, currentUnit }) 
                         <LoadingSpinner /> // Muestra el spinner mientras se está cargando
                     ) : (
                         lessons.map(lesson => (
-                            <LessonItem key={lesson.id}>
+                            <LessonItem key={lesson.id} onClick={() => handleLessonClick(lesson.id)}>
                                 <LessonCard>
                                     <h1>{lesson.title}</h1>
                                     <h3>{lesson.description}</h3>

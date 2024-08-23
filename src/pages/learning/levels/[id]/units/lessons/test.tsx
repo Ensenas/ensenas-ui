@@ -47,9 +47,10 @@ interface LessonProps {
     currentLevel: number | null;
     currentUnit: number | null;
     currentLesson: number | null;
+    setTest: (test: Boolean) => void;
 }
 
-const LessonTest: React.FC<LessonProps> = ({ currentLevel, currentUnit, currentLesson }) => {
+const LessonTest: React.FC<LessonProps> = ({ currentLevel, currentUnit, currentLesson, setTest }) => {
 
     const [isLoading, setIsLoading] = useState(true)
 
@@ -79,16 +80,6 @@ const LessonTest: React.FC<LessonProps> = ({ currentLevel, currentUnit, currentL
                 <Title>Lección 1: Introducción al Lenguaje de Señas</Title>
                 <LessonTitle>Deberas realizar con tu mano la siguiente seña:</LessonTitle>
                 <VideoRecorder />
-                <Title>Volver a Ver</Title>
-                <CompletedLessonsList>
-                    {lessons.map((lesson) => (
-                        <CompletedLessonItem key={lesson.id}>
-                            <CompletedLessonPreview src={lesson.videoSrc} alt={`Preview de ${lesson.title}`} />
-                            <CompletedLessonTitle>{lesson.title}</CompletedLessonTitle>
-                            <CompletedLessonDescription>{lesson.description}</CompletedLessonDescription>
-                        </CompletedLessonItem>
-                    ))}
-                </CompletedLessonsList>
             </Section>
         </ProtectedRoute>
     )

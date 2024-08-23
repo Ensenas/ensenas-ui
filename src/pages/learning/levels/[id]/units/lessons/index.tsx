@@ -17,9 +17,10 @@ interface LessonProps {
     currentLevel: number | null;
     currentUnit: number | null;
     currentLesson: number | null;
+    setTest: (test: Boolean) => void;
 }
 
-const Lesson: React.FC<LessonProps> = ({ currentLevel, currentUnit, currentLesson }) => {
+const Lesson: React.FC<LessonProps> = ({ currentLevel, currentUnit, currentLesson, setTest }) => {
     const [lesson, setLesson] = useState<any>(null)
     const [isLoading, setIsLoading] = useState(true)
     const [videoCompleted, setVideoCompleted] = useState(false)
@@ -53,6 +54,10 @@ const Lesson: React.FC<LessonProps> = ({ currentLevel, currentUnit, currentLesso
         setVideoCompleted(true)
     }
 
+    const handleStartTest = () => {
+        setTest(true)
+    }
+
     return (
         <ProtectedRoute>
             <Section>
@@ -72,7 +77,7 @@ const Lesson: React.FC<LessonProps> = ({ currentLevel, currentUnit, currentLesso
                             <TooltipContainer>
                                 <TestButton
                                     disabled={!videoCompleted}
-                                    onClick={() => alert('Realizar Test')}
+                                    onClick={() => handleStartTest()}
                                     onMouseOver={() => !videoCompleted && setShowTooltip(true)}
                                     onMouseOut={() => setShowTooltip(false)}
                                 >

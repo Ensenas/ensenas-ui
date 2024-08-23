@@ -92,6 +92,7 @@ import UnitLessons from './learning/levels/[id]/units'
 import Lesson from './learning/levels/[id]/units/lessons/index'
 import Profile from './profile'
 import Statistics from './statistics'
+import LessonTest from './learning/levels/[id]/units/lessons/test'
 
 const navItems = [
   { label: 'Inicio', icon: '/icons/home-icon.png', href: '/home' },
@@ -109,6 +110,7 @@ const HomePage: React.FC = () => {
   const [currentUnit, setCurrentUnit] = useState<number | null>(null)
   const [currentLesson, setCurrentLesson] = useState<number | null>(null)
   const [activePage, setActivePage] = useState('/home')
+  const [test, setTest] = useState<Boolean>(false)
 
   useEffect(() => {
     if (activePage.startsWith('/learning') && currentLevel) {
@@ -127,6 +129,7 @@ const HomePage: React.FC = () => {
       setCurrentLevel(null) // Reset level when navigating away from learning
       setCurrentUnit(null)
       setCurrentLesson(null)
+      setTest(false)
     }
   }
 
@@ -161,8 +164,10 @@ const HomePage: React.FC = () => {
               <LevelUnits currentLevel={currentLevel} setCurrentUnit={setCurrentUnit} />}
             {activePage.startsWith(`/learning/levels/${currentLevel}`) && currentUnit && !currentLesson &&
               <UnitLessons currentLevel={currentLevel} currentUnit={currentUnit} setCurrentLesson={setCurrentLesson} />}
-            {activePage.startsWith(`/learning/levels/${currentLevel}`) && currentUnit && currentLesson &&
-              <Lesson currentLevel={currentLevel} currentUnit={currentUnit} currentLesson={currentLesson} />}
+            {activePage.startsWith(`/learning/levels/${currentLevel}`) && currentUnit && currentLesson && !test &&
+              <Lesson currentLevel={currentLevel} currentUnit={currentUnit} currentLesson={currentLesson} setTest={setTest} />}
+            {activePage.startsWith(`/learning/levels/${currentLevel}`) && currentUnit && currentLesson && test &&
+              <LessonTest currentLevel={currentLevel} currentUnit={currentUnit} currentLesson={currentLesson} setTest={setTest} />}
           </ContentContainer>
         </HomePageWrapper>
       </div>

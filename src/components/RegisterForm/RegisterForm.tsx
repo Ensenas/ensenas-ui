@@ -45,9 +45,9 @@ const RegisterForm = () => {
         fetchCountries()
     }, [])
 
-  const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(event.target.value)
-  }
+    const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setEmail(event.target.value)
+    }
 
     const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setPassword(event.target.value)
@@ -62,16 +62,16 @@ const RegisterForm = () => {
     const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setName(event.target.value)
     }
-    
+
     const handleSurnameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSurname(event.target.value)
     }
-    
+
     const handleBirthDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setBirthDate(event.target.value)
         validateBirthDate(event.target.value)
     }
-    
+
     const handleCountryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         setCountry(event.target.value)
     }
@@ -106,15 +106,15 @@ const RegisterForm = () => {
 
     const handleRegister = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
-    
+
         validatePassword(password, confirmPassword)
         validateBirthDate(birthDate)
-    
+
         if (passwordError || confirmPasswordError || countryError || birthDateError) {
             // No enviar el formulario si hay errores de validación
             return
         }
-    
+
         try {
             const response = await axios.post('/ens-api/auth/sign-up', {
                 mail: email,
@@ -124,16 +124,16 @@ const RegisterForm = () => {
                 birthDate,
                 country
             })
-    
+
             console.log(response)
-    
+
             const data = response.data
             const status = response.status
-    
+
             if (status === 200) {
                 // Mostrar mensaje de éxito
                 setSuccessMessage('Registro exitoso. Redirigiendo al inicio de sesión...')
-    
+
                 // Redirigir después de 2 segundos
                 setTimeout(() => {
                     router.replace('/login')
@@ -146,7 +146,7 @@ const RegisterForm = () => {
             // Aquí podrías mostrar un mensaje de error al usuario
         }
     }
-    
+
 
     return (
         <Container>
@@ -194,7 +194,7 @@ const RegisterForm = () => {
                             error={countryError} // Mostrar error si lo hay
                         />
                     </FormColumn>
-                
+
                     <FormColumn>
                         <Subtitle>Información de la cuenta</Subtitle>
                         <InputField

@@ -4,7 +4,10 @@ interface SubsectionProps {
   num: string
 }
 
+const HEADER_HEIGHT = '100px';
+
 export const LandingPageContainer = styled.div`
+  margin-top: ${HEADER_HEIGHT};
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -106,6 +109,8 @@ export const Section = styled.section`
 
   width: 100%;
   padding: 0px;
+  padding-top: ${HEADER_HEIGHT};
+  padding-bottom: ${HEADER_HEIGHT};
   background-color: #f9f9f9;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -209,17 +214,17 @@ export const Subsection = styled.div<SubsectionProps>`
         top: 40%;
         transform: translateY(-50%);
         color: ${({ num }) => {
-          switch (num) {
-            case '1.':
-              return '#df464f'
-            case '2.':
-              return '#e67537'
-            case '3.':
-              return '#eda939'
-            default:
-              return 'black'
-          }
-        }};
+    switch (num) {
+      case '1.':
+        return '#df464f'
+      case '2.':
+        return '#e67537'
+      case '3.':
+        return '#eda939'
+      default:
+        return 'black'
+    }
+  }};
       }
     }
 

@@ -27,6 +27,7 @@ const UnitLessons: React.FC<UnitLessonsProps> = ({ currentLevel, currentUnit, se
         const fetchLessons = async () => {
             try {
                 const response = await axios.get('/ens-api/lessons')
+                console.log('DATA', response.data)
                 const lessonsList = response.data.map((lesson: any) => ({
                     id: lesson.id,
                     title: lesson.title,

@@ -73,7 +73,17 @@ const RegisterForm = () => {
     }
 
     const handleCountryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        setCountry(event.target.value)
+        const selectedCountry = event.target.value
+        setCountry(selectedCountry)
+        validateCountry(selectedCountry)
+    }
+
+    const validateCountry = (country: string) => {
+        if (!countries.some(c => c.value === country)) {
+            setCountryError('El país no corresponde con una opción válida')
+        } else {
+            setCountryError('')
+        }
     }
 
     const validatePassword = (password: string, confirmPassword: string) => {

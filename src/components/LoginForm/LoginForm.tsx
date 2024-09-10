@@ -26,7 +26,7 @@ import InputField from './InputField'
 const LoginForm = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
     const router = useRouter()
     const { data: session, status } = useSession()
@@ -48,58 +48,58 @@ const LoginForm = () => {
     }
 
     const handleGoogleClick = async () => {
-        setIsLoading(true); // Inicia el estado de carga
+        setIsLoading(true) // Inicia el estado de carga
         try {
             const signInResponse = await signIn('google', {
                 redirect: false
-            });
+            })
             if (signInResponse && !signInResponse.error) {
-                router.push('/home');
+                router.push('/home')
             } else if (signInResponse?.error) {
-                setError('Error en la autenticación con Google');
+                setError('Error en la autenticación con Google')
             }
         } catch (error) {
-            console.error('Error en la autenticación con Google:', error);
-            setError('Error en la autenticación con Google');
+            console.error('Error en la autenticación con Google:', error)
+            setError('Error en la autenticación con Google')
         } finally {
-            setIsLoading(false); // Detén el estado de carga
+            setIsLoading(false) // Detén el estado de carga
         }
     }
 
     const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        setIsLoading(true); // Inicia el estado de carga
+        event.preventDefault()
+        setIsLoading(true) // Inicia el estado de carga
         try {
             const response = await axios.post('/ens-api/auth/login', {
                 mail: email,
                 password
-            });
-            const { access_token } = response.data;
+            })
+            const { access_token } = response.data
 
             if (access_token) {
-                localStorage.setItem('authToken', access_token);
+                localStorage.setItem('authToken', access_token)
 
                 const signInResponse = await signIn('credentials', {
                     redirect: false,
                     email,
                     password
-                });
+                })
 
                 if (signInResponse?.error) {
-                    setError(signInResponse.error);
+                    setError(signInResponse.error)
                 } else if (signInResponse?.ok) {
-                    router.push('/home');
+                    router.push('/home')
                 } else {
-                    setError('Error desconocido.');
+                    setError('Error desconocido.')
                 }
             } else {
-                setError('Error al obtener el token.');
+                setError('Error al obtener el token.')
             }
         } catch (error) {
-            console.error('Error de inicio de sesión:', error);
-            setError('Credenciales incorrectas.');
+            console.error('Error de inicio de sesión:', error)
+            setError('Credenciales incorrectas.')
         } finally {
-            setIsLoading(false); // Detén el estado de carga
+            setIsLoading(false) // Detén el estado de carga
         }
     }
 

@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+/* eslint-disable no-unused-vars */
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 
@@ -42,7 +44,7 @@ const LessonTest: React.FC<LessonProps> = ({ currentLevel, currentUnit, currentL
             }
         }
         fetchLesson()
-    }, [])
+    }, [currentLesson])
 
     return (
         <ProtectedRoute>

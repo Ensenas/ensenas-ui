@@ -1,5 +1,7 @@
+/* eslint-disable no-console */
+/* eslint-disable no-unused-vars */
 import axios from 'axios'
-import router from 'next/router'
+// import router from 'next/router'
 import React, { useEffect, useState } from 'react'
 
 import ProtectedRoute from '../../components/ProtectedRoute'

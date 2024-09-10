@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+/* eslint-disable no-unused-vars */
 import axios from 'axios'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
@@ -40,7 +42,7 @@ const LevelUnits: React.FC<LevelUnitsProps> = ({ currentLevel, setCurrentUnit })
             }
         }
         fetchUnits()
-    }, [])
+    }, [currentLevel])
 
 
     useEffect(() => {

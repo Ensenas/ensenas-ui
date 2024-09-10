@@ -15,6 +15,7 @@ export interface InputProps {
   value?: string
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
   required?: boolean
+  error?: string
 }
 
 export interface SelectOption {

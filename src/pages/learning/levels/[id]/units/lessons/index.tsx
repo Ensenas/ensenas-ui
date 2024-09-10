@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+/* eslint-disable no-unused-vars */
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 
@@ -16,7 +18,7 @@ interface LessonProps {
     currentLevel: number | null;
     currentUnit: number | null;
     currentLesson: number | null;
-    setTest: (test: Boolean) => void;
+    setTest: (_test: Boolean) => void;
 }
 
 const Lesson: React.FC<LessonProps> = ({ currentLevel, currentUnit, currentLesson, setTest }) => {

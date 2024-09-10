@@ -62,4 +62,4 @@ export const Medal = styled.div<{ completed: boolean }>`
 
   /* Aplicar filtro para cambiar el color a gris si no está completada */
   filter: ${({ completed }) => (completed ? 'none' : 'grayscale(100%)')};
-`;
+`

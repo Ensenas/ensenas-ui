@@ -1,13 +1,13 @@
 // Spinner.tsx
-import React from 'react';
-import styled from 'styled-components';
+import React from 'react'
+import styled from 'styled-components'
 
 const SpinnerContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh; /* O ajusta según tus necesidades */
-`;
+`
 
 const Spinner = styled.div`
   border: 8px solid #f3f3f3; /* Light grey */
@@ -21,12 +21,12 @@ const Spinner = styled.div`
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
   }
-`;
+`
 
 const LoadingSpinner: React.FC = () => (
   <SpinnerContainer>
     <Spinner />
   </SpinnerContainer>
-);
+)
 
-export default LoadingSpinner;
+export default LoadingSpinner

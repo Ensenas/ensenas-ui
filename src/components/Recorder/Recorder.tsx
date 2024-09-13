@@ -1,5 +1,6 @@
-import { Container, RecordButton } from "./RecorderElements"
-import Webcam from "react-webcam";
+import Webcam from 'react-webcam'
+
+import { Container, RecordButton } from './RecorderElements'
 
 
 const Recorder: React.FC = () => {

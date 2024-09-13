@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+/* eslint-disable no-unused-vars */
 import { useSession } from 'next-auth/react'
 import React, { useEffect,useState } from 'react'
 import { FaEdit, FaSave } from 'react-icons/fa' // Para el icono del lápiz
@@ -151,7 +153,7 @@ const Profile: React.FC = () => {
                   <Input 
                     type="email" 
                     name="email"
-                    value={profileData.email}
+                    value={profileData.mail}
                     onChange={handleChange} 
                     disabled={!isEditing} 
                   />

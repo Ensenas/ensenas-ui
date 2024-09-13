@@ -45,7 +45,7 @@ export const TestButton = styled.button`
     background-color: #ccc;
     cursor: not-allowed;
   }
-`;
+`
 
 export const Tooltip = styled.div<{ show: boolean }>`
   visibility: ${({ show }) => (show ? 'visible' : 'hidden')};
@@ -62,11 +62,11 @@ export const Tooltip = styled.div<{ show: boolean }>`
   z-index: 10;
   transition: visibility 0.3s ease, opacity 0.3s ease;
   opacity: ${({ show }) => (show ? 1 : 0)};
-`;
+`
 
 export const TooltipContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   position: relative; /* Necesario para el posicionamiento del tooltip */
-`;
+`

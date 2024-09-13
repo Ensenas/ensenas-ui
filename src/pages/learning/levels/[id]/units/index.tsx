@@ -1,5 +1,7 @@
+/* eslint-disable no-console */
+/* eslint-disable no-unused-vars */
 import axios from 'axios'
-import { useRouter } from 'next/router'
+// import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 
 import ProtectedRoute from '../../../../../components/ProtectedRoute'
@@ -7,7 +9,7 @@ import LoadingSpinner from '../../../../../components/Spinner/Spinner'
 import {
     LessonCard,
     LessonItem,
-    LessonTitle,
+    // LessonTitle,
     Section,
     Title
 } from '../../../../../styles/Learning.styles'
@@ -15,7 +17,7 @@ import {
 interface UnitLessonsProps {
     currentLevel: number | null;
     currentUnit: number | null;
-    setCurrentLesson: (lessonId: number) => void;
+    setCurrentLesson: (idLesson :number) => void;
 }
 
 const UnitLessons: React.FC<UnitLessonsProps> = ({ currentLevel, currentUnit, setCurrentLesson }) => {
@@ -27,6 +29,7 @@ const UnitLessons: React.FC<UnitLessonsProps> = ({ currentLevel, currentUnit, se
         const fetchLessons = async () => {
             try {
                 const response = await axios.get('/ens-api/lessons')
+                console.log('DATA', response.data)
                 const lessonsList = response.data.map((lesson: any) => ({
                     id: lesson.id,
                     title: lesson.title,
@@ -42,7 +45,7 @@ const UnitLessons: React.FC<UnitLessonsProps> = ({ currentLevel, currentUnit, se
             }
         }
         fetchLessons()
-    }, [])
+    }, [currentLevel])
 
     useEffect(() => {
         if (currentLevel) {
@@ -60,7 +63,7 @@ const UnitLessons: React.FC<UnitLessonsProps> = ({ currentLevel, currentUnit, se
             }
             setLessons(filteredLessons)
         }
-    }, [currentUnit, allLessons])
+    }, [currentUnit, allLessons, currentLevel])
 
     const handleLessonClick = (lessonId: number) => {
         setCurrentLesson(lessonId) // Actualiza el estado de la unidad actual

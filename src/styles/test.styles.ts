@@ -43,3 +43,23 @@ export const CompletedLessonDescription = styled.p`
   font-size: 0.8em;
   color: #666;
 `
+
+export const InstructionText = styled.p`
+  font-size: 1em;
+  color: #333;
+  margin-top: 10px;
+`
+
+export const RecordButton = styled.button`
+  background-color: #007bff;
+  color: #fff;
+  margin-top: 10px;
+  padding: 12px 30px;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  &:hover {
+    background-color: #0056b3;
+  }
+`

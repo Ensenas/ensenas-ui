@@ -4,7 +4,7 @@ interface SubsectionProps {
   num: string
 }
 
-const HEADER_HEIGHT = '100px';
+const HEADER_HEIGHT = '100px'
 
 export const LandingPageContainer = styled.div`
   margin-top: ${HEADER_HEIGHT};

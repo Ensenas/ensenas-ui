@@ -1,6 +1,16 @@
+/* eslint-disable no-console */
+/* eslint-disable no-unused-vars */
 import NextAuth from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import GoogleProvider from 'next-auth/providers/google'
+
+// Define una interfaz de Usuario con campos opcionales si es necesario
+interface User {
+  id: string; // Opcional, ya que tu API solo devuelve un token
+  email?: string;
+  name?: string;
+  accessToken?: string;
+}
 
 const handler = NextAuth({
   providers: [
@@ -23,18 +33,24 @@ const handler = NextAuth({
               mail: credentials?.email,
               password: credentials?.password
             })
-          });
+          })
 
-          const user = await res.json();
+          const data = await res.json()
 
-          if (res.ok && user.access_token) {
-            return { accessToken: user.access_token, email: credentials?.email, name: credentials?.email };
+          if (res.ok && data.access_token) {
+            // Devuelve un objeto con las propiedades requeridas, usando valores predeterminados
+            return {
+              id: 'default-id', // Proporciona un valor predeterminado si no tienes un ID
+              email: credentials?.email || '',
+              name: credentials?.email || '', // Proporciona un valor predeterminado si no tienes un nombre
+              accessToken: data.access_token
+            } as User
           } else {
-            return null;
+            return null
           }
         } catch (error) {
-          console.error('Error en la autorización:', error);
-          return null;
+          console.error('Error en la autorización:', error)
+          return null
         }
       }
     })
@@ -45,14 +61,10 @@ const handler = NextAuth({
         token.accessToken = account.access_token
       }
       return token
-    },
-    async session({ session, token }) {
-      session.accessToken = token.accessToken
-      return session
     }
   },
   pages: {
-    signIn: '/login' // Personaliza la ruta de inicio de sesión si es necesario
+    signIn: '/login'
   },
   secret: process.env.NEXTAUTH_SECRET
 })

@@ -58,7 +58,7 @@ export const Image = styled.img`
 `
 
 export const Recommendations = styled.div`
-  margin-top: 40px;
+  margin: 40px;
 `
 
 export const RecommendationsTitle = styled.h3`
@@ -68,6 +68,7 @@ export const RecommendationsTitle = styled.h3`
 
 export const VideoList = styled.div`
   display: flex;
+  justify-content: space-between;
   overflow-x: auto;
   padding: 10px 0;
 `

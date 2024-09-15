@@ -3,13 +3,13 @@ import styled from 'styled-components'
 // Contenedor principal que aloja la barra lateral y el contenido
 export const HomePageWrapper = styled.div`
   display: flex;
-  height: 100%;
+  height: 100vh;
   background: #f4f4f4;
 `
 // Contenedor del contenido principal
 export const ContentContainer = styled.div`
-  width: 80%;
-  padding: 20px;
+  width: 100%;
+
 `
 
 // Contenedor de la barra lateral

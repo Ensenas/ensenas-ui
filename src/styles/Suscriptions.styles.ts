@@ -22,6 +22,7 @@ export const SubscriptionsGrid = styled.div`
   grid-auto-rows: minmax(500px, auto); /* Ajusta la altura mínima de las filas */
   max-width: 70%; /* Ajusta el ancho máximo según tus necesidades */
   margin: 0 auto; /* Centra la grilla dentro del contenedor padre */
+  padding-bottom: 40px;
 `
 
 export const SubscriptionCard = styled.div<{ background: string, isPremium?: boolean  }>`

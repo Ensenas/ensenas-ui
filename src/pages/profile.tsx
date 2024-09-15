@@ -94,7 +94,7 @@ const Profile: React.FC = () => {
           {loading ? (
               <LoadingSpinner /> // Muestra el spinner mientras se está cargando
             ) : error ? (
-              <p>{error}</p> // Muestra el mensaje de error si ocurrió un problema
+              <p style={{ margin: '40px' }}>{error}</p> // Muestra el mensaje de error si ocurrió un problema
             ) : (
             <Section>
               <Header>

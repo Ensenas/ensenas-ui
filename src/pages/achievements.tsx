@@ -1,9 +1,12 @@
 /* eslint-disable no-console */
 /* eslint-disable no-unused-vars */
 import axios from 'axios'
+import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 
+import HomeLayout from '../components/HomeLayout/HomeLayout'
 import ProtectedRoute from '../components/ProtectedRoute'
+import LoadingSpinner from '../components/Spinner/Spinner'
 import {
   AchievementCard,
   AchievementsGrid,
@@ -16,6 +19,7 @@ import {
 
 // Componente principal
 const MisLogros: React.FC = () => {
+  const router = useRouter()
   const [achievements, setAchievements] = useState<any[]>([])
   const [loading, setLoading] = useState<boolean>(true)
 
@@ -50,29 +54,32 @@ const MisLogros: React.FC = () => {
     fetchAchievements()
   }, [])
 
-  if (loading) {
-    return <Section>Cargando...</Section>
-  }
-
-
   return (
     <ProtectedRoute>
-      <Section>
-        <Title>Mis Logros</Title>
-        <AchievementsGrid>
-          {achievements.length === 0 ? (
-            <CardContent>No hay logros para mostrar.</CardContent>
-          ) : (
-            achievements.map((achievement) => (
-              <AchievementCard key={achievement.id}>
-                <CardTitle>{achievement.title}</CardTitle>
-                <Medal completed={achievement.completed} />
-                <CardContent>{achievement.description}</CardContent>
-              </AchievementCard>
-            ))
-          )}
-        </AchievementsGrid>
-      </Section>
+      <HomeLayout activePage='/achievements'>
+        <div>
+          {loading ? (
+              <LoadingSpinner /> // Muestra el spinner mientras se está cargando
+            ) : (
+          <Section>
+          <Title>Mis Logros</Title>
+          <AchievementsGrid>
+            {achievements.length === 0 ? (
+              <CardContent>No hay logros para mostrar.</CardContent>
+            ) : (
+              achievements.map((achievement) => (
+                <AchievementCard key={achievement.id}>
+                  <CardTitle>{achievement.title}</CardTitle>
+                  <Medal completed={achievement.completed} />
+                  <CardContent>{achievement.description}</CardContent>
+                </AchievementCard>
+              ))
+            )}
+          </AchievementsGrid>
+        </Section>
+        )}
+      </div>
+      </HomeLayout>
     </ProtectedRoute>
   )
 }

@@ -1,11 +1,13 @@
 /* eslint-disable no-console */
 /* eslint-disable no-unused-vars */
 import axios from 'axios'
-import { useRouter } from 'next/router'
+import router, { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 
+import HomeLayout from '../../../../components/HomeLayout/HomeLayout'
 import ProtectedRoute from '../../../../components/ProtectedRoute'
 import LoadingSpinner from '../../../../components/Spinner/Spinner'
+import { useNavigation } from '../../../../context/NavigationLearningContext'
 import {
     Section,
     Title,
@@ -17,10 +19,12 @@ interface LevelUnitsProps {
     setCurrentUnit: (unitId: number) => void;
 }
 
-const LevelUnits: React.FC<LevelUnitsProps> = ({ currentLevel, setCurrentUnit }) => {
+const LevelUnits: React.FC<LevelUnitsProps> = ({}) => {
     const [units, setUnits] = useState<any[]>([])
     const [allUnits, setAllUnits] = useState<any[]>([])
     const [isLoading, setIsLoading] = useState(true)
+    const { currentLevel, setCurrentLevel, currentUnit, setCurrentUnit, currentLesson, setCurrentLesson } = useNavigation()
+  
 
     useEffect(() => {
         console.log(currentLevel)
@@ -71,26 +75,29 @@ const LevelUnits: React.FC<LevelUnitsProps> = ({ currentLevel, setCurrentUnit })
 
     const handleUnitClick = (unitId: number) => {
         setCurrentUnit(unitId) // Actualiza el estado de la unidad actual
+        router.push(`/learning/levels/${currentLevel}/units/${unitId}`)
     }
 
     return (
         <ProtectedRoute>
-            <Section>
-                <Title>Unidades del Nivel</Title>
-                <div>
-                    {isLoading ? (
-                        <LoadingSpinner /> // Muestra el spinner mientras se está cargando
-                    ) : (
-                        units.map(unit => (
-                            <div key={unit.id} onClick={() => handleUnitClick(unit.id)}>
-                                <UnitCard>
-                                    <h1>{unit.title}</h1>
-                                    <h3>{unit.description}</h3>
-                                </UnitCard>
-                            </div>
-                        )))}
-                </div>
-            </Section>
+            <HomeLayout activePage={`/learning/levels/${currentLevel}/units`}>
+                <Section>
+                    <Title>Unidades del Nivel</Title>
+                    <div>
+                        {isLoading ? (
+                            <LoadingSpinner /> // Muestra el spinner mientras se está cargando
+                        ) : (
+                            units.map(unit => (
+                                <div key={unit.id} onClick={() => handleUnitClick(unit.id)}>
+                                    <UnitCard>
+                                        <h1>{unit.title}</h1>
+                                        <h3>{unit.description}</h3>
+                                    </UnitCard>
+                                </div>
+                            )))}
+                    </div>
+                </Section>
+            </HomeLayout>
         </ProtectedRoute>
     )
 }

@@ -1,18 +1,21 @@
 /* eslint-disable no-console */
 /* eslint-disable no-unused-vars */
 import axios from 'axios'
+import router from 'next/router'
 // import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 
-import ProtectedRoute from '../../../../../components/ProtectedRoute'
-import LoadingSpinner from '../../../../../components/Spinner/Spinner'
+import HomeLayout from '../../../../../../components/HomeLayout/HomeLayout'
+import ProtectedRoute from '../../../../../../components/ProtectedRoute'
+import LoadingSpinner from '../../../../../../components/Spinner/Spinner'
+import { useNavigation } from '../../../../../../context/NavigationLearningContext'
 import {
     LessonCard,
     LessonItem,
     // LessonTitle,
     Section,
     Title
-} from '../../../../../styles/Learning.styles'
+} from '../../../../../../styles/Learning.styles'
 
 interface UnitLessonsProps {
     currentLevel: number | null;
@@ -20,10 +23,12 @@ interface UnitLessonsProps {
     setCurrentLesson: (idLesson :number) => void;
 }
 
-const UnitLessons: React.FC<UnitLessonsProps> = ({ currentLevel, currentUnit, setCurrentLesson }) => {
+const UnitLessons: React.FC<UnitLessonsProps> = ({}) => {
     const [lessons, setLessons] = useState<any[]>([])
     const [allLessons, setAllLessons] = useState<any[]>([])
     const [isLoading, setIsLoading] = useState(true)
+    const { currentLevel, setCurrentLevel, currentUnit, setCurrentUnit, currentLesson, setCurrentLesson } = useNavigation()
+  
 
     useEffect(() => {
         const fetchLessons = async () => {
@@ -67,26 +72,29 @@ const UnitLessons: React.FC<UnitLessonsProps> = ({ currentLevel, currentUnit, se
 
     const handleLessonClick = (lessonId: number) => {
         setCurrentLesson(lessonId) // Actualiza el estado de la unidad actual
+        router.push(`/learning/levels/${currentLevel}/units/${currentUnit}/lessons/${lessonId}`)
     }
 
     return (
         <ProtectedRoute>
-            <Section>
-                <Title>Lecciones de la Unidad</Title>
-                <div>
-                    {isLoading ? (
-                        <LoadingSpinner /> // Muestra el spinner mientras se está cargando
-                    ) : (
-                        lessons.map(lesson => (
-                            <LessonItem key={lesson.id} onClick={() => handleLessonClick(lesson.id)}>
-                                <LessonCard>
-                                    <h1>{lesson.title}</h1>
-                                    <h3>{lesson.description}</h3>
-                                </LessonCard>
-                            </LessonItem>
-                        )))}
-                </div>
-            </Section>
+            <HomeLayout activePage={`/learning/levels/${currentLevel}/units/${currentUnit}`}>
+                <Section>
+                    <Title>Lecciones de la Unidad</Title>
+                    <div>
+                        {isLoading ? (
+                            <LoadingSpinner /> // Muestra el spinner mientras se está cargando
+                        ) : (
+                            lessons.map(lesson => (
+                                <LessonItem key={lesson.id} onClick={() => handleLessonClick(lesson.id)}>
+                                    <LessonCard>
+                                        <h1>{lesson.title}</h1>
+                                        <h3>{lesson.description}</h3>
+                                    </LessonCard>
+                                </LessonItem>
+                            )))}
+                    </div>
+                </Section>
+            </HomeLayout>
         </ProtectedRoute>
     )
 }

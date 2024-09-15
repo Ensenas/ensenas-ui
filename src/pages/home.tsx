@@ -1,39 +1,68 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable no-console */
+import axios from 'axios'
 import { useRouter } from 'next/router'
+import { useSession } from 'next-auth/react'
 import React, { useEffect, useState } from 'react'
 
-import HomeHeader from '../components/HomeHeader/HomeHeader'
+import HomeLayout from '../components/HomeLayout/HomeLayout'
 import ProtectedRoute from '../components/ProtectedRoute'
+import LoadingSpinner from '../components/Spinner/Spinner'
 import {
   ContentContainer,
-  HomePageWrapper,
-  NavIcon,
-  NavItem,
-  SidebarContainer,
-  SidebarNav
-} from '../styles/HomePage.styles'
-import Achievements from './achievements'
-import HomeMain from './homeMain'
-import MyLearning from './learning'
-import LevelUnits from './learning/levels/[id]/index'
-import UnitLessons from './learning/levels/[id]/units'
-import Lesson from './learning/levels/[id]/units/lessons/index'
-import LessonTest from './learning/levels/[id]/units/lessons/test'
-import Profile from './profile'
-import Statistics from './statistics'
+  Image,
+  Recommendations,
+  RecommendationsTitle,
+  Section,
+  VideoItem,
+  VideoList,
+  WelcomeTitle
+} from '../styles/HomeMain.styles'
+import { LessonCard, LessonItem } from '../styles/Learning.styles'
 
-const navItems = [
-  { label: 'Inicio', icon: '/icons/home-icon.png', href: '/home' },
-  { label: 'Mi Aprendizaje', icon: '/icons/learning-icon.png', href: '/learning' },
-  { label: 'Perfil', icon: '/icons/profile-icon.png', href: '/profile' },
-  { label: 'Mis Logros', icon: '/icons/achievement-icon.png', href: '/achievements' },
-  { label: 'Estadísticas', icon: '/icons/statistics-icon.png', href: '/statistics' }
-
-]
 
 const HomePage: React.FC = () => {
-  const router = useRouter()
+
+  const { data: session } = useSession()
+
+  const [lessons, setLessons] = useState<any[]>([])
+  const [allLessons, setAllLessons] = useState<any[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchLessons = async () => {
+        try {
+            const response = await axios.get('/ens-api/lessons')
+            console.log('DATA', response.data)
+            const lessonsList = response.data.map((lesson: any) => ({
+                id: lesson.id,
+                title: lesson.title,
+                description: lesson.description,
+                order: lesson.order
+            }))
+            lessonsList.sort((a, b) => a.order < b.order)
+            setAllLessons(lessonsList)
+        } catch (error) {
+            console.error('Error fetching units:', error)
+        } finally {
+            setIsLoading(false) // Termina la carga, incluso si hay error
+        }
+    }
+    fetchLessons()
+  }, [])
+
+  useEffect(() => {
+        const filteredLessons = allLessons.filter(lesson => lesson.title.startsWith('E-01') || 
+          lesson.title.startsWith('B-01') || lesson.title.startsWith('I-01'))   
+        setLessons(filteredLessons)
+  }, [allLessons])
+
+  const handleLessonClick = (lessonId: number) => {
+    setCurrentLesson(lessonId) // Actualiza el estado de la unidad actual
+    setCurrentLevel(2)
+    setCurrentUnit(8) 
+    setActivePage('/learning/levels/')
+  }
 
   const [currentLevel, setCurrentLevel] = useState<number | null>(null)
   const [currentUnit, setCurrentUnit] = useState<number | null>(null)
@@ -55,20 +84,10 @@ const HomePage: React.FC = () => {
   }, [activePage, currentLevel, currentUnit, currentLesson])
 
 
-  const handleNavigation = (href: string) => {
-    router.push(href)
-    setActivePage(href)
-    if (!activePage.startsWith('/learning)')) {
-      setCurrentLevel(null) // Reset level when navigating away from learning
-      setCurrentUnit(null)
-      setCurrentLesson(null)
-      setTest(false)
-    }
-  }
 
   return (
     <ProtectedRoute>
-      <div>
+      {/* <div>
         <HomeHeader />
         <HomePageWrapper>
           <SidebarContainer>
@@ -105,7 +124,46 @@ const HomePage: React.FC = () => {
                 currentLesson={currentLesson} setTest={setTest} />}
           </ContentContainer>
         </HomePageWrapper>
-      </div>
+      </div> */}
+      <HomeLayout activePage={activePage}>
+        <Section>
+          <WelcomeTitle>¡Bienvenido, {session?.user?.name}!</WelcomeTitle>
+          <ContentContainer>
+            <div style={{ width: '70%', display: 'inline-block'}}>
+              <p style={{ fontSize: '1.2em', color: '#666' }}>
+                ¡Te damos la bienvenida a nuestra plataforma de aprendizaje de lenguaje de señas!
+              </p>
+              <p style={{ fontSize: '1.2em', color: '#666' }}>
+                Estamos emocionados de que te hayas unido a nosotros en esta jornada para aprender y
+                conectar a través de este hermoso y esencial lenguaje.
+              </p>
+              <p style={{ fontSize: '1.2em', color: '#666' }}>
+                ¡Buena suerte y disfruta del proceso de aprendizaje!
+              </p>
+            </div>
+            <Image src="/signs.gif" alt="Welcome Image" />
+          </ContentContainer>
+          <Recommendations>
+            <RecommendationsTitle>Recomendaciones para ti</RecommendationsTitle>
+            <VideoList>
+                {isLoading ? (
+                    <LoadingSpinner /> // Muestra el spinner mientras se está cargando
+                ) : (
+                    lessons.map(lesson => (
+                      <VideoItem key={lesson.id}>
+                        <LessonItem key={lesson.id} onClick={() => handleLessonClick(lesson.id)}>
+                            <LessonCard>
+                                <h1>{lesson.title}</h1>
+                                <h3>{lesson.description}</h3>
+                            </LessonCard>
+                        </LessonItem>
+                      </VideoItem>  
+                    )))}
+            </VideoList>
+          </Recommendations>
+        </Section>
+        {/* Aquí puedes agregar más componentes según sea necesario */}
+      </HomeLayout>
     </ProtectedRoute>
   )
 }

@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable no-console */
-// import { useRouter } from 'next/router'
+import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 
 import HomeHeader from '../components/HomeHeader/HomeHeader'
@@ -33,7 +33,7 @@ const navItems = [
 ]
 
 const HomePage: React.FC = () => {
-  // const router = useRouter()
+  const router = useRouter()
 
   const [currentLevel, setCurrentLevel] = useState<number | null>(null)
   const [currentUnit, setCurrentUnit] = useState<number | null>(null)
@@ -56,6 +56,7 @@ const HomePage: React.FC = () => {
 
 
   const handleNavigation = (href: string) => {
+    router.push(href)
     setActivePage(href)
     if (!activePage.startsWith('/learning)')) {
       setCurrentLevel(null) // Reset level when navigating away from learning
@@ -87,7 +88,8 @@ const HomePage: React.FC = () => {
             </SidebarNav>
           </SidebarContainer>
           <ContentContainer>
-            {activePage === '/home' && <HomeMain />}
+            {activePage === '/home' && <HomeMain setCurrentLevel={setCurrentLevel} 
+              setCurrentUnit={setCurrentUnit} setCurrentLesson={setCurrentLesson} setActivePage={setActivePage} />}
             {activePage === '/learning' && <MyLearning setCurrentLevel={setCurrentLevel} />}
             {activePage === '/profile' && <Profile />}
             {activePage === '/achievements' && <Achievements />}

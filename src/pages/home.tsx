@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable no-console */
 import axios from 'axios'
@@ -14,11 +15,14 @@ import {
   Recommendations,
   RecommendationsTitle,
   Section,
+  TextContainer,
   VideoItem,
   VideoList,
   WelcomeTitle
-} from '../styles/HomeMain.styles'
+} from '../styles/HomePage.styles'
 import { LessonCard, LessonItem } from '../styles/Learning.styles'
+import { useNavigation } from '../context/NavigationLearningContext'
+import HomeModal from '../components/HomeModal/HomeModal'
 
 
 const HomePage: React.FC = () => {
@@ -28,6 +32,19 @@ const HomePage: React.FC = () => {
   const [lessons, setLessons] = useState<any[]>([])
   const [allLessons, setAllLessons] = useState<any[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const { currentLevel, setCurrentLevel, currentUnit, setCurrentUnit, currentLesson, setCurrentLesson, hasShownModal, setHasShownModal } = useNavigation()
+  const [isModalVisible, setIsModalVisible] = useState(true); // Estado para controlar la visibilidad del modal
+  const [activePage, setActivePage] = useState('/home')
+  const [test, setTest] = useState<Boolean>(false)
+
+  useEffect(() => {
+    if (session) {
+      const hasShownModal = localStorage.getItem('hasShownModal');
+      if (hasShownModal) {
+        setIsModalVisible(false);
+      }
+    }
+  }, [])
 
   useEffect(() => {
     const fetchLessons = async () => {
@@ -64,12 +81,6 @@ const HomePage: React.FC = () => {
     setActivePage('/learning/levels/')
   }
 
-  const [currentLevel, setCurrentLevel] = useState<number | null>(null)
-  const [currentUnit, setCurrentUnit] = useState<number | null>(null)
-  const [currentLesson, setCurrentLesson] = useState<number | null>(null)
-  const [activePage, setActivePage] = useState('/home')
-  const [test, setTest] = useState<Boolean>(false)
-
   useEffect(() => {
     if (activePage.startsWith('/learning') && currentLevel) {
       if (currentUnit) {
@@ -83,87 +94,59 @@ const HomePage: React.FC = () => {
     }
   }, [activePage, currentLevel, currentUnit, currentLesson])
 
+  const handleCloseModal = () => {
+    setIsModalVisible(false);
+    localStorage.setItem('hasShownModal', 'true');
+  }
 
 
   return (
     <ProtectedRoute>
-      {/* <div>
-        <HomeHeader />
-        <HomePageWrapper>
-          <SidebarContainer>
-            <SidebarNav>
-              {navItems.map((item) => (
-                <NavItem
-                  key={item.label}
-                  isActive={activePage === item.href}
-                  onClick={() => handleNavigation(item.href)}
-                >
-                  <NavIcon>
-                    <img src={item.icon} alt={`${item.label} Icon`} />
-                  </NavIcon>
-                  <span>{item.label}</span>
-                </NavItem>
-              ))}
-            </SidebarNav>
-          </SidebarContainer>
-          <ContentContainer>
-            {activePage === '/home' && <HomeMain setCurrentLevel={setCurrentLevel} 
-              setCurrentUnit={setCurrentUnit} setCurrentLesson={setCurrentLesson} setActivePage={setActivePage} />}
-            {activePage === '/learning' && <MyLearning setCurrentLevel={setCurrentLevel} />}
-            {activePage === '/profile' && <Profile />}
-            {activePage === '/achievements' && <Achievements />}
-            {activePage === '/statistics' && <Statistics />}
-            {activePage.startsWith('/learning/levels/') && currentLevel && !currentUnit &&
-              <LevelUnits currentLevel={currentLevel} setCurrentUnit={setCurrentUnit} />}
-            {activePage.startsWith(`/learning/levels/${currentLevel}`) && currentUnit && !currentLesson &&
-              <UnitLessons currentLevel={currentLevel} currentUnit={currentUnit} setCurrentLesson={setCurrentLesson} />}
-            {activePage.startsWith(`/learning/levels/${currentLevel}`) && currentUnit && currentLesson && !test &&
-              <Lesson currentLevel={currentLevel} currentUnit={currentUnit} currentLesson={currentLesson} setTest={setTest} />}
-            {activePage.startsWith(`/learning/levels/${currentLevel}`) && currentUnit && currentLesson && test &&
-              <LessonTest currentLevel={currentLevel} currentUnit={currentUnit} 
-                currentLesson={currentLesson} setTest={setTest} />}
-          </ContentContainer>
-        </HomePageWrapper>
-      </div> */}
-      <HomeLayout activePage={activePage}>
-        <Section>
-          <WelcomeTitle>¡Bienvenido, {session?.user?.name}!</WelcomeTitle>
-          <ContentContainer>
-            <div style={{ width: '70%', display: 'inline-block'}}>
-              <p style={{ fontSize: '1.2em', color: '#666' }}>
-                ¡Te damos la bienvenida a nuestra plataforma de aprendizaje de lenguaje de señas!
-              </p>
-              <p style={{ fontSize: '1.2em', color: '#666' }}>
-                Estamos emocionados de que te hayas unido a nosotros en esta jornada para aprender y
-                conectar a través de este hermoso y esencial lenguaje.
-              </p>
-              <p style={{ fontSize: '1.2em', color: '#666' }}>
-                ¡Buena suerte y disfruta del proceso de aprendizaje!
-              </p>
-            </div>
-            <Image src="/signs.gif" alt="Welcome Image" />
-          </ContentContainer>
-          <Recommendations>
-            <RecommendationsTitle>Recomendaciones para ti</RecommendationsTitle>
-            <VideoList>
-                {isLoading ? (
-                    <LoadingSpinner /> // Muestra el spinner mientras se está cargando
-                ) : (
-                    lessons.map(lesson => (
-                      <VideoItem key={lesson.id}>
-                        <LessonItem key={lesson.id} onClick={() => handleLessonClick(lesson.id)}>
-                            <LessonCard>
-                                <h1>{lesson.title}</h1>
-                                <h3>{lesson.description}</h3>
-                            </LessonCard>
-                        </LessonItem>
-                      </VideoItem>  
-                    )))}
-            </VideoList>
-          </Recommendations>
-        </Section>
-        {/* Aquí puedes agregar más componentes según sea necesario */}
-      </HomeLayout>
+      { isModalVisible ? (
+        <HomeModal isVisible={isModalVisible} onClose={handleCloseModal} />
+      ): (
+        <HomeLayout activePage={activePage}>
+          <Section>
+            <TextContainer>
+              <WelcomeTitle>¡Bienvenido, {session?.user?.name}!</WelcomeTitle>
+                <div style={{ width: '90%', display: 'inline-block'}}>
+                  <p style={{ fontSize: '1.2em', color: '#fff' }}>
+                    ¡Te damos la bienvenida a nuestra plataforma de aprendizaje de lenguaje de señas!
+                  </p>
+                  <p style={{ fontSize: '1.2em', color: '#fff' }}>
+                    Estamos emocionados de que te hayas unido a nosotros en esta jornada para aprender y
+                    conectar a través de este hermoso y esencial lenguaje.
+                  </p>
+                  <p style={{ fontSize: '1.2em', color: '#fff' }}>
+                    ¡Buena suerte y disfruta del proceso de aprendizaje!
+                  </p>
+                </div>
+            </TextContainer>
+            {/* <ContentContainer>
+              <Image src="/signs.gif" alt="Welcome Image" />
+            </ContentContainer> */}
+            <Recommendations>
+              <RecommendationsTitle>Recomendaciones para ti</RecommendationsTitle>
+              <VideoList>
+                  {isLoading ? (
+                      <LoadingSpinner /> // Muestra el spinner mientras se está cargando
+                  ) : (
+                      lessons.map(lesson => (
+                        <VideoItem key={lesson.id}>
+                          <LessonItem key={lesson.id} onClick={() => handleLessonClick(lesson.id)}>
+                              <LessonCard>
+                                  <h1>{lesson.title}</h1>
+                                  <h3>{lesson.description}</h3>
+                              </LessonCard>
+                          </LessonItem>
+                        </VideoItem>  
+                      )))}
+              </VideoList>
+            </Recommendations>
+          </Section>
+          {/* Aquí puedes agregar más componentes según sea necesario */}
+        </HomeLayout>
+      )}
     </ProtectedRoute>
   )
 }

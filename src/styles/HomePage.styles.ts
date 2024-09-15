@@ -1,58 +1,85 @@
 import styled from 'styled-components'
 
-// Contenedor principal que aloja la barra lateral y el contenido
-export const HomePageWrapper = styled.div`
-  display: flex;
-  height: 100%;
-  background: #f4f4f4;
+export const Section = styled.div`
+  margin: 0px;
 `
-
-// Contenedor de la barra lateral
-export const SidebarContainer = styled.div`
-  width: 15%;
-  background: #fff;
-  border-right: 1px solid #ddd;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-`
-
-// Navegación en columna
-export const SidebarNav = styled.nav`
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
-`
-
-// Elemento de la navegación
-export const NavItem = styled.div<{ isActive: boolean }>`
-  display: flex;
-  align-items: center;
-  padding: 10px 15px;
-  margin-bottom: 10px;
-  background: ${({ isActive }) => (isActive ? '#e0e0e0' : 'transparent')};
-  border-radius: 5px;
-  cursor: pointer;
-
-  span {
-    margin-left: 10px;
-    font-size: 14px;
-    font-weight: ${({ isActive }) => (isActive ? 'bold' : 'normal')};
-  }
-
-  &:hover {
-    background: #e0e0e0;
-  }
-`
-
-// Icono de la navegación
-export const NavIcon = styled.div`
-  img {
-    width: 20px;
-    height: 20px;
-  }
-`
-
-// Contenedor del contenido principal
 export const ContentContainer = styled.div`
-  width: 80%;
+  width: 100%;
+  background: white;
+
+  text-align: center;
+  align-items: center;
+  justify-content: center;
   padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+`
+
+export const TextContainer = styled.div`
+  position: relative;
+  height: 400px; /* Altura del contenedor */
+  padding: 50px; /* Espaciado interno del contenedor */
+  box-sizing: border-box; /* Incluye el padding en el cálculo del tamaño total del contenedor */
+  overflow: hidden; /* Oculta cualquier contenido que se desborde */
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('/abstract-colorful-background-design_632743-33.avif'); /* Ruta de la imagen */
+    background-repeat: no-repeat; /* Evita que la imagen se repita */
+    background-size: cover; /* Asegura que la imagen cubra todo el contenedor */
+    background-position: center; /* Centra la imagen en el contenedor */
+    opacity: 0.95; /* Opacidad de la imagen */
+    z-index: 1; /* Asegura que el pseudo-elemento esté debajo del contenido */
+  }
+
+  & > * {
+    position: relative;
+    z-index: 2; /* Asegura que el contenido esté sobre el pseudo-elemento */
+    color: #fff; /* Color del texto para que sea legible sobre el fondo */
+  }
+
+
+`;
+
+export const WelcomeTitle = styled.h1`
+  margin-bottom: 30px;
+  font-size: 3em;
+  color: #fff;
+`
+
+export const Image = styled.img`
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+`
+
+export const Recommendations = styled.div`
+  margin-top: 40px;
+`
+
+export const RecommendationsTitle = styled.h3`
+  font-size: 1.4em;
+  color: #333;
+`
+
+export const VideoList = styled.div`
+  display: flex;
+  overflow-x: auto;
+  padding: 10px 0;
+`
+
+export const VideoItem = styled.div`
+  min-width: 200px;
+  margin-right: 15px;
+  background: #f9f9f9;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  font-size: 1em;
+  color: #555;
 `

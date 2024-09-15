@@ -43,8 +43,8 @@ const Subscriptions: React.FC = () => {
     useEffect(() => {
         setLoading(false)
         const subs = [
-            { id: 1, name: 'Plan Basico', logo: "/hot-air-balloon.png", status: 'Activo', expirationDate: '2024-12-31' },
-            { id: 2, name: 'Plan Premium', logo: "/air-plane.png", status: 'Inactivo', expirationDate: '2024-06-30' },
+            { id: 1, name: 'Plan Basico', isPremium: false, background: "/BasicPlan.jpg", logo: "/hot-air-balloon.png", status: 'Activo', expirationDate: '2024-12-31' },
+            { id: 2, name: 'Plan Premium', isPremium: true, background: "/PremiumPlan.jpg", logo: "/air-plane.png", status: 'Inactivo', expirationDate: '2024-06-30' },
             // Otros planes de suscripción
         ]
 
@@ -67,31 +67,33 @@ const Subscriptions: React.FC = () => {
                 <CardContent>No hay suscripciones para mostrar.</CardContent>
               ) : (
                 subscriptions.map(sub => (
-                  <SubscriptionCard key={sub.id}>
-                    {sub.isTrial ? (
-                      <TrialCard>
-                        <TrialTitle>{sub.name}</TrialTitle>
-                        <CardContent>Estado: {sub.status}</CardContent>
-                        <CardContent>Fecha de Expiración: {sub.expirationDate}</CardContent>
-                      </TrialCard>
-                    ) : (
-                      <div>
-                        <CardTitle>{sub.name}</CardTitle>
-                        <CardContent>Estado: {sub.status}</CardContent>
-                        <CardContent>Fecha de Expiración: {sub.expirationDate}</CardContent>
-                      </div>
-                    )}
-                    <CardLogo>
-                        <LogoImage src={sub.logo} alt="Logo" />
-                    </CardLogo>
-                    <CardActions>
-                        <ActionButton>Ver Detalles</ActionButton>
-                        {sub.status === 'Activo' ? (
-                                <ActionButton>Cancelar Suscripción</ActionButton>
+                  <SubscriptionCard key={sub.id} background={sub.background} isPremium={sub.isPremium}>
+                    {/* <CardImage src={sub.background}> */}
+                        {sub.isTrial ? (
+                        <TrialCard background={sub.background}>
+                            <TrialTitle>{sub.name}</TrialTitle>
+                            <CardContent>Estado: {sub.status}</CardContent>
+                            <CardContent>Fecha de Expiración: {sub.expirationDate}</CardContent>
+                        </TrialCard>
                         ) : (
-                                <ActionButton>Contratar</ActionButton>
+                        <div>
+                            <CardTitle>{sub.name}</CardTitle>
+                            <CardContent>Estado: {sub.status}</CardContent>
+                            <CardContent>Fecha de Expiración: {sub.expirationDate}</CardContent>
+                        </div>
                         )}
-                    </CardActions>
+                        <CardLogo>
+                            <LogoImage src={sub.logo} alt="Logo" />
+                        </CardLogo>
+                        <CardActions>
+                            <ActionButton>Ver Detalles</ActionButton>
+                            {sub.status === 'Activo' ? (
+                                    <ActionButton>Cancelar Suscripción</ActionButton>
+                            ) : (
+                                    <ActionButton>Contratar</ActionButton>
+                            )}
+                        </CardActions>
+                    {/* </CardImage> */}
                   </SubscriptionCard>
                 ))
               )}

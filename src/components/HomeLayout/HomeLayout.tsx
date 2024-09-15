@@ -2,7 +2,7 @@
 import { useRouter } from 'next/router'
 import React from 'react'
 
-import { ContentContainer, HomePageWrapper, NavIcon, NavItem,SidebarContainer, SidebarNav } from '../../styles/HomePage.styles'
+import { ContentContainer, HomePageWrapper, NavIcon, NavItem,SidebarContainer, SidebarNav } from './HomeLayout.styles'
 import HomeHeader from '../HomeHeader/HomeHeader'
 
 const navItems = [

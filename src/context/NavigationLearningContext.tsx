@@ -9,6 +9,8 @@ interface NavigationLearningContextType {
   setCurrentUnit: (unit: number | null) => void;
   currentLesson: number | null;
   setCurrentLesson: (lesson: number | null) => void;
+  hasShownModal: boolean | null;
+  setHasShownModal: (hsm: boolean | null) => void;
 }
 
 const NavigationLearningContext = createContext<NavigationLearningContextType | undefined>(undefined)

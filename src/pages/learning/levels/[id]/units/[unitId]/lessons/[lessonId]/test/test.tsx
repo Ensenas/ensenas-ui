@@ -3,12 +3,12 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 
-import ProtectedRoute from '../../../../../../../../components/ProtectedRoute'
-import VideoRecorder from '../../../../../../../../components/Recorder/VideoRecorder'
+import ProtectedRoute from '../../../../../../../../../components/ProtectedRoute'
+import VideoRecorder from '../../../../../../../../../components/Recorder/VideoRecorder'
 import {
     InstructionText,
     LessonTitle, Section, Title
-} from '../../../../../../../../styles/test.styles'
+} from '../../../../../../../../../styles/test.styles'
 
 
 interface LessonProps {

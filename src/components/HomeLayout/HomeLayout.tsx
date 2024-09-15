@@ -10,7 +10,8 @@ const navItems = [
   { label: 'Mi Aprendizaje', icon: '/icons/learning-icon.png', href: '/learning' },
   { label: 'Perfil', icon: '/icons/profile-icon.png', href: '/profile' },
   { label: 'Mis Logros', icon: '/icons/achievement-icon.png', href: '/achievements' },
-  { label: 'Estadísticas', icon: '/icons/statistics-icon.png', href: '/statistics' }
+  { label: 'Estadísticas', icon: '/icons/statistics-icon.png', href: '/statistics' },
+  { label: 'Suscripciones', icon: '/icons/suscription-icon.png', href: '/suscriptions' }
 ]
 
 const HomeLayout: React.FC<{ children: React.ReactNode, activePage: string}> 

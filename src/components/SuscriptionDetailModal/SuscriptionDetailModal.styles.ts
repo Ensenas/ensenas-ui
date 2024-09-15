@@ -14,34 +14,31 @@ export const ModalOverlay = styled.div`
 `;
 
 export const ModalContent = styled.div`
-  position: relative; /* Añadido para posicionar el botón de cerrar */
   background: #fff;
   padding: 20px;
   border-radius: 10px;
   text-align: center;
   max-width: 90%;
   max-height: 80%;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  position: relative;
 `;
 
-export const ModalImage = styled.img`
-  width: 100%;
-  height: auto;
-  max-width: 500px;
+export const ModalTitle = styled.h2`
+  margin: 0;
+  padding-bottom: 10px;
 `;
 
-export const CloseButton = styled.button`
+export const ModalBody = styled.div`
+  text-align: left;
+`;
+
+export const ModalCloseButton = styled.button`
   position: absolute;
   top: 10px;
   right: 10px;
-  background: transparent;
+  background: none;
   border: none;
-  color: #333;
-  font-size: 24px;
+  font-size: 20px;
   cursor: pointer;
-  transition: color 0.3s ease;
-
-  &:hover {
-    color: #ff0000; /* Cambia el color al pasar el ratón por encima */
-  }
+  color: #333;
 `;

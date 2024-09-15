@@ -16,11 +16,18 @@ import {
   LogoImage
 } from '../styles/Suscriptions.styles'
 import LoadingSpinner from '../components/Spinner/Spinner'
+import SubscriptionDetailModal from '../components/SuscriptionDetailModal/SuscriptionDetailModal'
+import ConfirmationModal from '../components/ConfirmationModal/ConfirmationModal'
 
 const Subscriptions: React.FC = () => {
   const [subscriptions, setSubscriptions] = useState<any[]>([])
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
+  const [selectedSubscription, setSelectedSubscription] = useState<any | null>(null);
+  const [isModalVisible, setModalVisible] = useState<boolean>(false);
+  const [isConfirmationVisible, setConfirmationVisible] = useState<boolean>(false);
+
+
 
 //   useEffect(() => {
 //     // Función para obtener las suscripciones del backend
@@ -43,13 +50,42 @@ const Subscriptions: React.FC = () => {
     useEffect(() => {
         setLoading(false)
         const subs = [
-            { id: 1, name: 'Plan Basico', isPremium: false, background: "/BasicPlan.jpg", logo: "/hot-air-balloon.png", status: 'Activo', expirationDate: '2024-12-31' },
-            { id: 2, name: 'Plan Premium', isPremium: true, background: "/PremiumPlan.jpg", logo: "/air-plane.png", status: 'Inactivo', expirationDate: '2024-06-30' },
+            { id: 1, name: 'Plan Básico', isPremium: false, background: "/BasicPlan.jpg", logo: "/hot-air-balloon.png", status: 'Activo', 
+                expirationDate: '31/12/2024', detalle: "Detalle Plan Basico" },
+            { id: 2, name: 'Plan Premium', isPremium: true, background: "/PremiumPlan.jpg", logo: "/air-plane.png", status: 'Inactivo', 
+                expirationDate: '30/06/2024', detalle: "Detalle Plan Premium" },
             // Otros planes de suscripción
         ]
 
         setSubscriptions(subs)
     }, [])
+
+    const handleViewDetails = (subscription: any) => {
+        setSelectedSubscription(subscription);
+        setModalVisible(true);
+    }
+    
+    const handleCloseModal = () => {
+        setModalVisible(false);
+        setSelectedSubscription(null);
+    }
+
+    const handleCancelSubscription = (subscription: any) => {
+        setSelectedSubscription(subscription);
+        setConfirmationVisible(true);
+      };
+    
+      const handleConfirmCancel = () => {
+        // Aquí deberías agregar la lógica para cancelar la suscripción
+        console.log(`Cancelando suscripción: ${selectedSubscription?.name}`);
+        setConfirmationVisible(false);
+        setSelectedSubscription(null);
+      };
+    
+      const handleCloseConfirmation = () => {
+        setConfirmationVisible(false);
+        setSelectedSubscription(null);
+      };
 
   return (
     <ProtectedRoute>
@@ -85,11 +121,11 @@ const Subscriptions: React.FC = () => {
                             <LogoImage src={sub.logo} alt="Logo" />
                         </CardLogo>
                         <CardActions>
-                            <ActionButton>Ver Detalles</ActionButton>
+                            <ActionButton onClick={() => handleViewDetails(sub)}>Ver Detalles</ActionButton>
                             {sub.status === 'Activo' ? (
-                                    <ActionButton>Cancelar Suscripción</ActionButton>
+                                    <ActionButton onClick={() => handleCancelSubscription(sub)}>Cancelar Suscripción</ActionButton>
                             ) : (
-                                    <ActionButton>Contratar</ActionButton>
+                                    <ActionButton>Suscribirse</ActionButton>
                             )}
                         </CardActions>
                   </SubscriptionCard>
@@ -99,6 +135,16 @@ const Subscriptions: React.FC = () => {
           )}
         </Section>
       </HomeLayout>
+      <SubscriptionDetailModal
+        isVisible={isModalVisible}
+        onClose={handleCloseModal}
+        subscription={selectedSubscription}
+      />
+      <ConfirmationModal
+        isVisible={isConfirmationVisible}
+        onClose={handleCloseConfirmation}
+        onConfirm={handleConfirmCancel}
+      />
     </ProtectedRoute>
   )
 }

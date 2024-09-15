@@ -18,6 +18,10 @@ export const SidebarContainer = styled.div`
   background: #fff;
   border-right: 1px solid #ddd;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+
+  @media (max-width: 1100px) {
+    width: 90px; /* Ancho reducido para pantallas pequeñas */
+  }
 `
 
 // Navegación en columna
@@ -41,10 +45,17 @@ export const NavItem = styled.div<{ isActive: boolean }>`
     margin-left: 10px;
     font-size: 14px;
     font-weight: ${({ isActive }) => (isActive ? 'bold' : 'normal')};
+    white-space: nowrap;
   }
 
   &:hover {
     background: #e0e0e0;
+  }
+
+  @media (max-width: 1100px) {
+    span {
+      display: none; /* Oculta el texto en pantallas pequeñas */
+    }
   }
 `
 

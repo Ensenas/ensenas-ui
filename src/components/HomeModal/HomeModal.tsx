@@ -1,6 +1,6 @@
-// components/AutoCloseModal.tsx
 import React, { useEffect } from 'react';
-import {ModalContent, ModalImage, ModalOverlay} from './HomeModal.styles'
+import { ModalContent, ModalImage, ModalOverlay, CloseButton } from './HomeModal.styles';
+
 interface ModalProps {
   isVisible: boolean;
   onClose: () => void;
@@ -11,7 +11,7 @@ const HomeModal: React.FC<ModalProps> = ({ isVisible, onClose }) => {
     if (isVisible) {
       const timer = setTimeout(() => {
         onClose();
-      }, 3000); // Cierra el modal después de 3 segundos
+      }, 4000); // Cierra el modal después de 3 segundos
 
       return () => clearTimeout(timer); // Limpia el timer si el componente se desmonta
     }
@@ -22,6 +22,7 @@ const HomeModal: React.FC<ModalProps> = ({ isVisible, onClose }) => {
   return (
     <ModalOverlay>
       <ModalContent>
+        <CloseButton onClick={onClose}>&times;</CloseButton>
         <ModalImage src="/signs.gif" alt="Modal Image" />
       </ModalContent>
     </ModalOverlay>

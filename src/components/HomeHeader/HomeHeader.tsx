@@ -7,6 +7,10 @@ import { HeaderContainer, Logo, LogoutButton, SearchButton, SearchInput } from '
 const HomeHeader: React.FC = () => {
   const handleSignOut = () => {
     localStorage.removeItem('authToken')
+    localStorage.removeItem('currentLevel')
+    localStorage.removeItem('currentUnit')
+    localStorage.removeItem('currentLesson')
+    localStorage.removeItem('hasShownModal')
     signOut({ callbackUrl: '/' })
   }
 

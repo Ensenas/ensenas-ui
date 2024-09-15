@@ -68,7 +68,6 @@ const Subscriptions: React.FC = () => {
               ) : (
                 subscriptions.map(sub => (
                   <SubscriptionCard key={sub.id} background={sub.background} isPremium={sub.isPremium}>
-                    {/* <CardImage src={sub.background}> */}
                         {sub.isTrial ? (
                         <TrialCard background={sub.background}>
                             <TrialTitle>{sub.name}</TrialTitle>
@@ -93,7 +92,6 @@ const Subscriptions: React.FC = () => {
                                     <ActionButton>Contratar</ActionButton>
                             )}
                         </CardActions>
-                    {/* </CardImage> */}
                   </SubscriptionCard>
                 ))
               )}

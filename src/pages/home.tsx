@@ -38,11 +38,12 @@ const HomePage: React.FC = () => {
   const [test, setTest] = useState<Boolean>(false)
 
   useEffect(() => {
-    if (session) {
-      const hasShownModal = localStorage.getItem('hasShownModal');
-      if (hasShownModal) {
-        setIsModalVisible(false);
-      }
+    const hasShownModal = localStorage.getItem('hasShownModal');
+    console.log('hasshown',hasShownModal)
+    if (!hasShownModal) {
+      setIsModalVisible(true);
+      localStorage.setItem('hasShownModal', 'true'); // Marca que el modal ya se ha mostrado
+      console.log('hasshown', hasShownModal)
     }
   }, [])
 
@@ -97,18 +98,19 @@ const HomePage: React.FC = () => {
   const handleCloseModal = () => {
     setIsModalVisible(false);
     localStorage.setItem('hasShownModal', 'true');
+    setHasShownModal(true)
   }
 
 
   return (
     <ProtectedRoute>
-      { isModalVisible ? (
+      { !hasShownModal ? (
         <HomeModal isVisible={isModalVisible} onClose={handleCloseModal} />
       ): (
         <HomeLayout activePage={activePage}>
           <Section>
             <TextContainer>
-              <WelcomeTitle>¡Bienvenido, {session?.user?.name}!</WelcomeTitle>
+              <WelcomeTitle>¡Bienvenid@, {session?.user?.name}!</WelcomeTitle>
                 <div style={{ width: '90%', display: 'inline-block'}}>
                   <p style={{ fontSize: '1.2em', color: '#fff' }}>
                     ¡Te damos la bienvenida a nuestra plataforma de aprendizaje de lenguaje de señas!

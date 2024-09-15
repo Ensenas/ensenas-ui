@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 // context/NavigationContext.tsx
-import React, { createContext, ReactNode,useContext, useState } from 'react'
+import React, { createContext, ReactNode,useContext, useEffect, useState } from 'react'
 
 interface NavigationLearningContextType {
   currentLevel: number | null;
@@ -16,13 +16,36 @@ interface NavigationLearningContextType {
 const NavigationLearningContext = createContext<NavigationLearningContextType | undefined>(undefined)
 
 export const NavigationProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [currentLevel, setCurrentLevel] = useState<number | null>(null)
-  const [currentUnit, setCurrentUnit] = useState<number | null>(null)
-  const [currentLesson, setCurrentLesson] = useState<number | null>(null)
+    
+    const isBrowser = typeof window !== 'undefined' && typeof window.localStorage !== 'undefined';
+
+    const [currentLevel, setCurrentLevel] = useState<number | null>(() => {
+        return isBrowser ? JSON.parse(localStorage.getItem('currentLevel') || 'null') : null;
+    })
+
+    const [currentUnit, setCurrentUnit] = useState<number | null>(() => {
+        return isBrowser ? JSON.parse(localStorage.getItem('currentUnit') || 'null') : null;
+    })
+
+    const [currentLesson, setCurrentLesson] = useState<number | null>(() => {
+        return isBrowser ? JSON.parse(localStorage.getItem('currentLesson') || 'null') : null;
+    })
+
+    const [hasShownModal, setHasShownModal] = useState<boolean | null>(() => {
+        return isBrowser ? JSON.parse(localStorage.getItem('hasShownModal') || 'null') : null;
+    })
+    
+    useEffect(() => {
+    // Guarda el estado en localStorage cada vez que cambie
+    localStorage.setItem('currentLevel', JSON.stringify(currentLevel));
+    localStorage.setItem('currentUnit', JSON.stringify(currentUnit));
+    localStorage.setItem('currentLesson', JSON.stringify(currentLesson));
+    localStorage.setItem('hasShownModal', JSON.stringify(hasShownModal));
+    }, [currentLevel, currentUnit, currentLesson, hasShownModal]);
 
   return (
     <NavigationLearningContext.Provider
-      value={{ currentLevel, setCurrentLevel, currentUnit, setCurrentUnit, currentLesson, setCurrentLesson }}
+      value={{ currentLevel, setCurrentLevel, currentUnit, setCurrentUnit, currentLesson, setCurrentLesson, hasShownModal, setHasShownModal }}
     >
       {children}
     </NavigationLearningContext.Provider>

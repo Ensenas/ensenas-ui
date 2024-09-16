@@ -39,3 +39,9 @@ next-env.d.ts
 .envrc
 
 tasks.md
+
+.vscode/
+
+#idea
+
+.idea/

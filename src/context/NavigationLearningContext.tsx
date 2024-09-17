@@ -11,6 +11,8 @@ interface NavigationLearningContextType {
   setCurrentLesson: (lesson: number | null) => void;
   hasShownModal: boolean | null;
   setHasShownModal: (hsm: boolean | null) => void;
+  test: boolean | null;
+  setTest: (test: boolean | null) => void;
 }
 
 const NavigationLearningContext = createContext<NavigationLearningContextType | undefined>(undefined)
@@ -34,6 +36,10 @@ export const NavigationProvider: React.FC<{ children: ReactNode }> = ({ children
     const [hasShownModal, setHasShownModal] = useState<boolean | null>(() => {
         return isBrowser ? JSON.parse(localStorage.getItem('hasShownModal') || 'null') : null;
     })
+
+    const [test, setTest] = useState<boolean | null>(() => {
+        return isBrowser ? JSON.parse(localStorage.getItem('test') || 'null') : null;
+    })
     
     useEffect(() => {
     // Guarda el estado en localStorage cada vez que cambie
@@ -41,11 +47,12 @@ export const NavigationProvider: React.FC<{ children: ReactNode }> = ({ children
     localStorage.setItem('currentUnit', JSON.stringify(currentUnit));
     localStorage.setItem('currentLesson', JSON.stringify(currentLesson));
     localStorage.setItem('hasShownModal', JSON.stringify(hasShownModal));
-    }, [currentLevel, currentUnit, currentLesson, hasShownModal]);
+    localStorage.setItem('test', JSON.stringify(test));
+    }, [currentLevel, currentUnit, currentLesson, hasShownModal, test]);
 
   return (
     <NavigationLearningContext.Provider
-      value={{ currentLevel, setCurrentLevel, currentUnit, setCurrentUnit, currentLesson, setCurrentLesson, hasShownModal, setHasShownModal }}
+      value={{ currentLevel, setCurrentLevel, currentUnit, setCurrentUnit, currentLesson, setCurrentLesson, hasShownModal, setHasShownModal, test, setTest }}
     >
       {children}
     </NavigationLearningContext.Provider>

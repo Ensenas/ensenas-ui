@@ -16,6 +16,7 @@ import {
     VideoContainer} from '../../../../../../../../styles/Lesson.styles'
 import { useNavigation } from '../../../../../../../../context/NavigationLearningContext'
 import LoadingSpinner from '../../../../../../../../components/Spinner/Spinner'
+import router from 'next/router'
 
 interface LessonProps {
     currentLevel: number | null;
@@ -24,12 +25,12 @@ interface LessonProps {
     setTest: (_test: Boolean) => void;
 }
 
-const Lesson: React.FC<LessonProps> = ({ setTest }) => {
+const Lesson: React.FC<LessonProps> = ({ }) => {
     const [lesson, setLesson] = useState<any>(null)
     const [isLoading, setIsLoading] = useState(true)
     const [videoCompleted, setVideoCompleted] = useState(false)
     const [showTooltip, setShowTooltip] = useState(false)
-    const { currentLevel, setCurrentLevel, currentUnit, setCurrentUnit, currentLesson, setCurrentLesson } = useNavigation()
+    const { currentLevel, setCurrentLevel, currentUnit, setCurrentUnit, currentLesson, setCurrentLesson, setTest } = useNavigation()
   
 
     useEffect(() => {
@@ -63,6 +64,8 @@ const Lesson: React.FC<LessonProps> = ({ setTest }) => {
 
     const handleStartTest = () => {
         setTest(true)
+        router.push(`/learning/levels/${currentLevel}/units/${currentUnit}/lessons/${currentLesson}/test`)
+    
     }
 
     return (

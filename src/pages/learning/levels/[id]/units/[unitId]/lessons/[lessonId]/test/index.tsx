@@ -9,6 +9,8 @@ import {
     InstructionText,
     LessonTitle, Section, Title
 } from '../../../../../../../../../styles/test.styles'
+import { useNavigation } from '../../../../../../../../../context/NavigationLearningContext'
+import HomeLayout from '../../../../../../../../../components/HomeLayout/HomeLayout'
 
 
 interface LessonProps {
@@ -18,10 +20,12 @@ interface LessonProps {
     setTest: (test: Boolean) => void;
 }
 
-const LessonTest: React.FC<LessonProps> = ({ currentLevel, currentUnit, currentLesson, setTest }) => {
+const LessonTest: React.FC<LessonProps> = ({}) => {
 
     const [isLoading, setIsLoading] = useState(true)
     const [lesson, setLesson] = useState<any>(null)
+    const { currentLevel, setCurrentLevel, currentUnit, setCurrentUnit, currentLesson, setCurrentLesson, test, setTest } = useNavigation()
+  
 
     useEffect(() => {
         const fetchLesson = async () => {
@@ -44,23 +48,25 @@ const LessonTest: React.FC<LessonProps> = ({ currentLevel, currentUnit, currentL
             }
         }
         fetchLesson()
-    }, [currentLesson])
+    }, [])
 
     return (
         <ProtectedRoute>
-            <Section>
-                {isLoading ? (
-                    <div>Loading...</div>
-                ) : (
-                    lesson && (
-                        <>
-                            <Title>{lesson.title}</Title>
-                            <LessonTitle>Deberás realizar con tu mano la siguiente seña: {lesson.description}</LessonTitle>
-                            <InstructionText>Por favor, sigue las instrucciones y graba tu respuesta.</InstructionText>
-                            <VideoRecorder />
-                        </>
-                ))}
-            </Section>
+            <HomeLayout activePage={`/learning/levels/${currentLevel}/units/${currentUnit}/levels/${currentLevel}`}>
+                <Section>
+                    {isLoading ? (
+                        <div>Loading...</div>
+                    ) : (
+                        lesson && (
+                            <>
+                                <Title>{lesson.title}</Title>
+                                <LessonTitle>Deberás realizar con tu mano la siguiente seña: {lesson.description}</LessonTitle>
+                                <InstructionText>Por favor, sigue las instrucciones y graba tu respuesta.</InstructionText>
+                                <VideoRecorder />
+                            </>
+                    ))}
+                </Section>
+            </HomeLayout>
         </ProtectedRoute>
     )
 }

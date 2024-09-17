@@ -13,7 +13,8 @@ import {
   TrialCard,
   TrialTitle,
   CardLogo,
-  LogoImage
+  LogoImage,
+  Status
 } from '../styles/Suscriptions.styles'
 import LoadingSpinner from '../components/Spinner/Spinner'
 import SubscriptionDetailModal from '../components/SuscriptionDetailModal/SuscriptionDetailModal'
@@ -103,7 +104,7 @@ const Subscriptions: React.FC = () => {
                 <CardContent>No hay suscripciones para mostrar.</CardContent>
               ) : (
                 subscriptions.map(sub => (
-                  <SubscriptionCard key={sub.id} background={sub.background} isPremium={sub.isPremium}>
+                  <SubscriptionCard key={sub.id} background={sub.background} isPremium={sub.isPremium} status={sub.status}>
                         {sub.isTrial ? (
                         <TrialCard background={sub.background}>
                             <TrialTitle>{sub.name}</TrialTitle>
@@ -113,8 +114,13 @@ const Subscriptions: React.FC = () => {
                         ) : (
                         <div>
                             <CardTitle>{sub.name}</CardTitle>
-                            <CardContent>Estado: {sub.status}</CardContent>
-                            <CardContent>Fecha de Expiración: {sub.expirationDate}</CardContent>
+                            {sub.status === 'Activo' ? (
+                                <>
+                                    <CardContent><Status status={sub.status}>{sub.status}</Status></CardContent>
+                                </>
+                            ) : (
+                                <></>
+                            )}
                         </div>
                         )}
                         <CardLogo>

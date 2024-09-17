@@ -25,7 +25,7 @@ export const SubscriptionsGrid = styled.div`
   padding-bottom: 40px;
 `
 
-export const SubscriptionCard = styled.div<{ background: string, isPremium?: boolean  }>`
+export const SubscriptionCard = styled.div<{ background: string, isPremium?: boolean, status?: string  }>`
   display: flex;
   flex-direction: column; /* Establece la dirección del flex para apilar elementos verticalmente */
   justify-content: space-between; /* Espacia los elementos para que el contenido y las acciones estén en extremos opuestos */
@@ -35,7 +35,7 @@ export const SubscriptionCard = styled.div<{ background: string, isPremium?: boo
   background-size: cover;
   background-position: center; /* Centra la imagen en el contenedor */
   opacity: 0.95; /* Opacidad de la imagen */
-  border: 2px solid #fff; /* Borde azul */
+  border: 5px solid ${({ status }) => (status === 'Activo' ? '#feba4e' : 'fff')};; /* Borde azul */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   text-align: center;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -68,6 +68,14 @@ export const CardContent = styled.p`
   font-size: 1.1em;
   color: #fff;
   margin-bottom: 8px;
+`
+
+export const Status = styled.p<{ status: string }>`
+  
+  color: ${({ status }) => (status === 'Activo' ? '#4c971f' : '#cb1a18')};
+  font-weight: bold;
+  font-size: 1.4em;
+
 `
 
 export const CardLogo = styled.div`

@@ -124,9 +124,6 @@ const HomePage: React.FC = () => {
                   </p>
                 </div>
             </TextContainer>
-            {/* <ContentContainer>
-              <Image src="/signs.gif" alt="Welcome Image" />
-            </ContentContainer> */}
             <Recommendations>
               <RecommendationsTitle>Recomendaciones para ti</RecommendationsTitle>
               <VideoList>

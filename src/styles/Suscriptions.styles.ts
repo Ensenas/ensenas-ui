@@ -35,7 +35,6 @@ export const SubscriptionCard = styled.div<{ background: string, isPremium?: boo
   background-size: cover;
   background-position: center; /* Centra la imagen en el contenedor */
   opacity: 0.95; /* Opacidad de la imagen */
-  border: 5px solid ${({ status }) => (status === 'Activo' ? '#feba4e' : 'fff')};; /* Borde azul */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   text-align: center;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -59,7 +58,7 @@ export const SubscriptionCard = styled.div<{ background: string, isPremium?: boo
 `
 
 export const CardTitle = styled.h3`
-  font-size: 1.7em;
+  font-size: 1.5em;
   margin-bottom: 10px;
   color: #fff;
 `
@@ -70,12 +69,29 @@ export const CardContent = styled.p`
   margin-bottom: 8px;
 `
 
-export const Status = styled.p<{ status: string }>`
-  
-  color: ${({ status }) => (status === 'Activo' ? '#4c971f' : '#cb1a18')};
-  font-weight: bold;
-  font-size: 1.4em;
+export const Status = styled.button<{ status: string }>`
+  background-color: ${({ status }) => (status === 'Activo' ? '#4c971f' : '#cb1a18')};
+  color: #fff;
+  font-size: 1.2em;
+  border: none; /* Elimina el borde predeterminado */
+  border-radius: 10px; /* Redondea los bordes */
+  padding: 10px 20px; /* Espaciado interno para hacerlo más grande y cómodo */
+  text-align: center; /* Centra el texto dentro del botón */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Añade una sombra para darle profundidad */
+  transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease; /* Añade una transición suave para el hover */
+  opacity: 85%;
 
+  &:focus {
+    outline: none; /* Elimina el borde de enfoque predeterminado */
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.2); /* Añade una sombra sutil para el enfoque */
+  }
+
+  &:disabled {
+    background-color: #cccccc; /* Color de fondo para el estado deshabilitado */
+    cursor: not-allowed; /* Cambia el cursor al pasar sobre el botón deshabilitado */
+    box-shadow: none; /* Elimina la sombra en el estado deshabilitado */
+    color: #666666; /* Cambia el color del texto en el estado deshabilitado */
+  }
 `
 
 export const CardLogo = styled.div`
@@ -84,6 +100,22 @@ export const CardLogo = styled.div`
   justify-content: center; /* Centra el logo horizontalmente */
   align-items: center; /* Centra el logo verticalmente */
 `
+
+export const PriceContent = styled.div`
+  display: flex;
+  align-items: center; /* Alinea verticalmente el contenido */
+  justify-content: center; /* Centra horizontalmente el contenido */
+  text-align: center;
+`
+export const CardPrice = styled.p`
+  display:flex;
+  text-align: center;
+  align-items: center;
+  font-size: 2.5em;
+  color: #fff;
+  margin: 10px 0;
+  font-weight: bold;
+`;
 
 export const LogoImage = styled.img`
   max-width: 150px; /* Ajusta el tamaño máximo del logo */

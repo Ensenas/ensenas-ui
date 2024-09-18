@@ -1,5 +1,5 @@
 import React from 'react';
-import { ModalOverlay, ModalContent, ModalTitle, ModalBody, ModalCloseButton } from './SuscriptionDetailModal.styles'; // Añade los estilos correspondientes
+import { ModalOverlay, ModalContent, ModalTitle, ModalBody, ModalCloseButton, FeatureList, FeatureItem, TickIcon, CrossIcon, StatusContent, Status } from './SuscriptionDetailModal.styles';
 
 interface SubscriptionDetailModalProps {
   isVisible: boolean;
@@ -16,7 +16,15 @@ interface SubscriptionDetailModalProps {
 }
 
 const SubscriptionDetailModal: React.FC<SubscriptionDetailModalProps> = ({ isVisible, onClose, subscription }) => {
-  if (!isVisible || !subscription) return null;
+  if (!isVisible || !subscription) return null
+
+  const features = [
+    { label: 'Acceso a lecciones básicas', isPremiumFeature: false },
+    { label: 'Acceso a lecciones avanzadas', isPremiumFeature: true },
+    { label: 'Certificación de curso', isPremiumFeature: true },
+    { label: 'Soporte prioritario', isPremiumFeature: true }, 
+    { label: 'Material adicional', isPremiumFeature: true },
+  ]
 
   return (
     <ModalOverlay>
@@ -24,9 +32,27 @@ const SubscriptionDetailModal: React.FC<SubscriptionDetailModalProps> = ({ isVis
         <ModalCloseButton onClick={onClose}>×</ModalCloseButton>
         <ModalTitle>{subscription.name}</ModalTitle>
         <ModalBody>
-          <p><strong>Estado:</strong> {subscription.status}</p>
-          <p><strong>Fecha de Expiración:</strong> {subscription.expirationDate}</p>
-          <p><strong>Detalles:</strong> {subscription.detalle}</p>
+          <StatusContent>
+            <p style={{color: '#fff'}}><strong>Estado:</strong></p>
+            <Status status={subscription.status}>{subscription.status}</Status>
+          </StatusContent>
+          {subscription.status === 'Activo' ? (
+              <p style={{color: '#fff'}}><strong>Fecha de Expiración:</strong> {subscription.expirationDate}</p>
+          ) : (
+              <></>
+          )}
+          <FeatureList>
+            {features.map((feature, index) => (
+              <FeatureItem key={index}>
+                {!subscription.isPremium && feature.isPremiumFeature ? (
+                  <CrossIcon>✗</CrossIcon>
+                ) : (
+                  <TickIcon>✓</TickIcon>
+                )}
+                {feature.label}
+              </FeatureItem>
+            ))}
+          </FeatureList>
         </ModalBody>
       </ModalContent>
     </ModalOverlay>
@@ -34,3 +60,4 @@ const SubscriptionDetailModal: React.FC<SubscriptionDetailModalProps> = ({ isVis
 }
 
 export default SubscriptionDetailModal
+

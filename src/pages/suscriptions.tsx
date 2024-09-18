@@ -14,7 +14,9 @@ import {
   TrialTitle,
   CardLogo,
   LogoImage,
-  Status
+  Status,
+  CardPrice,
+  PriceContent
 } from '../styles/Suscriptions.styles'
 import LoadingSpinner from '../components/Spinner/Spinner'
 import SubscriptionDetailModal from '../components/SuscriptionDetailModal/SuscriptionDetailModal'
@@ -52,9 +54,9 @@ const Subscriptions: React.FC = () => {
         setLoading(false)
         const subs = [
             { id: 1, name: 'Plan Básico', isPremium: false, background: "/BasicPlan.jpg", logo: "/hot-air-balloon.png", status: 'Activo', 
-                expirationDate: '31/12/2024', detalle: "Detalle Plan Basico" },
+                expirationDate: '31/12/2024', price: '$2000 ARS', detalle: "Detalle Plan Basico" },
             { id: 2, name: 'Plan Premium', isPremium: true, background: "/PremiumPlan.jpg", logo: "/air-plane.png", status: 'Inactivo', 
-                expirationDate: '30/06/2024', detalle: "Detalle Plan Premium" },
+                expirationDate: '30/06/2024', price: '$5000 ARS', detalle: "Detalle Plan Premium" },
             // Otros planes de suscripción
         ]
 
@@ -104,37 +106,43 @@ const Subscriptions: React.FC = () => {
                 <CardContent>No hay suscripciones para mostrar.</CardContent>
               ) : (
                 subscriptions.map(sub => (
-                  <SubscriptionCard key={sub.id} background={sub.background} isPremium={sub.isPremium} status={sub.status}>
-                        {sub.isTrial ? (
+                    <SubscriptionCard key={sub.id} background={sub.background} isPremium={sub.isPremium} status={sub.status}>
+                    {sub.isTrial ? (
                         <TrialCard background={sub.background}>
                             <TrialTitle>{sub.name}</TrialTitle>
                             <CardContent>Estado: {sub.status}</CardContent>
                             <CardContent>Fecha de Expiración: {sub.expirationDate}</CardContent>
+                            <CardPrice>Precio: {sub.price} <p>/ mes</p></CardPrice>
                         </TrialCard>
-                        ) : (
+                    ) : (
                         <div>
                             <CardTitle>{sub.name}</CardTitle>
-                            {sub.status === 'Activo' ? (
+                            <PriceContent>
+                                <CardPrice>{sub.price}</CardPrice>
+                                <p style={{fontSize: '20px', color:'#fff', marginLeft: '10px'}}>/ mes</p>
+                            </PriceContent>
+                            <CardContent><Status status={sub.status}>{sub.status}</Status></CardContent>
+                            {/* {sub.status === 'Activo' ? (
                                 <>
                                     <CardContent><Status status={sub.status}>{sub.status}</Status></CardContent>
                                 </>
                             ) : (
                                 <></>
-                            )}
+                            )} */}
                         </div>
+                    )}
+                    <CardLogo>
+                        <LogoImage src={sub.logo} alt="Logo" />
+                    </CardLogo>
+                    <CardActions>
+                        <ActionButton onClick={() => handleViewDetails(sub)}>Ver Detalles</ActionButton>
+                        {sub.status === 'Activo' ? (
+                            <ActionButton onClick={() => handleCancelSubscription(sub)}>Cancelar Suscripción</ActionButton>
+                        ) : (
+                            <ActionButton>Suscribirse</ActionButton>
                         )}
-                        <CardLogo>
-                            <LogoImage src={sub.logo} alt="Logo" />
-                        </CardLogo>
-                        <CardActions>
-                            <ActionButton onClick={() => handleViewDetails(sub)}>Ver Detalles</ActionButton>
-                            {sub.status === 'Activo' ? (
-                                    <ActionButton onClick={() => handleCancelSubscription(sub)}>Cancelar Suscripción</ActionButton>
-                            ) : (
-                                    <ActionButton>Suscribirse</ActionButton>
-                            )}
-                        </CardActions>
-                  </SubscriptionCard>
+                    </CardActions>
+                </SubscriptionCard>                
                 ))
               )}
             </SubscriptionsGrid>

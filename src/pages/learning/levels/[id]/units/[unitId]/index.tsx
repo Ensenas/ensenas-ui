@@ -8,7 +8,7 @@ import React, { useEffect, useState } from 'react'
 import HomeLayout from '../../../../../../components/HomeLayout/HomeLayout'
 import ProtectedRoute from '../../../../../../components/ProtectedRoute'
 import LoadingSpinner from '../../../../../../components/Spinner/Spinner'
-import { useNavigation } from '../../../../../../context/NavigationLearningContext'
+import { Lesson, useNavigation } from '../../../../../../context/NavigationLearningContext'
 import {
     LessonCard,
     LessonItem,
@@ -17,75 +17,38 @@ import {
     Title
 } from '../../../../../../styles/Learning.styles'
 
-interface UnitLessonsProps {
-    currentLevel: number | null;
-    currentUnit: number | null;
-    setCurrentLesson: (idLesson :number) => void;
-}
 
-const UnitLessons: React.FC<UnitLessonsProps> = ({}) => {
-    const [lessons, setLessons] = useState<any[]>([])
-    const [allLessons, setAllLessons] = useState<any[]>([])
-    const [isLoading, setIsLoading] = useState(true)
-    const { currentLevel, setCurrentLevel, currentUnit, setCurrentUnit, currentLesson, setCurrentLesson } = useNavigation()
+const UnitLessons: React.FC = ({}) => {
+    const [filteredLessons, setFilteredLessons] = useState<Lesson[]>()
+    const { currentLevel, setCurrentLevel, currentUnit, setCurrentUnit, currentLesson, setCurrentLesson,
+        lessons, isLoading
+     } = useNavigation()
   
 
     useEffect(() => {
-        const fetchLessons = async () => {
-            try {
-                const response = await axios.get('/ens-api/lessons')
-                console.log('DATA', response.data)
-                const lessonsList = response.data.map((lesson: any) => ({
-                    id: lesson.id,
-                    title: lesson.title,
-                    description: lesson.description,
-                    order: lesson.order
-                }))
-                lessonsList.sort((a, b) => a.order < b.order)
-                setAllLessons(lessonsList)
-            } catch (error) {
-                console.error('Error fetching units:', error)
-            } finally {
-                setIsLoading(false) // Termina la carga, incluso si hay error
-            }
-        }
-        fetchLessons()
-    }, [currentLevel])
 
-    useEffect(() => {
-        if (currentLevel) {
-            let filteredLessons: any[] = []
-            switch (currentLevel) {
-                case 2:
-                    filteredLessons = allLessons.filter(lesson => lesson.title.startsWith('E'))
-                    break
-                case 3:
-                    filteredLessons = allLessons.filter(lesson => lesson.title.startsWith('I'))
-                    break
-                case 4:
-                    filteredLessons = allLessons.filter(lesson => lesson.title.startsWith('B'))
-                    break
-            }
-            setLessons(filteredLessons)
+        if (currentUnit && currentLevel) {
+            setFilteredLessons(lessons?.filter(lesson => lesson.title.startsWith(currentUnit.title)).sort((a, b) => a.order - b.order))
         }
-    }, [currentUnit, allLessons, currentLevel])
+    }, [currentUnit, lessons, currentLevel])
 
-    const handleLessonClick = (lessonId: number) => {
-        setCurrentLesson(lessonId) // Actualiza el estado de la unidad actual
-        router.push(`/learning/levels/${currentLevel}/units/${currentUnit}/lessons/${lessonId}`)
+    const handleLessonClick = (lesson: Lesson) => {
+        lesson.videoSrc = 'https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4'
+        setCurrentLesson(lesson) // Actualiza el estado de la unidad actual
+        router.push(`/learning/levels/${currentLevel?.description}/units/${currentUnit?.description}/lessons/${lesson.description}`)
     }
 
     return (
         <ProtectedRoute>
-            <HomeLayout activePage={`/learning/levels/${currentLevel}/units/${currentUnit}`}>
+            <HomeLayout activePage={`/learning/levels/${currentLevel?.description}/units/${currentUnit?.description}`}>
                 <Section>
                     <Title>Lecciones de la Unidad</Title>
                     <div>
                         {isLoading ? (
                             <LoadingSpinner /> // Muestra el spinner mientras se está cargando
                         ) : (
-                            lessons.map(lesson => (
-                                <LessonItem key={lesson.id} onClick={() => handleLessonClick(lesson.id)}>
+                            filteredLessons?.map(lesson => (
+                                <LessonItem key={lesson.id} onClick={() => handleLessonClick(lesson)}>
                                     <LessonCard>
                                         <h1>{lesson.title}</h1>
                                         <h3>{lesson.description}</h3>

@@ -12,6 +12,8 @@ export const WebcamContainer = styled.div`
   position: relative;
   border-radius: 15px;s
   overflow: hidden;
+  widht: 1920px;
+  height: 1080px;
 `
 
 export const Overlay = styled.div`
@@ -27,13 +29,28 @@ export const Overlay = styled.div`
 `
 
 export const SelectorsContainer = styled.div`
-  position: absolute;
+  position: relative;
   left: 10px;
-  top: 240px;
+  top: 10px;
   background-color: rgba(255, 255, 255, 0.8);
-  padding: 10px;
+  padding: 0px;
+  margin-bottom: 20px;
   border-radius: 8px;
 `
+
+export const StyledSelect = styled.select`
+    padding: 10px;
+    margin: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    outline: none;
+
+    &:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    }
+`;
 
 export const LocalVideoLabel = styled.div`
   position: absolute;

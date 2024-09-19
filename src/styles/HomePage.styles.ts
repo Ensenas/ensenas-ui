@@ -2,11 +2,12 @@ import styled from 'styled-components'
 
 export const Section = styled.div`
   margin: 0px;
+  max-width: 100%; /* Asegura que no sobrepase el ancho de la pantalla */
+  overflow: hidden;
 `
 export const ContentContainer = styled.div`
   width: 100%;
   background: white;
-
   text-align: center;
   align-items: center;
   justify-content: center;
@@ -59,18 +60,22 @@ export const Image = styled.img`
 
 export const Recommendations = styled.div`
   margin: 40px;
+  overflow-x: hidden;
 `
 
 export const RecommendationsTitle = styled.h3`
   font-size: 1.4em;
   color: #333;
+  overflow-x: hidden;
 `
 
 export const VideoList = styled.div`
   display: flex;
-  justify-content: space-between;
-  overflow-x: auto;
+  flex-wrap: nowrap; /* Evita que los elementos se muevan a la siguiente línea */
+  overflow-x: auto; /* Permite desplazamiento horizontal */
   padding: 10px 0;
+  max-width: 100%; /* Asegura que no sobrepase el ancho del contenedor */
+  box-sizing: border-box;
 `
 
 export const VideoItem = styled.div`
@@ -83,4 +88,41 @@ export const VideoItem = styled.div`
   text-align: center;
   font-size: 1em;
   color: #555;
+
+  max-height: 250px; /* Ajusta la altura máxima según necesites */
+  overflow: hidden;
+`
+
+export const LessonCard = styled.a`
+  display: block;
+  background: #f0f0f0;
+  padding: 15px;
+  margin: 10px;
+  border-radius: 8px;
+  text-align: center;
+  cursor: pointer;
+  transition: background 0.3s;
+  min-height: 180px;
+
+  &:hover {
+    background: #0567b1;
+  }
+  
+  h1 {
+    font-size: 1.4em;
+    color: #0567b1; /* Color del h1 por defecto */
+    transition: color 0.3s; /* Opcional: añade transición al color del h1 */
+  }
+  
+  h3 {
+    font-size: 1em;
+    transition: color 0.3s; /* Opcional: añade transición al color del h1 */
+  }
+
+  &:hover h1, &:hover h3, &:hover h5 {
+    color: #ffffff; /* Color del h1 cuando se hace hover */
+  }
+`
+export const LessonItem = styled.div`
+  margin: 10px 0;
 `

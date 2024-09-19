@@ -29,7 +29,7 @@ const Profile: React.FC = () => {
   useEffect(() => {
     const fetchProfileData = async () => {
       try {
-        const response = await fetch('/ens-api/auth/profile', {
+        const response = await fetch('/ens-api/users/profile', {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('authToken')}`

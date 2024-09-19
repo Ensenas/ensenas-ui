@@ -6,6 +6,7 @@ import { HeaderContainer, Logo, LogoutButton, SearchButton, SearchInput } from '
 import axios from 'axios'
 import { useNavigation } from '../../context/NavigationLearningContext'
 import SearchResults from './SearchResult'
+import router from 'next/router'
 
 const HomeHeader: React.FC = () => {
 
@@ -49,7 +50,18 @@ const HomeHeader: React.FC = () => {
     // Maneja la selección de la lección (puedes cambiar el estado o redirigir, etc.)
     console.log('Lección seleccionada:', lesson);
     setSearchTerm(''); // Opcional: limpiar el campo de búsqueda después de seleccionar
+    // setCurrentLevel(determineLevel(lesson))
+    // setCurrentUnit(determineUnit(lesson))
+    // router.push(`/learning/levels/${level}/units/${unit}/lessons/${lesson.id}`)
   }
+
+  // const determineLevel :  (number | null) = (lesson : any) => {
+  //   return 0;
+  // }
+
+  // const determineUnit :  (number | null) = (lesson : any) => {
+  //   return 0;
+  // }
 
   const handleSignOut = () => {
     localStorage.removeItem('authToken')

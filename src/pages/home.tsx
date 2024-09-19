@@ -18,10 +18,11 @@ import {
   TextContainer,
   VideoItem,
   VideoList,
+  LessonCard,
+  LessonItem,
   WelcomeTitle
 } from '../styles/HomePage.styles'
-import { LessonCard, LessonItem } from '../styles/Learning.styles'
-import { useNavigation } from '../context/NavigationLearningContext'
+import { Lesson, Level, Unit, useNavigation } from '../context/NavigationLearningContext'
 import HomeModal from '../components/HomeModal/HomeModal'
 
 
@@ -29,10 +30,9 @@ const HomePage: React.FC = () => {
 
   const { data: session } = useSession()
 
-  const [lessons, setLessons] = useState<any[]>([])
-  const [allLessons, setAllLessons] = useState<any[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-  const { currentLevel, setCurrentLevel, currentUnit, setCurrentUnit, currentLesson, setCurrentLesson, hasShownModal, setHasShownModal } = useNavigation()
+  const [filteredLessons, setfilteredLessons] = useState<Lesson[]>()
+  const { currentLevel, setCurrentLevel, currentUnit, setCurrentUnit, currentLesson, setCurrentLesson,
+    levels, units, lessons, isLoading, hasShownModal, setHasShownModal } = useNavigation()
   const [isModalVisible, setIsModalVisible] = useState(true); // Estado para controlar la visibilidad del modal
   const [activePage, setActivePage] = useState('/home')
   const [test, setTest] = useState<Boolean>(false)
@@ -47,50 +47,47 @@ const HomePage: React.FC = () => {
     }
   }, [])
 
-  useEffect(() => {
-    const fetchLessons = async () => {
-        try {
-            const response = await axios.get('/ens-api/lessons')
-            console.log('DATA', response.data)
-            const lessonsList = response.data.map((lesson: any) => ({
-                id: lesson.id,
-                title: lesson.title,
-                description: lesson.description,
-                order: lesson.order
-            }))
-            lessonsList.sort((a, b) => a.order < b.order)
-            setAllLessons(lessonsList)
-        } catch (error) {
-            console.error('Error fetching units:', error)
-        } finally {
-            setIsLoading(false) // Termina la carga, incluso si hay error
-        }
-    }
-    fetchLessons()
-  }, [])
 
   useEffect(() => {
-        const filteredLessons = allLessons.filter(lesson => lesson.title.startsWith('E-01') || 
-          lesson.title.startsWith('B-01') || lesson.title.startsWith('I-01'))   
-        setLessons(filteredLessons)
-  }, [allLessons])
+    setfilteredLessons(lessons?.filter(lesson => lesson.title.startsWith('E-01') || 
+    lesson.title.startsWith('B-01') || lesson.title.startsWith('I-01')) )
+  }, [lessons])
 
-  const handleLessonClick = (lessonId: number) => {
-    setCurrentLesson(lessonId) // Actualiza el estado de la unidad actual
-    setCurrentLevel(2)
-    setCurrentUnit(8) 
-    setActivePage('/learning/levels/')
+  const handleLessonClick = (lesson: Lesson) => {
+    setCurrentLesson(lesson) // Actualiza el estado de la unidad actual
+    setCurrentLevel(findLevel(lesson))
+    setCurrentUnit(findUnit(lesson)) 
+    setActivePage(`/learning/levels/${currentLevel?.description}/units/${currentUnit?.description}/${currentLesson?.description}`)
   }
+
+  const findLevel = (lesson : Lesson) : Level | null => {
+    console.log('substringgg', lesson.title.substring(0,1))
+    const currLevel = levels?.find((level : Level) => level.title.startsWith(lesson.title.substring(0,1)))
+    if(currLevel != undefined)
+      return currLevel
+    else
+      return null 
+  }
+
+  const findUnit = (lesson : Lesson) : Unit | null => {
+    console.log('substringgg', lesson.title.substring(0,1))
+    const currUnit =  units?.find((level : Level) => level.title.startsWith(lesson.title.substring(0,3)))
+    if(currUnit != undefined)
+      return currUnit
+    else
+      return null 
+  }
+
 
   useEffect(() => {
     if (activePage.startsWith('/learning') && currentLevel) {
       if (currentUnit) {
-        setActivePage(`/learning/levels/${currentLevel}/units/${currentUnit}`)
+        setActivePage(`/learning/levels/${currentLevel.description}/units/${currentUnit.description}`)
         if(currentLesson){
-          setActivePage(`/learning/levels/${currentLevel}/units/${currentUnit}/${currentLesson}`)
+          setActivePage(`/learning/levels/${currentLevel.description}/units/${currentUnit.description}/${currentLesson.description}`)
         }
       } else {
-        setActivePage(`/learning/levels/${currentLevel}`)
+        setActivePage(`/learning/levels/${currentLevel.description}`)
       }
     }
   }, [activePage, currentLevel, currentUnit, currentLesson])
@@ -99,6 +96,14 @@ const HomePage: React.FC = () => {
     setIsModalVisible(false);
     localStorage.setItem('hasShownModal', 'true');
     setHasShownModal(true)
+  }
+
+  const getFirstPartString = (string: string): string | undefined => {
+    return string.split(':')[0]?.trim();
+  }
+  
+  const getSecondPartString = (string: string): string | undefined => {
+    return string.split(':')[1]?.trim();
   }
 
 
@@ -130,12 +135,13 @@ const HomePage: React.FC = () => {
                   {isLoading ? (
                       <LoadingSpinner /> // Muestra el spinner mientras se está cargando
                   ) : (
-                      lessons.map(lesson => (
+                      filteredLessons?.map(lesson => (
                         <VideoItem key={lesson.id}>
-                          <LessonItem key={lesson.id} onClick={() => handleLessonClick(lesson.id)}>
+                          <LessonItem key={lesson.id} onClick={() => handleLessonClick(lesson)}>
                               <LessonCard>
-                                  <h1>{lesson.title}</h1>
-                                  <h3>{lesson.description}</h3>
+                                  <h3>{getFirstPartString(lesson.description)}</h3>
+                                  <h1>{getSecondPartString(lesson.description)}</h1>
+                                  <h5>{lesson.title}</h5>
                               </LessonCard>
                           </LessonItem>
                         </VideoItem>  

@@ -18,45 +18,11 @@ import { useNavigation } from '../../../../../../../../context/NavigationLearnin
 import LoadingSpinner from '../../../../../../../../components/Spinner/Spinner'
 import router from 'next/router'
 
-interface LessonProps {
-    currentLevel: number | null;
-    currentUnit: number | null;
-    currentLesson: number | null;
-    setTest: (_test: Boolean) => void;
-}
-
-const Lesson: React.FC<LessonProps> = ({ }) => {
+const Lesson: React.FC = ({ }) => {
     const [lesson, setLesson] = useState<any>(null)
-    const [isLoading, setIsLoading] = useState(true)
     const [videoCompleted, setVideoCompleted] = useState(false)
     const [showTooltip, setShowTooltip] = useState(false)
     const { currentLevel, setCurrentLevel, currentUnit, setCurrentUnit, currentLesson, setCurrentLesson, setTest } = useNavigation()
-  
-
-    useEffect(() => {
-        const fetchLesson = async () => {
-            if (currentLesson) {
-                try {
-                    const response = await axios.get('/ens-api/lessons')
-                    const lessonsList = response.data.map((lesson: any) => ({
-                        id: lesson.id,
-                        title: lesson.title,
-                        description: lesson.description,
-                        order: lesson.order,
-                        videoSrc: 'https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4'
-                    }))
-                    const lesson = lessonsList.find((lesson) => lesson.id === currentLesson)
-                    setLesson(lesson)
-                    setIsLoading(false)
-                } catch (error) {
-                    console.error('Error fetching lesson:', error)
-                } finally {
-                    setIsLoading(false)
-                }
-            }
-        }
-        fetchLesson()
-    }, [currentLesson])
 
     const handleVideoEnd = () => {
         setVideoCompleted(true)
@@ -64,24 +30,18 @@ const Lesson: React.FC<LessonProps> = ({ }) => {
 
     const handleStartTest = () => {
         setTest(true)
-        router.push(`/learning/levels/${currentLevel}/units/${currentUnit}/lessons/${currentLesson}/test`)
-    
+        router.push(`/learning/levels/${currentLevel?.id}/units/${currentUnit?.id}/lessons/${currentLesson?.id}/test`)
     }
 
     return (
         <ProtectedRoute>
-            <HomeLayout activePage={`/learning/levels/${currentLevel}/units/${currentUnit}/levels/${currentLevel}`}>
+            <HomeLayout activePage={`/learning/levels/${currentLevel?.description}/units/${currentUnit?.description}/levels/${currentLesson?.description}`}>
                 <Section>
-                    {isLoading ? (
-                        <LoadingSpinner /> 
-                    ) : (
-                        lesson && (
-                            <>
-                                <Title>{lesson.title}</Title>
-                                <LessonTitle>{lesson.description}</LessonTitle>
+                                <Title>{currentLesson?.title}</Title>
+                                <LessonTitle>{currentLesson?.description}</LessonTitle>
                                 <VideoContainer>
                                     <VideoPlayer
-                                        src={lesson.videoSrc}
+                                        src={currentLesson ? currentLesson.videoSrc : 'https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4'}
                                         onEnded={handleVideoEnd}
                                     />
                                 </VideoContainer>
@@ -98,9 +58,6 @@ const Lesson: React.FC<LessonProps> = ({ }) => {
                                         Deber terminar el video antes
                                     </Tooltip>
                                 </TooltipContainer>
-                            </>
-                        )
-                    )}
                 </Section>
             </HomeLayout>
             

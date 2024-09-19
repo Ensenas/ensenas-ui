@@ -8,6 +8,7 @@ import HomeHeader from '../HomeHeader/HomeHeader'
 const navItems = [
   { label: 'Inicio', icon: '/icons/home-icon.png', href: '/home' },
   { label: 'Mi Aprendizaje', icon: '/icons/learning-icon.png', href: '/learning' },
+  { label: 'Modo Libre', icon: '/icons/freeMode-icon.png', href: '/freeMode' },
   { label: 'Perfil', icon: '/icons/profile-icon.png', href: '/profile' },
   { label: 'Mis Logros', icon: '/icons/achievement-icon.png', href: '/achievements' },
   { label: 'Estadísticas', icon: '/icons/statistics-icon.png', href: '/statistics' },

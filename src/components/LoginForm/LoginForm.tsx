@@ -97,7 +97,7 @@ const LoginForm = () => {
             }
         } catch (error) {
             console.error('Error de inicio de sesión:', error)
-            setError('Credenciales incorrectas.')
+            setError(`Error en el inicio de sesión: ${error} `)
         } finally {
             setIsLoading(false) // Detén el estado de carga
         }
@@ -157,7 +157,7 @@ const LoginForm = () => {
                         </InfoTextContainer>
                         {error && (
                             <ErrorModal
-                                isOpen={!error}
+                                isOpen={error != null}
                                 onRequestClose={() => setError(null)}
                                 message={error}
                             />

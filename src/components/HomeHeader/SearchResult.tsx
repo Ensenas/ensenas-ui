@@ -9,7 +9,7 @@ const SearchResults: React.FC<SearchResultsProps> = ({ lessons, onSelect }) => {
     return (
         <ResultsContainer>
         {lessons.map(lesson => (
-            <ResultItem key={lesson.description} onClick={() => onSelect(lesson)}>
+            <ResultItem key={lesson.id} onClick={() => onSelect(lesson)}>
             {lesson.description}
             </ResultItem>
         ))}

@@ -11,7 +11,8 @@ import {
   AchievementCard,
   AchievementsGrid,
   CardContent,
-  CardTitle,
+  CardLesson,
+  CardUnit,
   Medal,
   Section,
   Title
@@ -23,14 +24,6 @@ const MisLogros: React.FC = () => {
   const [achievements, setAchievements] = useState<any[]>([])
   const [loading, setLoading] = useState<boolean>(true)
 
-  // Mocked data
-  const mockAchievements = [
-    { id: 1, title: 'Lecciones Vistas el Último Mes', description: '15 lecciones', completed: true },
-    { id: 2, title: 'Nivel Actual', description: 'Intermedio', completed: false },
-    { id: 3, title: 'Certificados Obtenidos', description: 'Certificado de Nivel Básico', completed: true },
-    { id: 4, title: 'Estadísticas de Uso', description: 'Tiempo Total Dedicado: 20 horas', completed: false }
-    // Agrega más medallas mockeadas si lo deseas
-  ]
 
   useEffect(() => {
     const fetchAchievements = async () => {
@@ -54,6 +47,14 @@ const MisLogros: React.FC = () => {
     fetchAchievements()
   }, [])
 
+  const getFirstPartString = (string: string): string | undefined => {
+    return string.split(':')[0]?.trim();
+  }
+  
+  const getSecondPartString = (string: string): string | undefined => {
+    return string.split(':')[1]?.trim();
+  }
+
   return (
     <ProtectedRoute>
       <HomeLayout activePage='/achievements'>
@@ -69,9 +70,14 @@ const MisLogros: React.FC = () => {
             ) : (
               achievements.map((achievement) => (
                 <AchievementCard key={achievement.id}>
-                  <CardTitle>{achievement.title}</CardTitle>
+                  <CardUnit>
+                    {getFirstPartString(achievement.description)}
+                  </CardUnit>
+                  <CardLesson>
+                  {getSecondPartString(achievement.description)}
+                  </CardLesson>
                   <Medal completed={achievement.completed} />
-                  <CardContent>{achievement.description}</CardContent>
+                  <CardContent>{achievement.title}</CardContent>
                 </AchievementCard>
               ))
             )}

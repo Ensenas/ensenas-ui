@@ -24,11 +24,9 @@ import { LessonCard, LessonItem } from '../styles/Learning.styles'
 import { useNavigation } from '../context/NavigationLearningContext'
 import HomeModal from '../components/HomeModal/HomeModal'
 
-
 const HomePage: React.FC = () => {
 
   const { data: session } = useSession()
-
   const [lessons, setLessons] = useState<any[]>([])
   const [allLessons, setAllLessons] = useState<any[]>([])
   const [isLoading, setIsLoading] = useState(true)
@@ -39,7 +37,7 @@ const HomePage: React.FC = () => {
 
   useEffect(() => {
     const hasShownModal = localStorage.getItem('hasShownModal');
-    console.log('hasshown',hasShownModal)
+    console.log('hasshown', hasShownModal)
     if (!hasShownModal) {
       setIsModalVisible(true);
       localStorage.setItem('hasShownModal', 'true'); // Marca que el modal ya se ha mostrado
@@ -49,36 +47,36 @@ const HomePage: React.FC = () => {
 
   useEffect(() => {
     const fetchLessons = async () => {
-        try {
-            const response = await axios.get('/ens-api/lessons')
-            console.log('DATA', response.data)
-            const lessonsList = response.data.map((lesson: any) => ({
-                id: lesson.id,
-                title: lesson.title,
-                description: lesson.description,
-                order: lesson.order
-            }))
-            lessonsList.sort((a, b) => a.order < b.order)
-            setAllLessons(lessonsList)
-        } catch (error) {
-            console.error('Error fetching units:', error)
-        } finally {
-            setIsLoading(false) // Termina la carga, incluso si hay error
-        }
+      try {
+        const response = await axios.get('/ens-api/lessons')
+        console.log('DATA', response.data)
+        const lessonsList = response.data.map((lesson: any) => ({
+          id: lesson.id,
+          title: lesson.title,
+          description: lesson.description,
+          order: lesson.order
+        }))
+        lessonsList.sort((a, b) => a.order < b.order)
+        setAllLessons(lessonsList)
+      } catch (error) {
+        console.error('Error fetching units:', error)
+      } finally {
+        setIsLoading(false) // Termina la carga, incluso si hay error
+      }
     }
     fetchLessons()
   }, [])
 
   useEffect(() => {
-        const filteredLessons = allLessons.filter(lesson => lesson.title.startsWith('E-01') || 
-          lesson.title.startsWith('B-01') || lesson.title.startsWith('I-01'))   
-        setLessons(filteredLessons)
+    const filteredLessons = allLessons.filter(lesson => lesson.title.startsWith('E-01') ||
+      lesson.title.startsWith('B-01') || lesson.title.startsWith('I-01'))
+    setLessons(filteredLessons)
   }, [allLessons])
 
   const handleLessonClick = (lessonId: number) => {
     setCurrentLesson(lessonId) // Actualiza el estado de la unidad actual
     setCurrentLevel(2)
-    setCurrentUnit(8) 
+    setCurrentUnit(8)
     setActivePage('/learning/levels/')
   }
 
@@ -86,7 +84,7 @@ const HomePage: React.FC = () => {
     if (activePage.startsWith('/learning') && currentLevel) {
       if (currentUnit) {
         setActivePage(`/learning/levels/${currentLevel}/units/${currentUnit}`)
-        if(currentLesson){
+        if (currentLesson) {
           setActivePage(`/learning/levels/${currentLevel}/units/${currentUnit}/${currentLesson}`)
         }
       } else {
@@ -104,25 +102,25 @@ const HomePage: React.FC = () => {
 
   return (
     <ProtectedRoute>
-      { !hasShownModal ? (
+      {!hasShownModal ? (
         <HomeModal isVisible={isModalVisible} onClose={handleCloseModal} />
-      ): (
+      ) : (
         <HomeLayout activePage={activePage}>
           <Section>
             <TextContainer>
               <WelcomeTitle>¡Bienvenid@, {session?.user?.name}!</WelcomeTitle>
-                <div style={{ width: '90%', display: 'inline-block'}}>
-                  <p style={{ fontSize: '1.2em', color: '#fff' }}>
-                    ¡Te damos la bienvenida a nuestra plataforma de aprendizaje de lenguaje de señas!
-                  </p>
-                  <p style={{ fontSize: '1.2em', color: '#fff' }}>
-                    Estamos emocionados de que te hayas unido a nosotros en esta jornada para aprender y
-                    conectar a través de este hermoso y esencial lenguaje.
-                  </p>
-                  <p style={{ fontSize: '1.2em', color: '#fff' }}>
-                    ¡Buena suerte y disfruta del proceso de aprendizaje!
-                  </p>
-                </div>
+              <div style={{ width: '90%', display: 'inline-block' }}>
+                <p style={{ fontSize: '1.2em', color: '#fff' }}>
+                  ¡Te damos la bienvenida a nuestra plataforma de aprendizaje de lenguaje de señas!
+                </p>
+                <p style={{ fontSize: '1.2em', color: '#fff' }}>
+                  Estamos emocionados de que te hayas unido a nosotros en esta jornada para aprender y
+                  conectar a través de este hermoso y esencial lenguaje.
+                </p>
+                <p style={{ fontSize: '1.2em', color: '#fff' }}>
+                  ¡Buena suerte y disfruta del proceso de aprendizaje!
+                </p>
+              </div>
             </TextContainer>
             {/* <ContentContainer>
               <Image src="/signs.gif" alt="Welcome Image" />
@@ -130,19 +128,19 @@ const HomePage: React.FC = () => {
             <Recommendations>
               <RecommendationsTitle>Recomendaciones para ti</RecommendationsTitle>
               <VideoList>
-                  {isLoading ? (
-                      <LoadingSpinner /> // Muestra el spinner mientras se está cargando
-                  ) : (
-                      lessons.map(lesson => (
-                        <VideoItem key={lesson.id}>
-                          <LessonItem key={lesson.id} onClick={() => handleLessonClick(lesson.id)}>
-                              <LessonCard>
-                                  <h1>{lesson.title}</h1>
-                                  <h3>{lesson.description}</h3>
-                              </LessonCard>
-                          </LessonItem>
-                        </VideoItem>  
-                      )))}
+                {isLoading ? (
+                  <LoadingSpinner /> // Muestra el spinner mientras se está cargando
+                ) : (
+                  lessons.map(lesson => (
+                    <VideoItem key={lesson.id}>
+                      <LessonItem key={lesson.id} onClick={() => handleLessonClick(lesson.id)}>
+                        <LessonCard>
+                          <h1>{lesson.title}</h1>
+                          <h3>{lesson.description}</h3>
+                        </LessonCard>
+                      </LessonItem>
+                    </VideoItem>
+                  )))}
               </VideoList>
             </Recommendations>
           </Section>

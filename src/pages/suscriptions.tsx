@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import HomeLayout from '../components/HomeLayout/HomeLayout'
 import ProtectedRoute from '../components/ProtectedRoute'
+import { useRouter } from 'next/router'
 import {
   Section,
   Title,
@@ -26,113 +27,118 @@ const Subscriptions: React.FC = () => {
   const [selectedSubscription, setSelectedSubscription] = useState<any | null>(null);
   const [isModalVisible, setModalVisible] = useState<boolean>(false);
   const [isConfirmationVisible, setConfirmationVisible] = useState<boolean>(false);
+  const router = useRouter()
 
 
 
-//   useEffect(() => {
-//     // Función para obtener las suscripciones del backend
-//     const fetchSubscriptions = async () => {
-//       try {
-//         const response = await fetch('/api/subscriptions') // URL de la API
-//         const data = await response.json()
-//         setSubscriptions(data)
-//       } catch (error) {
-//         setError('Error al obtener las suscripciones.')
-//         console.error('Error al obtener las suscripciones:', error)
-//       } finally {
-//         setLoading(false)
-//       }
-//     }
+  //   useEffect(() => {
+  //     // Función para obtener las suscripciones del backend
+  //     const fetchSubscriptions = async () => {
+  //       try {
+  //         const response = await fetch('/api/subscriptions') // URL de la API
+  //         const data = await response.json()
+  //         setSubscriptions(data)
+  //       } catch (error) {
+  //         setError('Error al obtener las suscripciones.')
+  //         console.error('Error al obtener las suscripciones:', error)
+  //       } finally {
+  //         setLoading(false)
+  //       }
+  //     }
 
-//     fetchSubscriptions()
-//   }, [])
+  //     fetchSubscriptions()
+  //   }, [])
 
-    useEffect(() => {
-        setLoading(false)
-        const subs = [
-            { id: 1, name: 'Plan Básico', isPremium: false, background: "/BasicPlan.jpg", logo: "/hot-air-balloon.png", status: 'Activo', 
-                expirationDate: '31/12/2024', detalle: "Detalle Plan Basico" },
-            { id: 2, name: 'Plan Premium', isPremium: true, background: "/PremiumPlan.jpg", logo: "/air-plane.png", status: 'Inactivo', 
-                expirationDate: '30/06/2024', detalle: "Detalle Plan Premium" },
-            // Otros planes de suscripción
-        ]
+  useEffect(() => {
+    setLoading(false)
+    const subs = [
+      {
+        id: 1, name: 'Plan Básico', isPremium: false, background: "/BasicPlan.jpg", logo: "/hot-air-balloon.png", status: 'Activo',
+        expirationDate: '31/12/2024', detalle: "Detalle Plan Basico", route: 'basic'
+      },
+      {
+        id: 2, name: 'Plan Premium', isPremium: true, background: "/PremiumPlan.jpg", logo: "/air-plane.png", status: 'Inactivo',
+        expirationDate: '30/06/2024', detalle: "Detalle Plan Premium", route: 'premium'
+      },
+      // Otros planes de suscripción
+    ]
 
-        setSubscriptions(subs)
-    }, [])
+    setSubscriptions(subs)
+  }, [])
 
-    const handleViewDetails = (subscription: any) => {
-        setSelectedSubscription(subscription);
-        setModalVisible(true);
-    }
-    
-    const handleCloseModal = () => {
-        setModalVisible(false);
-        setSelectedSubscription(null);
-    }
+  const handleViewDetails = (subscription: any) => {
+    setSelectedSubscription(subscription);
+    setModalVisible(true);
+  }
 
-    const handleCancelSubscription = (subscription: any) => {
-        setSelectedSubscription(subscription);
-        setConfirmationVisible(true);
-      };
-    
-      const handleConfirmCancel = () => {
-        // Aquí deberías agregar la lógica para cancelar la suscripción
-        console.log(`Cancelando suscripción: ${selectedSubscription?.name}`);
-        setConfirmationVisible(false);
-        setSelectedSubscription(null);
-      };
-    
-      const handleCloseConfirmation = () => {
-        setConfirmationVisible(false);
-        setSelectedSubscription(null);
-      };
+  const handleCloseModal = () => {
+    setModalVisible(false);
+    setSelectedSubscription(null);
+  }
+
+  const handleCancelSubscription = (subscription: any) => {
+    setSelectedSubscription(subscription);
+    setConfirmationVisible(true);
+  };
+
+  const handleConfirmCancel = () => {
+    // Aquí deberías agregar la lógica para cancelar la suscripción
+    console.log(`Cancelando suscripción: ${selectedSubscription?.name}`);
+    setConfirmationVisible(false);
+    setSelectedSubscription(null);
+  };
+
+  const handleCloseConfirmation = () => {
+    setConfirmationVisible(false);
+    setSelectedSubscription(null);
+  };
 
   return (
     <ProtectedRoute>
       <HomeLayout activePage='/admin/subscriptions'>
         <Section>
           <Title>Administrar Suscripciones</Title>
-          { loading ? (
-              <LoadingSpinner /> // Muestra el spinner mientras se está cargando
-            ) : 
-          error ? (
-            <Section>{error}</Section>
-          ) : (
-            <SubscriptionsGrid>
-              {subscriptions.length === 0 ? (
-                <CardContent>No hay suscripciones para mostrar.</CardContent>
-              ) : (
-                subscriptions.map(sub => (
-                  <SubscriptionCard key={sub.id} background={sub.background} isPremium={sub.isPremium}>
-                        {sub.isTrial ? (
+          {loading ? (
+            <LoadingSpinner /> // Muestra el spinner mientras se está cargando
+          ) :
+            error ? (
+              <Section>{error}</Section>
+            ) : (
+              <SubscriptionsGrid>
+                {subscriptions.length === 0 ? (
+                  <CardContent>No hay suscripciones para mostrar.</CardContent>
+                ) : (
+                  subscriptions.map(sub => (
+                    <SubscriptionCard key={sub.id} background={sub.background} isPremium={sub.isPremium}>
+                      {sub.isTrial ? (
                         <TrialCard background={sub.background}>
-                            <TrialTitle>{sub.name}</TrialTitle>
-                            <CardContent>Estado: {sub.status}</CardContent>
-                            <CardContent>Fecha de Expiración: {sub.expirationDate}</CardContent>
+                          <TrialTitle>{sub.name}</TrialTitle>
+                          <CardContent>Estado: {sub.status}</CardContent>
+                          <CardContent>Fecha de Expiración: {sub.expirationDate}</CardContent>
                         </TrialCard>
-                        ) : (
+                      ) : (
                         <div>
-                            <CardTitle>{sub.name}</CardTitle>
-                            <CardContent>Estado: {sub.status}</CardContent>
-                            <CardContent>Fecha de Expiración: {sub.expirationDate}</CardContent>
+                          <CardTitle>{sub.name}</CardTitle>
+                          <CardContent>Estado: {sub.status}</CardContent>
+                          <CardContent>Fecha de Expiración: {sub.expirationDate}</CardContent>
                         </div>
+                      )}
+                      <CardLogo>
+                        <LogoImage src={sub.logo} alt="Logo" />
+                      </CardLogo>
+                      <CardActions>
+                        <ActionButton onClick={() => handleViewDetails(sub)}>Ver Detalles</ActionButton>
+                        {sub.status === 'Activo' ? (
+                          <ActionButton onClick={() => handleCancelSubscription(sub)}>Cancelar Suscripción</ActionButton>
+                        ) : (
+                          <ActionButton onClick={() => router.push(`/payment?plan=${sub.route}`)}>Suscribirse</ActionButton>
                         )}
-                        <CardLogo>
-                            <LogoImage src={sub.logo} alt="Logo" />
-                        </CardLogo>
-                        <CardActions>
-                            <ActionButton onClick={() => handleViewDetails(sub)}>Ver Detalles</ActionButton>
-                            {sub.status === 'Activo' ? (
-                                    <ActionButton onClick={() => handleCancelSubscription(sub)}>Cancelar Suscripción</ActionButton>
-                            ) : (
-                                    <ActionButton>Suscribirse</ActionButton>
-                            )}
-                        </CardActions>
-                  </SubscriptionCard>
-                ))
-              )}
-            </SubscriptionsGrid>
-          )}
+                      </CardActions>
+                    </SubscriptionCard>
+                  ))
+                )}
+              </SubscriptionsGrid>
+            )}
         </Section>
       </HomeLayout>
       <SubscriptionDetailModal

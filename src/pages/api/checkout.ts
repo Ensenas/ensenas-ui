@@ -11,7 +11,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     if (req.method === "POST") {
         const product: IProduct = req.body.product;
 
-        const URL = "https://localhost:3001";
+        const URL = "https://some-random-url.ngrok.io";
 
         try {
             const preference: CreatePreferencePayload = {

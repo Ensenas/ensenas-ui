@@ -1,34 +1,37 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable @next/next/no-img-element */
+/* eslint-disable no-console */
 import { useEffect, useState } from 'react'
+
+import ConfirmationModal from '../components/ConfirmationModal/ConfirmationModal'
 import HomeLayout from '../components/HomeLayout/HomeLayout'
 import ProtectedRoute from '../components/ProtectedRoute'
-import {
-  Section,
-  Title,
-  SubscriptionsGrid,
-  SubscriptionCard,
-  CardTitle,
-  CardContent,
-  CardActions,
-  ActionButton,
-  TrialCard,
-  TrialTitle,
-  CardLogo,
-  LogoImage,
-  Status,
-  CardPrice,
-  PriceContent
-} from '../styles/Suscriptions.styles'
 import LoadingSpinner from '../components/Spinner/Spinner'
 import SubscriptionDetailModal from '../components/SuscriptionDetailModal/SuscriptionDetailModal'
-import ConfirmationModal from '../components/ConfirmationModal/ConfirmationModal'
+import {
+  ActionButton,
+  CardActions,
+  CardContent,
+  CardLogo,
+  CardPrice,
+  CardTitle,
+  LogoImage,
+  PriceContent,
+  Section,
+  Status,
+  SubscriptionCard,
+  SubscriptionsGrid,
+  Title,
+  TrialCard,
+  TrialTitle} from '../styles/Suscriptions.styles'
 
 const Subscriptions: React.FC = () => {
   const [subscriptions, setSubscriptions] = useState<any[]>([])
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
-  const [selectedSubscription, setSelectedSubscription] = useState<any | null>(null);
-  const [isModalVisible, setModalVisible] = useState<boolean>(false);
-  const [isConfirmationVisible, setConfirmationVisible] = useState<boolean>(false);
+  const [selectedSubscription, setSelectedSubscription] = useState<any | null>(null)
+  const [isModalVisible, setModalVisible] = useState<boolean>(false)
+  const [isConfirmationVisible, setConfirmationVisible] = useState<boolean>(false)
 
 
 
@@ -53,10 +56,10 @@ const Subscriptions: React.FC = () => {
     useEffect(() => {
         setLoading(false)
         const subs = [
-            { id: 1, name: 'Plan Básico', isPremium: false, background: "/BasicPlan.jpg", logo: "/hot-air-balloon.png", status: 'Activo', 
-                expirationDate: '31/12/2024', price: '$2000 ARS', detalle: "Detalle Plan Basico" },
-            { id: 2, name: 'Plan Premium', isPremium: true, background: "/PremiumPlan.jpg", logo: "/air-plane.png", status: 'Inactivo', 
-                expirationDate: '30/06/2024', price: '$5000 ARS', detalle: "Detalle Plan Premium" },
+            { id: 1, name: 'Plan Básico', isPremium: false, background: '/BasicPlan.jpg', logo: '/hot-air-balloon.png', 
+              status: 'Activo', expirationDate: '31/12/2024', price: '$2000 ARS', detalle: 'Detalle Plan Basico' },
+            { id: 2, name: 'Plan Premium', isPremium: true, background: '/PremiumPlan.jpg', logo: '/air-plane.png', 
+              status: 'Inactivo', expirationDate: '30/06/2024', price: '$5000 ARS', detalle: 'Detalle Plan Premium' }
             // Otros planes de suscripción
         ]
 
@@ -64,31 +67,31 @@ const Subscriptions: React.FC = () => {
     }, [])
 
     const handleViewDetails = (subscription: any) => {
-        setSelectedSubscription(subscription);
-        setModalVisible(true);
+        setSelectedSubscription(subscription)
+        setModalVisible(true)
     }
     
     const handleCloseModal = () => {
-        setModalVisible(false);
-        setSelectedSubscription(null);
+        setModalVisible(false)
+        setSelectedSubscription(null)
     }
 
     const handleCancelSubscription = (subscription: any) => {
-        setSelectedSubscription(subscription);
-        setConfirmationVisible(true);
-      };
+        setSelectedSubscription(subscription)
+        setConfirmationVisible(true)
+      }
     
       const handleConfirmCancel = () => {
         // Aquí deberías agregar la lógica para cancelar la suscripción
-        console.log(`Cancelando suscripción: ${selectedSubscription?.name}`);
-        setConfirmationVisible(false);
-        setSelectedSubscription(null);
-      };
+        console.log(`Cancelando suscripción: ${selectedSubscription?.name}`)
+        setConfirmationVisible(false)
+        setSelectedSubscription(null)
+      }
     
       const handleCloseConfirmation = () => {
-        setConfirmationVisible(false);
-        setSelectedSubscription(null);
-      };
+        setConfirmationVisible(false)
+        setSelectedSubscription(null)
+      }
 
   return (
     <ProtectedRoute>

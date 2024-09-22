@@ -55,7 +55,7 @@ export const Status = styled.button<{ status: string }>`
   padding: 10px 10px; /* Espaciado interno para hacerlo más grande y cómodo */
   text-align: center; /* Centra el texto dentro del botón */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Añade una sombra para darle profundidad */
-  transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease; /* Añade una transición suave para el hover */
+  transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease; 
   opacity: 85%;
   margin-left: 15px;
 

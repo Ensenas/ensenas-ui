@@ -78,7 +78,7 @@ export const Status = styled.button<{ status: string }>`
   padding: 10px 20px; /* Espaciado interno para hacerlo más grande y cómodo */
   text-align: center; /* Centra el texto dentro del botón */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Añade una sombra para darle profundidad */
-  transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease; /* Añade una transición suave para el hover */
+  transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
   opacity: 85%;
 
   &:focus {
@@ -115,7 +115,7 @@ export const CardPrice = styled.p`
   color: #fff;
   margin: 10px 0;
   font-weight: bold;
-`;
+`
 
 export const LogoImage = styled.img`
   max-width: 150px; /* Ajusta el tamaño máximo del logo */

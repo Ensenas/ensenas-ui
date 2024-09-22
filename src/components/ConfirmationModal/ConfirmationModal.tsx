@@ -1,5 +1,6 @@
-import React from 'react';
-import { Button, Text, ModalContent, ModalOverlay } from './ConfirmationModal.styles'; // Asegúrate de tener estilos adecuados para tu modal
+import React from 'react'
+
+import { Button, ModalContent, ModalOverlay,Text } from './ConfirmationModal.styles'
 
 interface ConfirmationModalProps {
   isVisible: boolean;
@@ -8,7 +9,7 @@ interface ConfirmationModalProps {
 }
 
 const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ isVisible, onClose, onConfirm }) => {
-  if (!isVisible) return null;
+  if (!isVisible) return null
 
   return (
     <ModalOverlay>
@@ -19,7 +20,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ isVisible, onClos
         </ModalContent>
     </ModalOverlay>
     
-  );
-};
+  )
+}
 
-export default ConfirmationModal;
+export default ConfirmationModal

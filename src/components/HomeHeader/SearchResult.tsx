@@ -1,8 +1,11 @@
-import { ResultsContainer, ResultItem } from './SearchResult.styles'
+/* eslint-disable no-unused-vars */
+/* eslint-disable @next/next/no-img-element */
+/* eslint-disable no-console */
+import { ResultItem,ResultsContainer } from './SearchResult.styles'
 
 interface SearchResultsProps {
-    lessons: any[];
-    onSelect: (lesson: any) => void;
+    lessons: any[]
+    onSelect: (lesson: any) => void
   }
 
 const SearchResults: React.FC<SearchResultsProps> = ({ lessons, onSelect }) => {

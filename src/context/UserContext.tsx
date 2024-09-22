@@ -22,18 +22,18 @@ const UserContext = createContext<UserContextType | undefined>(undefined)
 
 export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     
-    const isBrowser = typeof window !== 'undefined' && typeof window.localStorage !== 'undefined';
+    const isBrowser = typeof window !== 'undefined' && typeof window.localStorage !== 'undefined'
 
     const [currentUser, setCurrentUser] = useState<User | null>(() => {
-        return isBrowser ? JSON.parse(localStorage.getItem('user') || 'null') : null;
+        return isBrowser ? JSON.parse(localStorage.getItem('user') || 'null') : null
     })
 
     
     useEffect(() => {
     // Guarda el estado en localStorage cada vez que cambie
-    localStorage.setItem('currentLevel', JSON.stringify(currentUser));
+    localStorage.setItem('currentLevel', JSON.stringify(currentUser))
 
-    }, [currentUser]);
+    }, [currentUser])
 
   return (
     <UserContext.Provider

@@ -1,19 +1,21 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable @next/next/no-img-element */
+/* eslint-disable no-console */
+import axios from 'axios'
+import router from 'next/router'
 import { signOut } from 'next-auth/react'
 import React, { useEffect, useState } from 'react'
 
-import { HeaderContainer, Logo, LogoutButton, SearchButton, SearchInput } from './HomeHeader.styles'
-import axios from 'axios'
 import { useNavigation } from '../../context/NavigationLearningContext'
+import { HeaderContainer, Logo, LogoutButton, SearchButton, SearchInput } from './HomeHeader.styles'
 import SearchResults from './SearchResult'
-import router from 'next/router'
 
 const HomeHeader: React.FC = () => {
 
   const [lessons, setLessons] = useState<any[]>([])
   const [allLessons, setAllLessons] = useState<any[]>([])
   const [isLoading, setIsLoading] = useState(true)
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState('')
   const { currentLevel, setCurrentLevel, currentUnit, setCurrentUnit, currentLesson, setCurrentLesson } = useNavigation()
   
   useEffect(() => {
@@ -39,7 +41,7 @@ const HomeHeader: React.FC = () => {
   }, [])
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(event.target.value);
+    setSearchTerm(event.target.value)
   }
 
   const filteredLessons = allLessons.filter(lesson =>
@@ -48,8 +50,8 @@ const HomeHeader: React.FC = () => {
 
   const handleSelectLesson = (lesson: any) => {
     // Maneja la selección de la lección (puedes cambiar el estado o redirigir, etc.)
-    console.log('Lección seleccionada:', lesson);
-    setSearchTerm(''); // Opcional: limpiar el campo de búsqueda después de seleccionar
+    console.log('Lección seleccionada:', lesson)
+    setSearchTerm('') // Opcional: limpiar el campo de búsqueda después de seleccionar
     // setCurrentLevel(determineLevel(lesson))
     // setCurrentUnit(determineUnit(lesson))
     // router.push(`/learning/levels/${level}/units/${unit}/lessons/${lesson.id}`)

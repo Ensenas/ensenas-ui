@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from 'styled-components'
 
 export const ModalOverlay = styled.div`
   position: fixed;
@@ -11,7 +11,7 @@ export const ModalOverlay = styled.div`
   justify-content: center;
   align-items: center;
   z-index: 9999;
-`;
+`
 
 export const ModalContent = styled.div`
   position: relative; /* Añadido para posicionar el botón de cerrar */
@@ -22,13 +22,13 @@ export const ModalContent = styled.div`
   max-width: 90%;
   max-height: 80%;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-`;
+`
 
 export const ModalImage = styled.img`
   width: 100%;
   height: auto;
   max-width: 500px;
-`;
+`
 
 export const CloseButton = styled.button`
   position: absolute;
@@ -44,4 +44,4 @@ export const CloseButton = styled.button`
   &:hover {
     color: #ff0000; /* Cambia el color al pasar el ratón por encima */
   }
-`;
+`

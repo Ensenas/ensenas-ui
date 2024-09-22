@@ -1,23 +1,24 @@
-import React, { useEffect } from 'react';
-import { ModalContent, ModalImage, ModalOverlay, CloseButton } from './HomeModal.styles';
+import React, { useEffect } from 'react'
+
+import { CloseButton,ModalContent, ModalImage, ModalOverlay } from './HomeModal.styles'
 
 interface ModalProps {
-  isVisible: boolean;
-  onClose: () => void;
+  isVisible: boolean
+  onClose: () => void
 }
 
 const HomeModal: React.FC<ModalProps> = ({ isVisible, onClose }) => {
   useEffect(() => {
     if (isVisible) {
       const timer = setTimeout(() => {
-        onClose();
-      }, 4000); // Cierra el modal después de 3 segundos
+        onClose()
+      }, 4000) // Cierra el modal después de 3 segundos
 
-      return () => clearTimeout(timer); // Limpia el timer si el componente se desmonta
+      return () => clearTimeout(timer) // Limpia el timer si el componente se desmonta
     }
-  }, [isVisible, onClose]);
+  }, [isVisible, onClose])
 
-  if (!isVisible) return null;
+  if (!isVisible) return null
 
   return (
     <ModalOverlay>
@@ -26,7 +27,7 @@ const HomeModal: React.FC<ModalProps> = ({ isVisible, onClose }) => {
         <ModalImage src="/signs.gif" alt="Modal Image" />
       </ModalContent>
     </ModalOverlay>
-  );
-};
+  )
+}
 
-export default HomeModal;
+export default HomeModal

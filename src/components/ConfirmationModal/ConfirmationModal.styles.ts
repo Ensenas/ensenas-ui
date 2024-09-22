@@ -1,5 +1,5 @@
 // ConfirmationModal.styles.ts
-import styled from 'styled-components';
+import styled from 'styled-components'
 
 export const ModalOverlay = styled.div`
   position: fixed;
@@ -12,7 +12,7 @@ export const ModalOverlay = styled.div`
   justify-content: center;
   align-items: center;
   z-index: 9999;
-`;
+`
 
 export const ModalContent = styled.div`
   background: #fff;
@@ -22,7 +22,7 @@ export const ModalContent = styled.div`
   max-width: 90%;
   max-height: 80%;
   position: relative;
-`;
+`
 
 export const Button = styled.button`
   padding: 10px 15px;
@@ -50,4 +50,4 @@ export const Button = styled.button`
 export const Text = styled.p`
   margin-bottom: 20px;
   color: #000;
-`;
+`

@@ -1,9 +1,11 @@
-// components/Layout.tsx
+/* eslint-disable no-unused-vars */
+/* eslint-disable @next/next/no-img-element */
+/* eslint-disable no-console */
 import { useRouter } from 'next/router'
 import React from 'react'
 
-import { ContentContainer, HomePageWrapper, NavIcon, NavItem,SidebarContainer, SidebarNav } from './HomeLayout.styles'
 import HomeHeader from '../HomeHeader/HomeHeader'
+import { ContentContainer, HomePageWrapper, NavIcon, NavItem,SidebarContainer, SidebarNav } from './HomeLayout.styles'
 
 const navItems = [
   { label: 'Inicio', icon: '/icons/home-icon.png', href: '/home' },

@@ -48,11 +48,11 @@ const MisLogros: React.FC = () => {
   }, [])
 
   const getFirstPartString = (string: string): string | undefined => {
-    return string.split(':')[0]?.trim();
+    return string.split(':')[0]?.trim()
   }
   
   const getSecondPartString = (string: string): string | undefined => {
-    return string.split(':')[1]?.trim();
+    return string.split(':')[1]?.trim()
   }
 
   return (

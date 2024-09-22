@@ -1,5 +1,7 @@
-import React from 'react';
-import { ModalOverlay, ModalContent, ModalTitle, ModalBody, ModalCloseButton, FeatureList, FeatureItem, TickIcon, CrossIcon, StatusContent, Status } from './SuscriptionDetailModal.styles';
+import React from 'react'
+
+import { CrossIcon,   FeatureItem, FeatureList, ModalBody, ModalCloseButton, ModalContent, 
+  ModalOverlay, ModalTitle, Status,StatusContent, TickIcon } from './SuscriptionDetailModal.styles'
 
 interface SubscriptionDetailModalProps {
   isVisible: boolean;
@@ -23,7 +25,7 @@ const SubscriptionDetailModal: React.FC<SubscriptionDetailModalProps> = ({ isVis
     { label: 'Acceso a lecciones avanzadas', isPremiumFeature: true },
     { label: 'Certificación de curso', isPremiumFeature: true },
     { label: 'Soporte prioritario', isPremiumFeature: true }, 
-    { label: 'Material adicional', isPremiumFeature: true },
+    { label: 'Material adicional', isPremiumFeature: true }
   ]
 
   return (

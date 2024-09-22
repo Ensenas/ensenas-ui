@@ -28,14 +28,16 @@ const UnitLessons: React.FC = ({}) => {
     useEffect(() => {
 
         if (currentUnit && currentLevel) {
-            setFilteredLessons(lessons?.filter(lesson => lesson.title.startsWith(currentUnit.title)).sort((a, b) => a.order - b.order))
+            setFilteredLessons(lessons?.filter(lesson => lesson.title.startsWith(currentUnit.title)).
+            sort((a, b) => a.order - b.order))
         }
     }, [currentUnit, lessons, currentLevel])
 
     const handleLessonClick = (lesson: Lesson) => {
         lesson.videoSrc = 'https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4'
         setCurrentLesson(lesson) // Actualiza el estado de la unidad actual
-        router.push(`/learning/levels/${currentLevel?.description}/units/${currentUnit?.description}/lessons/${lesson.description}`)
+        router.push(`/learning/levels/${currentLevel?.description}/units/${currentUnit?.description}
+            /lessons/${lesson.description}`)
     }
 
     return (

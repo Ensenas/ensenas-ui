@@ -1,10 +1,14 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable @next/next/no-img-element */
+/* eslint-disable no-console */
 'use client'
 
 import React, { useEffect, useRef, useState } from 'react'
-import { io, Socket } from 'socket.io-client'
-import { Container, WebcamContainer, Overlay } from './RecorderElements'
 import Webcam from 'react-webcam'
+import { io, Socket } from 'socket.io-client'
+
 import { Lesson, Unit, useNavigation } from '../../context/NavigationLearningContext'
+import { Container, Overlay,WebcamContainer } from './RecorderElements'
 
 const unitWords = {
     familiares: ['papa', 'mama', 'hijo', 'hermana'],
@@ -17,79 +21,80 @@ export default function VideoStreamRemoto() {
     const webcamRef = useRef<Webcam>(null)
     const canvasRef = useRef<HTMLCanvasElement>(null)
     const outputRef = useRef<HTMLImageElement>(null)
-    const { currentLevel, setCurrentLevel, currentUnit, setCurrentUnit, currentLesson, setCurrentLesson, setTest } = useNavigation()
+    const { currentLevel, setCurrentLevel, currentUnit, setCurrentUnit, 
+        currentLesson, setCurrentLesson, setTest } = useNavigation()
   
 
     useEffect(() => {
-        const newSocket = io('wss://alarma.mywire.org:3051');
+        const newSocket = io('wss://alarma.mywire.org:3051')
         
         newSocket.on('connect', () => {
-            console.log("Socket connected:", newSocket.id);
-        });
+            console.log('Socket connected:', newSocket.id)
+        })
 
         newSocket.on('disconnect', (reason) => {
-            console.log("Socket disconnected:", reason);
-        });
+            console.log('Socket disconnected:', reason)
+        })
 
         newSocket.on('processed_frame', (data) => {
-            console.log('Received processed frame:', data);
-            setFps((1 / data.total_time_time));
+            console.log('Received processed frame:', data)
+            setFps((1 / data.total_time_time))
             if (outputRef.current) {
-                outputRef.current.src = data.image;
+                outputRef.current.src = data.image
             }
-        });
+        })
 
-        setSocket(newSocket);
+        setSocket(newSocket)
         console.log('New Socket', newSocket)
         console.log('New Socket active', newSocket.active)
         console.log('Socket', socket)
 
         return () => {
-            newSocket.disconnect();
-            console.log("Socket disconnected:", newSocket.id);
-        };
-    }, []);
+            newSocket.disconnect()
+            console.log('Socket disconnected:', newSocket.id)
+        }
+    }, [socket])
 
     const sendFrame = () => {
         if (webcamRef.current && canvasRef.current) {
-            const video = webcamRef.current.video;
-            const canvas = canvasRef.current;
-            const context = canvas.getContext('2d');
+            const video = webcamRef.current.video
+            const canvas = canvasRef.current
+            const context = canvas.getContext('2d')
 
             if (video && context) {
-                canvas.width = video.videoWidth;
-                canvas.height = video.videoHeight;
-                context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+                canvas.width = video.videoWidth
+                canvas.height = video.videoHeight
+                context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight)
 
-                const dataURL = canvas.toDataURL('image/jpeg', 0.5);
+                const dataURL = canvas.toDataURL('image/jpeg', 0.5)
                 if (socket) {
-                    console.log("Sending frame:");
-                    const unit: string | undefined = findUnit();
-                    const word: string | undefined = findWord();
+                    console.log('Sending frame:')
+                    const unit: string | undefined = findUnit()
+                    const word: string | undefined = findWord()
                     console.log('UNIT', unit)
                     console.log('WORD', word)
-                    socket.emit('unit_selected', { unidad: unit });
-                    socket.emit('corregir_video_stream', { palabra: word, image: dataURL });
+                    socket.emit('unit_selected', { unidad: unit })
+                    socket.emit('corregir_video_stream', { palabra: word, image: dataURL })
                 }
             }
         }
     }
 
     useEffect(() => {
-        const interval = setInterval(sendFrame, 250);
-        return () => clearInterval(interval);
-    }, [socket])
+        const interval = setInterval(sendFrame, 250)
+        return () => clearInterval(interval)
+    }, [socket, sendFrame])
 
     const findUnit = () : string | undefined => {
         if(currentUnit){
-            return currentUnit.description.split(':').pop()?.trim().toLowerCase();
+            return currentUnit.description.split(':').pop()?.trim().toLowerCase()
         }
         
     }
     const findWord = () : string | undefined => {
         console.log(currentLesson)
         if(currentLesson && currentLesson.title){
-            return currentLesson.description.split(':').pop()?.trim().toLowerCase();
+            return currentLesson.description.split(':').pop()?.trim().toLowerCase()
         }
     }
     // const handleUnitChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -151,5 +156,5 @@ export default function VideoStreamRemoto() {
             
             <Overlay />
         </Container>
-    );
+    )
 }

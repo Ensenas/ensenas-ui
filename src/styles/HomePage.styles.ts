@@ -29,7 +29,7 @@ export const TextContainer = styled.div`
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: url('/abstract-colorful-background-design_632743-33.avif'); /* Ruta de la imagen */
+    background-image: url('/abstract-colorful-background.avif'); /* Ruta de la imagen */
     background-repeat: no-repeat; /* Evita que la imagen se repita */
     background-size: cover; /* Asegura que la imagen cubra todo el contenedor */
     background-position: center; /* Centra la imagen en el contenedor */
@@ -44,7 +44,7 @@ export const TextContainer = styled.div`
   }
 
 
-`;
+`
 
 export const WelcomeTitle = styled.h1`
   margin-bottom: 30px;

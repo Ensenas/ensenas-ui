@@ -3,15 +3,15 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 
+import HomeLayout from '../../../../../../../../../components/HomeLayout/HomeLayout'
 import ProtectedRoute from '../../../../../../../../../components/ProtectedRoute'
 import VideoRecorder from '../../../../../../../../../components/Recorder/VideoRecorder'
+import VideoStreamRemoto from '../../../../../../../../../components/Recorder/VideoStreamRemoto'
+import { useNavigation } from '../../../../../../../../../context/NavigationLearningContext'
 import {
     InstructionText,
     LessonTitle, Section, Title
 } from '../../../../../../../../../styles/test.styles'
-import { useNavigation } from '../../../../../../../../../context/NavigationLearningContext'
-import HomeLayout from '../../../../../../../../../components/HomeLayout/HomeLayout'
-import VideoStreamRemoto from '../../../../../../../../../components/Recorder/VideoStreamRemoto'
 
 
 interface LessonProps {
@@ -25,7 +25,8 @@ const LessonTest: React.FC<LessonProps> = ({}) => {
 
     // const [isLoading, setIsLoading] = useState(true)
     // const [lesson, setLesson] = useState<any>(null)
-    const { currentLevel, setCurrentLevel, currentUnit, setCurrentUnit, currentLesson, setCurrentLesson, test, setTest } = useNavigation()
+    const { currentLevel, setCurrentLevel, currentUnit, setCurrentUnit, currentLesson, 
+        setCurrentLesson, test, setTest } = useNavigation()
   
 
     // useEffect(() => {
@@ -53,7 +54,8 @@ const LessonTest: React.FC<LessonProps> = ({}) => {
 
     return (
         <ProtectedRoute>
-            <HomeLayout activePage={`/learning/levels/${currentLevel?.description}/units/${currentUnit?.description}/levels/${currentLesson?.description}`}>
+            <HomeLayout activePage={`/learning/levels/${currentLevel?.description}
+                /units/${currentUnit?.description}/levels/${currentLesson?.description}`}>
                 <Section>
                 
                         <Title>{currentLesson?.title}</Title>

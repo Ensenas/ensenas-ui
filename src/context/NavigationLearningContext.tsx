@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
-// context/NavigationContext.tsx
+/* eslint-disable @next/next/no-img-element */
+/* eslint-disable no-console */
 import axios from 'axios'
 import React, { createContext, ReactNode,useContext, useEffect, useState } from 'react'
 
@@ -50,57 +51,57 @@ const NavigationLearningContext = createContext<NavigationLearningContextType | 
 
 export const NavigationProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     
-    const isBrowser = typeof window !== 'undefined' && typeof window.localStorage !== 'undefined';
+    const isBrowser = typeof window !== 'undefined' && typeof window.localStorage !== 'undefined'
 
     const [currentLevel, setCurrentLevel] = useState<Level | null>(() => {
-        return isBrowser ? JSON.parse(localStorage.getItem('currentLevel') || 'null') : null;
+        return isBrowser ? JSON.parse(localStorage.getItem('currentLevel') || 'null') : null
     })
 
     const [currentUnit, setCurrentUnit] = useState<Unit | null>(() => {
-        return isBrowser ? JSON.parse(localStorage.getItem('currentUnit') || 'null') : null;
+        return isBrowser ? JSON.parse(localStorage.getItem('currentUnit') || 'null') : null
     })
 
     const [currentLesson, setCurrentLesson] = useState<Lesson | null>(() => {
-        return isBrowser ? JSON.parse(localStorage.getItem('currentLesson') || 'null') : null;
+        return isBrowser ? JSON.parse(localStorage.getItem('currentLesson') || 'null') : null
     })
 
     const [levels, setLevels] = useState<[Level] | null>(() => {
-      return isBrowser ? JSON.parse(localStorage.getItem('levels') || 'null') : null;
+      return isBrowser ? JSON.parse(localStorage.getItem('levels') || 'null') : null
     })
 
     const [units, setUnits] = useState<[Unit] | null>(() => {
-      return isBrowser ? JSON.parse(localStorage.getItem('units') || 'null') : null;
+      return isBrowser ? JSON.parse(localStorage.getItem('units') || 'null') : null
     })
 
     const [lessons, setLessons] = useState<[Lesson] | null>(() => {
-      return isBrowser ? JSON.parse(localStorage.getItem('lessons') || 'null') : null;
+      return isBrowser ? JSON.parse(localStorage.getItem('lessons') || 'null') : null
     })
 
     const [isLoading, setIsLoading] = useState<boolean | null>(() => {
-      return isBrowser ? JSON.parse(localStorage.getItem('isLoading') || 'null') : null;
+      return isBrowser ? JSON.parse(localStorage.getItem('isLoading') || 'null') : null
     })
 
 
     const [hasShownModal, setHasShownModal] = useState<boolean | null>(() => {
-        return isBrowser ? JSON.parse(localStorage.getItem('hasShownModal') || 'null') : null;
+        return isBrowser ? JSON.parse(localStorage.getItem('hasShownModal') || 'null') : null
     })
 
     const [test, setTest] = useState<boolean | null>(() => {
-        return isBrowser ? JSON.parse(localStorage.getItem('test') || 'null') : null;
+        return isBrowser ? JSON.parse(localStorage.getItem('test') || 'null') : null
     })
     
     useEffect(() => {
     // Guarda el estado en localStorage cada vez que cambie
-    localStorage.setItem('currentLevel', JSON.stringify(currentLevel));
-    localStorage.setItem('currentUnit', JSON.stringify(currentUnit));
-    localStorage.setItem('currentLesson', JSON.stringify(currentLesson));
-    localStorage.setItem('levels', JSON.stringify(levels));
-    localStorage.setItem('levels', JSON.stringify(units));
-    localStorage.setItem('lessons', JSON.stringify(lessons));
-    localStorage.setItem('loading', JSON.stringify(isLoading));
-    localStorage.setItem('hasShownModal', JSON.stringify(hasShownModal));
-    localStorage.setItem('test', JSON.stringify(test));
-    }, [currentLevel, currentUnit, currentLesson, hasShownModal, lessons, test]);
+    localStorage.setItem('currentLevel', JSON.stringify(currentLevel))
+    localStorage.setItem('currentUnit', JSON.stringify(currentUnit))
+    localStorage.setItem('currentLesson', JSON.stringify(currentLesson))
+    localStorage.setItem('levels', JSON.stringify(levels))
+    localStorage.setItem('levels', JSON.stringify(units))
+    localStorage.setItem('lessons', JSON.stringify(lessons))
+    localStorage.setItem('loading', JSON.stringify(isLoading))
+    localStorage.setItem('hasShownModal', JSON.stringify(hasShownModal))
+    localStorage.setItem('test', JSON.stringify(test))
+    }, [currentLevel, currentUnit, currentLesson, hasShownModal, levels, units, lessons, isLoading, test])
     
 
     useEffect(() => {

@@ -1,11 +1,14 @@
 /* eslint-disable no-console */
 /* eslint-disable no-unused-vars */
 import axios from 'axios'
+import router from 'next/router'
 import React, { useEffect, useState } from 'react'
 
 import HomeLayout from '../../../../../../../../components/HomeLayout/HomeLayout'
 import ProtectedRoute from '../../../../../../../../components/ProtectedRoute'
+import LoadingSpinner from '../../../../../../../../components/Spinner/Spinner'
 import VideoPlayer from '../../../../../../../../components/VideoPlayer/VideoPlayer'
+import { useNavigation } from '../../../../../../../../context/NavigationLearningContext'
 import {
     LessonTitle,
     Section,
@@ -14,15 +17,13 @@ import {
     Tooltip,
     TooltipContainer,
     VideoContainer} from '../../../../../../../../styles/Lesson.styles'
-import { useNavigation } from '../../../../../../../../context/NavigationLearningContext'
-import LoadingSpinner from '../../../../../../../../components/Spinner/Spinner'
-import router from 'next/router'
 
 const Lesson: React.FC = ({ }) => {
     const [lesson, setLesson] = useState<any>(null)
     const [videoCompleted, setVideoCompleted] = useState(false)
     const [showTooltip, setShowTooltip] = useState(false)
-    const { currentLevel, setCurrentLevel, currentUnit, setCurrentUnit, currentLesson, setCurrentLesson, setTest } = useNavigation()
+    const { currentLevel, setCurrentLevel, currentUnit, setCurrentUnit, currentLesson, 
+        setCurrentLesson, setTest } = useNavigation()
 
     const handleVideoEnd = () => {
         setVideoCompleted(true)
@@ -30,18 +31,21 @@ const Lesson: React.FC = ({ }) => {
 
     const handleStartTest = () => {
         setTest(true)
-        router.push(`/learning/levels/${currentLevel?.id}/units/${currentUnit?.id}/lessons/${currentLesson?.id}/test`)
+        router.push(`/learning/levels/${currentLevel?.id}/units/${currentUnit?.id}
+            /lessons/${currentLesson?.id}/test`)
     }
 
     return (
         <ProtectedRoute>
-            <HomeLayout activePage={`/learning/levels/${currentLevel?.description}/units/${currentUnit?.description}/levels/${currentLesson?.description}`}>
+            <HomeLayout activePage={`/learning/levels/${currentLevel?.description}
+                /units/${currentUnit?.description}/levels/${currentLesson?.description}`}>
                 <Section>
                                 <Title>{currentLesson?.title}</Title>
                                 <LessonTitle>{currentLesson?.description}</LessonTitle>
                                 <VideoContainer>
                                     <VideoPlayer
-                                        src={currentLesson ? currentLesson.videoSrc : 'https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4'}
+                                        src={currentLesson ? currentLesson.videoSrc : 
+                                            'https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4'}
                                         onEnded={handleVideoEnd}
                                     />
                                 </VideoContainer>

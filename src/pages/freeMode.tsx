@@ -1,11 +1,15 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable @next/next/no-img-element */
+/* eslint-disable no-console */
 'use client'
 
 import React, { useEffect, useRef, useState } from 'react'
-import { io, Socket } from 'socket.io-client'
-import { Container, WebcamContainer, Overlay, SelectorsContainer, StyledSelect } from '../styles/FreeMode.styles'
 import Webcam from 'react-webcam'
-import ProtectedRoute from '../components/ProtectedRoute'
+import { io, Socket } from 'socket.io-client'
+
 import HomeLayout from '../components/HomeLayout/HomeLayout'
+import ProtectedRoute from '../components/ProtectedRoute'
+import { Container, Overlay, SelectorsContainer, StyledSelect,WebcamContainer } from '../styles/FreeMode.styles'
 
 const unitWords = {
     familiares: ['papa', 'mama', 'hijo', 'hermana'],
@@ -23,76 +27,76 @@ const FreeMode : React.FC = () => {
     const outputRef = useRef<HTMLImageElement>(null)
 
     useEffect(() => {
-        const newSocket = io('wss://alarma.mywire.org:3051');
+        const newSocket = io('wss://alarma.mywire.org:3051')
         
         newSocket.on('connect', () => {
-            console.log("Socket connected:", newSocket.id);
-        });
+            console.log('Socket connected:', newSocket.id)
+        })
 
         newSocket.on('disconnect', (reason) => {
-            console.log("Socket disconnected:", reason);
-        });
+            console.log('Socket disconnected:', reason)
+        })
 
         newSocket.on('processed_frame', (data) => {
-            console.log('Received processed frame:', data);
-            setFps((1 / data.total_time_time));
+            console.log('Received processed frame:', data)
+            setFps((1 / data.total_time_time))
             if (outputRef.current) {
-                outputRef.current.src = data.image;
+                outputRef.current.src = data.image
             }
-        });
+        })
 
-        setSocket(newSocket);
+        setSocket(newSocket)
         console.log('New Socket', newSocket)
         console.log('New Socket active', newSocket.active)
         console.log('Socket', socket)
 
         return () => {
-            newSocket.disconnect();
-            console.log("Socket disconnected:", newSocket.id);
-        };
-    }, []);
+            newSocket.disconnect()
+          console.log('Socket disconnected:', newSocket.id)
+        }
+    }, [socket])
 
     const sendFrame = () => {
         if (webcamRef.current && canvasRef.current) {
-            const video = webcamRef.current.video;
-            const canvas = canvasRef.current;
-            const context = canvas.getContext('2d');
+            const video = webcamRef.current.video
+            const canvas = canvasRef.current
+            const context = canvas.getContext('2d')
 
             if (video && context) {
-                canvas.width = video.videoWidth;
-                canvas.height = video.videoHeight;
-                context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+                canvas.width = video.videoWidth
+                canvas.height = video.videoHeight
+                context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight)
 
-                const dataURL = canvas.toDataURL('image/jpeg', 0.5);
+                const dataURL = canvas.toDataURL('image/jpeg', 0.5)
                 if (socket) {
-                    console.log("Sending frame:");
-                    socket.emit('video_frame', { palabra: selectedWord, image: dataURL });
+                    console.log('Sending frame:')
+                    socket.emit('video_frame', { palabra: selectedWord, image: dataURL })
                 }
             }
         }
     }
 
     useEffect(() => {
-        const interval = setInterval(sendFrame, 250);
-        return () => clearInterval(interval);
-    }, [socket]);
+        const interval = setInterval(sendFrame, 250)
+        return () => clearInterval(interval)
+    }, [socket])
 
     const handleUnitChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const newUnit = e.target.value as keyof typeof unitWords;
-        setUnit(newUnit);
-        setSelectedWord(unitWords[newUnit][0]);
-        socket?.emit('unit_selected', { unidad: newUnit });
+        const newUnit = e.target.value as keyof typeof unitWords
+        setUnit(newUnit)
+        setSelectedWord(unitWords[newUnit][0])
+        socket?.emit('unit_selected', { unidad: newUnit })
     }
 
     const handleModeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const newMode = e.target.value;
-        setMode(newMode);
-        socket?.emit('reset_text');
+        const newMode = e.target.value
+        setMode(newMode)
+        socket?.emit('reset_text')
     }
 
     const handleWordChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        setSelectedWord(e.target.value);
-        socket?.emit('reset_text');
+        setSelectedWord(e.target.value)
+        socket?.emit('reset_text')
     }
 
     return (
@@ -130,7 +134,7 @@ const FreeMode : React.FC = () => {
                 </Container>
             </HomeLayout>
         </ProtectedRoute>
-    );
+    )
 }
 
 export default FreeMode

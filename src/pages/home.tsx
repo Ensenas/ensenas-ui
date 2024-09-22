@@ -7,23 +7,23 @@ import { useSession } from 'next-auth/react'
 import React, { useEffect, useState } from 'react'
 
 import HomeLayout from '../components/HomeLayout/HomeLayout'
+import HomeModal from '../components/HomeModal/HomeModal'
 import ProtectedRoute from '../components/ProtectedRoute'
 import LoadingSpinner from '../components/Spinner/Spinner'
+import { Lesson, Level, Unit, useNavigation } from '../context/NavigationLearningContext'
 import {
   ContentContainer,
   Image,
+  LessonCard,
+  LessonItem,
   Recommendations,
   RecommendationsTitle,
   Section,
   TextContainer,
   VideoItem,
   VideoList,
-  LessonCard,
-  LessonItem,
   WelcomeTitle
 } from '../styles/HomePage.styles'
-import { Lesson, Level, Unit, useNavigation } from '../context/NavigationLearningContext'
-import HomeModal from '../components/HomeModal/HomeModal'
 
 
 const HomePage: React.FC = () => {
@@ -33,16 +33,16 @@ const HomePage: React.FC = () => {
   const [filteredLessons, setfilteredLessons] = useState<Lesson[]>()
   const { currentLevel, setCurrentLevel, currentUnit, setCurrentUnit, currentLesson, setCurrentLesson,
     levels, units, lessons, isLoading, hasShownModal, setHasShownModal } = useNavigation()
-  const [isModalVisible, setIsModalVisible] = useState(true); // Estado para controlar la visibilidad del modal
+  const [isModalVisible, setIsModalVisible] = useState(true) // Estado para controlar la visibilidad del modal
   const [activePage, setActivePage] = useState('/home')
   const [test, setTest] = useState<Boolean>(false)
 
   useEffect(() => {
-    const hasShownModal = localStorage.getItem('hasShownModal');
+    const hasShownModal = localStorage.getItem('hasShownModal')
     console.log('hasshown',hasShownModal)
     if (!hasShownModal) {
-      setIsModalVisible(true);
-      localStorage.setItem('hasShownModal', 'true'); // Marca que el modal ya se ha mostrado
+      setIsModalVisible(true)
+      localStorage.setItem('hasShownModal', 'true') // Marca que el modal ya se ha mostrado
       console.log('hasshown', hasShownModal)
     }
   }, [])
@@ -84,7 +84,8 @@ const HomePage: React.FC = () => {
       if (currentUnit) {
         setActivePage(`/learning/levels/${currentLevel.description}/units/${currentUnit.description}`)
         if(currentLesson){
-          setActivePage(`/learning/levels/${currentLevel.description}/units/${currentUnit.description}/${currentLesson.description}`)
+          setActivePage(`/learning/levels/${currentLevel.description}
+            /units/${currentUnit.description}/${currentLesson.description}`)
         }
       } else {
         setActivePage(`/learning/levels/${currentLevel.description}`)
@@ -93,17 +94,17 @@ const HomePage: React.FC = () => {
   }, [activePage, currentLevel, currentUnit, currentLesson])
 
   const handleCloseModal = () => {
-    setIsModalVisible(false);
-    localStorage.setItem('hasShownModal', 'true');
+    setIsModalVisible(false)
+    localStorage.setItem('hasShownModal', 'true')
     setHasShownModal(true)
   }
 
   const getFirstPartString = (string: string): string | undefined => {
-    return string.split(':')[0]?.trim();
+    return string.split(':')[0]?.trim()
   }
   
   const getSecondPartString = (string: string): string | undefined => {
-    return string.split(':')[1]?.trim();
+    return string.split(':')[1]?.trim()
   }
 
 

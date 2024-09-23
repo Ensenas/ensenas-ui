@@ -146,7 +146,7 @@ const RegisterForm = () => {
 
                 // Redirigir después de 2 segundos
                 setTimeout(() => {
-                    router.replace('/login')
+                    router.push('/login')
                 }, 2000)
             } else {
                 throw new Error(data.message)

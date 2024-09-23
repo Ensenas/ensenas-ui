@@ -1,96 +1,67 @@
 /* eslint-disable no-console */
 /* eslint-disable no-unused-vars */
 import axios from 'axios'
-import { useRouter } from 'next/router'
+import router, { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 
+import HomeLayout from '../../../../components/HomeLayout/HomeLayout'
 import ProtectedRoute from '../../../../components/ProtectedRoute'
 import LoadingSpinner from '../../../../components/Spinner/Spinner'
+import { Unit, useNavigation } from '../../../../context/NavigationLearningContext'
 import {
     Section,
     Title,
     UnitCard
 } from '../../../../styles/Learning.styles'
 
-interface LevelUnitsProps {
-    currentLevel: number;
-    setCurrentUnit: (unitId: number) => void;
-}
-
-const LevelUnits: React.FC<LevelUnitsProps> = ({ currentLevel, setCurrentUnit }) => {
-    const [units, setUnits] = useState<any[]>([])
-    const [allUnits, setAllUnits] = useState<any[]>([])
-    const [isLoading, setIsLoading] = useState(true)
-
-    useEffect(() => {
-        console.log(currentLevel)
-        const fetchUnits = async () => {
-            try {
-                const response = await axios.get('/ens-api/units')
-                const unitsList = response.data.map((unit: any) => ({
-                    id: unit.id,
-                    title: unit.title,
-                    description: unit.description,
-                    order: unit.order
-                }))
-                unitsList.sort((a, b) => a.order < b.order)
-                setAllUnits(unitsList)
-            } catch (error) {
-                console.error('Error fetching units:', error)
-            } finally {
-                setIsLoading(false) // Termina la carga, incluso si hay error
-            }
-        }
-        fetchUnits()
-    }, [currentLevel])
+const LevelUnits: React.FC = ({}) => {
+    const [filteredUnits, setFilteredUnits] = useState<Unit[]>()
+    const { currentLevel, setCurrentLevel, currentUnit, setCurrentUnit, currentLesson, setCurrentLesson,
+        units, isLoading
+    } = useNavigation()
 
 
     useEffect(() => {
-        console.log('levels', currentLevel)
         if (currentLevel) {
-            let filteredUnits: any[] = []
-            switch (currentLevel) {
-                case 2:
-                    console.log('Paso por E')
-                    filteredUnits = allUnits.filter(unit => unit.title.startsWith('E'))
-                    console.log('allUnits ', allUnits)
-                    console.log('filteredUnits', filteredUnits)
-                    break
+            switch (currentLevel.id) {
                 case 3:
-                    filteredUnits = allUnits.filter(unit => unit.title.startsWith('I'))
+                    setFilteredUnits(units?.filter(unit => unit.title.startsWith('B')))
                     break
-                case 4:
-                    filteredUnits = allUnits.filter(unit => unit.title.startsWith('B'))
+                case 2:
+                    setFilteredUnits(units?.filter(unit => unit.title.startsWith('I')))
                     break
-
+                case 1:
+                    setFilteredUnits(units?.filter(unit => unit.title.startsWith('A')))
+                    break
             }
-            console.log(filteredUnits)
-            setUnits(filteredUnits)
         }
-    }, [currentLevel, allUnits])
+    }, [currentLevel, units])
 
-    const handleUnitClick = (unitId: number) => {
-        setCurrentUnit(unitId) // Actualiza el estado de la unidad actual
+    const handleUnitClick = (unit: Unit) => {
+        setCurrentUnit(unit) // Actualiza el estado de la unidad actual
+        router.push(`/learning/levels/${currentLevel?.description}/units/${unit.description}`)
     }
 
     return (
         <ProtectedRoute>
-            <Section>
-                <Title>Unidades del Nivel</Title>
-                <div>
-                    {isLoading ? (
-                        <LoadingSpinner /> // Muestra el spinner mientras se está cargando
-                    ) : (
-                        units.map(unit => (
-                            <div key={unit.id} onClick={() => handleUnitClick(unit.id)}>
-                                <UnitCard>
-                                    <h1>{unit.title}</h1>
-                                    <h3>{unit.description}</h3>
-                                </UnitCard>
-                            </div>
-                        )))}
-                </div>
-            </Section>
+            <HomeLayout activePage={`/learning/levels/${currentLevel?.description}/units`}>
+                <Section>
+                    <Title>Unidades del Nivel</Title>
+                    <div>
+                        {isLoading ? (
+                            <LoadingSpinner /> // Muestra el spinner mientras se está cargando
+                        ) : (
+                            filteredUnits?.map(unit => (
+                                <div key={unit.id} onClick={() => handleUnitClick(unit)}>
+                                    <UnitCard>
+                                        <h1>{unit.title}</h1>
+                                        <h3>{unit.description}</h3>
+                                    </UnitCard>
+                                </div>
+                            )))}
+                    </div>
+                </Section>
+            </HomeLayout>
         </ProtectedRoute>
     )
 }

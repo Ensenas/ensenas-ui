@@ -1,14 +1,18 @@
 /* eslint-disable no-console */
 /* eslint-disable no-unused-vars */
 import axios from 'axios'
+import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 
+import HomeLayout from '../components/HomeLayout/HomeLayout'
 import ProtectedRoute from '../components/ProtectedRoute'
+import LoadingSpinner from '../components/Spinner/Spinner'
 import {
   AchievementCard,
   AchievementsGrid,
   CardContent,
-  CardTitle,
+  CardLesson,
+  CardUnit,
   Medal,
   Section,
   Title
@@ -16,17 +20,10 @@ import {
 
 // Componente principal
 const MisLogros: React.FC = () => {
+  const router = useRouter()
   const [achievements, setAchievements] = useState<any[]>([])
   const [loading, setLoading] = useState<boolean>(true)
 
-  // Mocked data
-  const mockAchievements = [
-    { id: 1, title: 'Lecciones Vistas el Último Mes', description: '15 lecciones', completed: true },
-    { id: 2, title: 'Nivel Actual', description: 'Intermedio', completed: false },
-    { id: 3, title: 'Certificados Obtenidos', description: 'Certificado de Nivel Básico', completed: true },
-    { id: 4, title: 'Estadísticas de Uso', description: 'Tiempo Total Dedicado: 20 horas', completed: false }
-    // Agrega más medallas mockeadas si lo deseas
-  ]
 
   useEffect(() => {
     const fetchAchievements = async () => {
@@ -50,29 +47,45 @@ const MisLogros: React.FC = () => {
     fetchAchievements()
   }, [])
 
-  if (loading) {
-    return <Section>Cargando...</Section>
+  const getFirstPartString = (string: string): string | undefined => {
+    return string.split(':')[0]?.trim()
   }
-
+  
+  const getSecondPartString = (string: string): string | undefined => {
+    return string.split(':')[1]?.trim()
+  }
 
   return (
     <ProtectedRoute>
-      <Section>
-        <Title>Mis Logros</Title>
-        <AchievementsGrid>
-          {achievements.length === 0 ? (
-            <CardContent>No hay logros para mostrar.</CardContent>
-          ) : (
-            achievements.map((achievement) => (
-              <AchievementCard key={achievement.id}>
-                <CardTitle>{achievement.title}</CardTitle>
-                <Medal completed={achievement.completed} />
-                <CardContent>{achievement.description}</CardContent>
-              </AchievementCard>
-            ))
-          )}
-        </AchievementsGrid>
-      </Section>
+      <HomeLayout activePage='/achievements'>
+        <div>
+          {loading ? (
+              <LoadingSpinner /> // Muestra el spinner mientras se está cargando
+            ) : (
+          <Section>
+          <Title>Mis Logros</Title>
+          <AchievementsGrid>
+            {achievements.length === 0 ? (
+              <CardContent>No hay logros para mostrar.</CardContent>
+            ) : (
+              achievements.map((achievement) => (
+                <AchievementCard key={achievement.id}>
+                  <CardUnit>
+                    {getFirstPartString(achievement.description)}
+                  </CardUnit>
+                  <CardLesson>
+                  {getSecondPartString(achievement.description)}
+                  </CardLesson>
+                  <Medal completed={achievement.completed} />
+                  <CardContent>{achievement.title}</CardContent>
+                </AchievementCard>
+              ))
+            )}
+          </AchievementsGrid>
+        </Section>
+        )}
+      </div>
+      </HomeLayout>
     </ProtectedRoute>
   )
 }

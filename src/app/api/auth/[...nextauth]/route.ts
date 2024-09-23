@@ -42,7 +42,7 @@ const handler = NextAuth({
             return {
               id: 'default-id', // Proporciona un valor predeterminado si no tienes un ID
               email: credentials?.email || '',
-              name: credentials?.email || '', // Proporciona un valor predeterminado si no tienes un nombre
+              name: data.name + ' ' + data.surname, // Proporciona un valor predeterminado si no tienes un nombre
               accessToken: data.access_token
             } as User
           } else {

@@ -21,6 +21,7 @@ export const AchievementsGrid = styled.div`
 `
 
 export const AchievementCard = styled.div`
+ 
   padding: 20px;
   background-color: #fff;
   border-radius: 10px;
@@ -28,15 +29,22 @@ export const AchievementCard = styled.div`
   text-align: center;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 
+  min-height: 300px;
+
+
   &:hover {
     transform: translateY(-5px);
     box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
   }
 `
 
-export const CardTitle = styled.h3`
+export const CardUnit = styled.h3`
+  font-size: 1em;
+  color: #0567b1;
+`
+export const CardLesson = styled.h3`
   font-size: 1.5em;
-  margin-bottom: 15px;
+
   color: #0567b1;
 `
 

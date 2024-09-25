@@ -21,13 +21,13 @@ interface LessonProps {
     setTest: (test: Boolean) => void;
 }
 
-const LessonTest: React.FC<LessonProps> = ({}) => {
+const LessonTest: React.FC<LessonProps> = ({ }) => {
 
     // const [isLoading, setIsLoading] = useState(true)
     // const [lesson, setLesson] = useState<any>(null)
-    const { currentLevel, setCurrentLevel, currentUnit, setCurrentUnit, currentLesson, 
+    const { currentLevel, setCurrentLevel, currentUnit, setCurrentUnit, currentLesson,
         setCurrentLesson, test, setTest } = useNavigation()
-  
+
 
     // useEffect(() => {
     //     const fetchLesson = async () => {
@@ -57,11 +57,11 @@ const LessonTest: React.FC<LessonProps> = ({}) => {
             <HomeLayout activePage={`/learning/levels/${currentLevel?.description}
                 /units/${currentUnit?.description}/levels/${currentLesson?.description}`}>
                 <Section>
-                
-                        <Title>{currentLesson?.title}</Title>
-                        <LessonTitle>Deberás realizar con tu mano la siguiente seña: {currentLesson?.description}</LessonTitle>
-                        <InstructionText>Por favor, sigue las instrucciones y graba tu respuesta.</InstructionText>
-                        <VideoStreamRemoto />
+
+                    <Title>{currentLesson?.title}</Title>
+                    <LessonTitle>Deberás realizar con tu mano la siguiente seña: {currentLesson?.description}</LessonTitle>
+                    <InstructionText>Por favor, sigue las instrucciones y graba tu respuesta.</InstructionText>
+                    <VideoStreamRemoto unit={currentUnit} lesson={currentLesson} />
 
                 </Section>
             </HomeLayout>

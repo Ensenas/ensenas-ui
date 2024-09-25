@@ -8,26 +8,29 @@ import Webcam from 'react-webcam'
 import { io, Socket } from 'socket.io-client'
 
 import { Lesson, Unit, useNavigation } from '../../context/NavigationLearningContext'
-import { Container, Overlay,WebcamContainer } from './RecorderElements'
+import { Container, Overlay, WebcamContainer } from './RecorderElements'
 
 const unitWords = {
     familiares: ['papa', 'mama', 'hijo', 'hermana'],
     colores: ['amarillo', 'negro', 'rojo', 'verde']
 }
 
-export default function VideoStreamRemoto() {
+export default function VideoStreamRemoto({ unit, lesson }) {
     const [socket, setSocket] = useState<Socket | null>(null)
     const [fps, setFps] = useState(0)
     const webcamRef = useRef<Webcam>(null)
     const canvasRef = useRef<HTMLCanvasElement>(null)
     const outputRef = useRef<HTMLImageElement>(null)
-    const { currentLevel, setCurrentLevel, currentUnit, setCurrentUnit, 
+    const { currentLevel, setCurrentLevel, currentUnit, setCurrentUnit,
         currentLesson, setCurrentLesson, setTest } = useNavigation()
-  
+
+
 
     useEffect(() => {
         const newSocket = io('wss://alarma.mywire.org:3051')
-        
+
+        // const handleKeyPress = (event) => {
+        //     if (event.keyCode === 32) {
         newSocket.on('connect', () => {
             console.log('Socket connected:', newSocket.id)
         })
@@ -37,23 +40,31 @@ export default function VideoStreamRemoto() {
         })
 
         newSocket.on('processed_frame', (data) => {
-            console.log('Received processed frame:', data)
+            // console.log('Received processed frame:', data)
             setFps((1 / data.total_time_time))
             if (outputRef.current) {
                 outputRef.current.src = data.image
             }
         })
-
         setSocket(newSocket)
-        console.log('New Socket', newSocket)
-        console.log('New Socket active', newSocket.active)
-        console.log('Socket', socket)
+        newSocket.emit('unit_selected', { unidad: unit })
+        newSocket.emit('key_pressed', { key: 32 })
+        // console.log('New Socket', newSocket)
+        // console.log('New Socket active', newSocket.active)
+        // console.log('Socket', socket)
+        //}
+        // };
+
+
+        // document.addEventListener('keydown', handleKeyPress);
+
 
         return () => {
             newSocket.disconnect()
+            // document.removeEventListener('keydown', handleKeyPress);
             console.log('Socket disconnected:', newSocket.id)
         }
-    }, [socket])
+    }, [])
 
     const sendFrame = () => {
         if (webcamRef.current && canvasRef.current) {
@@ -68,12 +79,12 @@ export default function VideoStreamRemoto() {
 
                 const dataURL = canvas.toDataURL('image/jpeg', 0.5)
                 if (socket) {
-                    console.log('Sending frame:')
+                    // console.log('Sending frame:')
                     const unit: string | undefined = findUnit()
                     const word: string | undefined = findWord()
-                    console.log('UNIT', unit)
-                    console.log('WORD', word)
-                    socket.emit('unit_selected', { unidad: unit })
+                    // console.log('UNIT', unit)
+                    // console.log('WORD', word)
+
                     socket.emit('corregir_video_stream', { palabra: word, image: dataURL })
                 }
             }
@@ -85,15 +96,15 @@ export default function VideoStreamRemoto() {
         return () => clearInterval(interval)
     }, [socket, sendFrame])
 
-    const findUnit = () : string | undefined => {
-        if(currentUnit){
+    const findUnit = (): string | undefined => {
+        if (currentUnit) {
             return currentUnit.description.split(':').pop()?.trim().toLowerCase()
         }
-        
+
     }
-    const findWord = () : string | undefined => {
-        console.log(currentLesson)
-        if(currentLesson && currentLesson.title){
+    const findWord = (): string | undefined => {
+        // console.log(currentLesson)
+        if (currentLesson && currentLesson.title) {
             return currentLesson.description.split(':').pop()?.trim().toLowerCase()
         }
     }
@@ -140,7 +151,7 @@ export default function VideoStreamRemoto() {
             <img ref={outputRef} alt="Processed Video Stream" style={{ width: '80%', border: '2px solid #000' }} />
 
             <WebcamContainer>
-                <Webcam 
+                <Webcam
                     ref={webcamRef}
                     audio={false}
                     videoConstraints={{
@@ -153,7 +164,7 @@ export default function VideoStreamRemoto() {
             </WebcamContainer>
 
             <canvas ref={canvasRef} style={{ display: 'none' }} />
-            
+
             <Overlay />
         </Container>
     )

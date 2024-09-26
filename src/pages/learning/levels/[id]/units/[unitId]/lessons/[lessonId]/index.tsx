@@ -45,7 +45,7 @@ const Lesson: React.FC = ({ }) => {
                                 <VideoContainer>
                                     <VideoPlayer
                                         src={currentLesson ? currentLesson.videoSrc : 
-                                            'https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4'}
+                                            ''}
                                         onEnded={handleVideoEnd}
                                     />
                                 </VideoContainer>

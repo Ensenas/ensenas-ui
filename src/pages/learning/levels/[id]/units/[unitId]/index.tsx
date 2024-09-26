@@ -34,7 +34,10 @@ const UnitLessons: React.FC = ({}) => {
     }, [currentUnit, lessons, currentLevel])
 
     const handleLessonClick = (lesson: Lesson) => {
-        lesson.videoSrc = 'https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4'
+        console.log(currentLevel)
+        console.log(currentUnit)
+        console.log(currentLesson)
+        console.log(lesson.videoSrc)
         setCurrentLesson(lesson) // Actualiza el estado de la unidad actual
         router.push(`/learning/levels/${currentLevel?.description}/units/${currentUnit?.description}
             /lessons/${lesson.description}`)

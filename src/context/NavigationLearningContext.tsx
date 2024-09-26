@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable no-unused-vars */
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable no-console */
@@ -157,7 +158,8 @@ export const NavigationProvider: React.FC<{ children: ReactNode }> = ({ children
                   id: lesson.id,
                   title: lesson.title,
                   description: lesson.description,
-                  order: lesson.order
+                  order: lesson.order,
+                  videoSrc: `https://ensenas-videos.s3.us-west-1.amazonaws.com/${getFirstPartString(lesson.description)}/${getSecondPartString(lesson.description)}.mp4`
               }))
               lessonsList.sort((a, b) => a.order < b.order)
               setLessons(lessonsList)
@@ -170,6 +172,13 @@ export const NavigationProvider: React.FC<{ children: ReactNode }> = ({ children
       fetchLessons()
   }, [currentLevel])
 
+  const getFirstPartString = (string: string): string | undefined => {
+    return string.split(':')[0]?.trim().toLowerCase()
+  }
+  
+  const getSecondPartString = (string: string): string | undefined => {
+    return string.split(':')[1]?.trim().toLowerCase()
+  }
 
   return (
     <NavigationLearningContext.Provider

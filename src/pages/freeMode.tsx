@@ -28,7 +28,7 @@ const FreeMode : React.FC = () => {
 
     useEffect(() => {
         const newSocket = io('wss://alarma.mywire.org:3051')
-        
+
         newSocket.on('connect', () => {
             console.log('Socket connected:', newSocket.id)
         })
@@ -36,25 +36,23 @@ const FreeMode : React.FC = () => {
         newSocket.on('disconnect', (reason) => {
             console.log('Socket disconnected:', reason)
         })
-
         newSocket.on('processed_frame', (data) => {
-            console.log('Received processed frame:', data)
+            // console.log('Received processed frame:', data)
             setFps((1 / data.total_time_time))
             if (outputRef.current) {
                 outputRef.current.src = data.image
             }
         })
-
         setSocket(newSocket)
-        console.log('New Socket', newSocket)
-        console.log('New Socket active', newSocket.active)
-        console.log('Socket', socket)
+        newSocket.emit('unit_selected', { unidad: unit})
+        newSocket.emit('key_pressed', { key: 32 })
 
         return () => {
             newSocket.disconnect()
-          console.log('Socket disconnected:', newSocket.id)
+            // document.removeEventListener('keydown', handleKeyPress);
+            console.log('Socket disconnected:', newSocket.id)
         }
-    }, [socket])
+    }, [])
 
     const sendFrame = () => {
         if (webcamRef.current && canvasRef.current) {
@@ -69,7 +67,6 @@ const FreeMode : React.FC = () => {
 
                 const dataURL = canvas.toDataURL('image/jpeg', 0.5)
                 if (socket) {
-                    console.log('Sending frame:')
                     socket.emit('video_frame', { palabra: selectedWord, image: dataURL })
                 }
             }
@@ -79,7 +76,7 @@ const FreeMode : React.FC = () => {
     useEffect(() => {
         const interval = setInterval(sendFrame, 250)
         return () => clearInterval(interval)
-    }, [socket])
+    }, [socket,sendFrame])
 
     const handleUnitChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const newUnit = e.target.value as keyof typeof unitWords

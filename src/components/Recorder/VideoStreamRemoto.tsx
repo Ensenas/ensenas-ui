@@ -47,7 +47,7 @@ export default function VideoStreamRemoto({ unit, lesson }) {
             }
         })
         setSocket(newSocket)
-        newSocket.emit('unit_selected', { unidad: unit })
+        newSocket.emit('unit_selected', { unidad: findUnit()})
         newSocket.emit('key_pressed', { key: 32 })
         // console.log('New Socket', newSocket)
         // console.log('New Socket active', newSocket.active)
@@ -85,7 +85,7 @@ export default function VideoStreamRemoto({ unit, lesson }) {
                     // console.log('UNIT', unit)
                     // console.log('WORD', word)
 
-                    socket.emit('corregir_video_stream', { palabra: word, image: dataURL })
+                    socket.emit('corregir_video_stream', { frase: word, image: dataURL })
                 }
             }
         }

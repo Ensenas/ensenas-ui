@@ -6,7 +6,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import Webcam from 'react-webcam'
 import { io, Socket } from 'socket.io-client'
-
+import Spinner from '../Spinner/Spinner'
 import { Lesson, Unit, useNavigation } from '../../context/NavigationLearningContext'
 import { Container, Overlay, WebcamContainer } from './RecorderElements'
 
@@ -18,6 +18,8 @@ const unitWords = {
 export default function VideoStreamRemoto({ unit, lesson }) {
     const [socket, setSocket] = useState<Socket | null>(null)
     const [fps, setFps] = useState(0)
+    const [reset, setReset] = useState(false)
+    const [isConnected, setIsConnected] = useState(false)
     const webcamRef = useRef<Webcam>(null)
     const canvasRef = useRef<HTMLCanvasElement>(null)
     const outputRef = useRef<HTMLImageElement>(null)
@@ -29,10 +31,10 @@ export default function VideoStreamRemoto({ unit, lesson }) {
     useEffect(() => {
         const newSocket = io('wss://alarma.mywire.org:3051')
 
-        // const handleKeyPress = (event) => {
-        //     if (event.keyCode === 32) {
+
         newSocket.on('connect', () => {
             console.log('Socket connected:', newSocket.id)
+            setIsConnected(true)
         })
 
         newSocket.on('disconnect', (reason) => {
@@ -40,28 +42,35 @@ export default function VideoStreamRemoto({ unit, lesson }) {
         })
 
         newSocket.on('processed_frame', (data) => {
-            // console.log('Received processed frame:', data)
+
             setFps((1 / data.total_time_time))
             if (outputRef.current) {
                 outputRef.current.src = data.image
             }
         })
         setSocket(newSocket)
-        newSocket.emit('unit_selected', { unidad: findUnit()})
+        newSocket.emit('unit_selected', { unidad: findUnit() })
         newSocket.emit('key_pressed', { key: 32 })
         // console.log('New Socket', newSocket)
         // console.log('New Socket active', newSocket.active)
         // console.log('Socket', socket)
         //}
         // };
+        const handleKeyPress = (event) => {
 
+            if (event.keyCode === 13) {
+                setReset(true)
+                // socket.emit('corregir_video_stream', { reset: true })
+                // console.log("send")
+            }
+        }
 
-        // document.addEventListener('keydown', handleKeyPress);
+        document.addEventListener('keydown', handleKeyPress);
 
 
         return () => {
             newSocket.disconnect()
-            // document.removeEventListener('keydown', handleKeyPress);
+            document.removeEventListener('keydown', handleKeyPress);
             console.log('Socket disconnected:', newSocket.id)
         }
     }, [])
@@ -85,7 +94,8 @@ export default function VideoStreamRemoto({ unit, lesson }) {
                     // console.log('UNIT', unit)
                     // console.log('WORD', word)
 
-                    socket.emit('corregir_video_stream', { frase: word, image: dataURL })
+                    socket.emit('corregir_video_stream', { frase: word, image: dataURL, reset: reset })
+                    setReset(false)
                 }
             }
         }
@@ -127,10 +137,13 @@ export default function VideoStreamRemoto({ unit, lesson }) {
     // }
 
     return (
-        <Container>
-            <div id="fpsDisplay">FPS Max: {fps}</div>
+        <div>
+            {isConnected ? (
 
-            {/* <div id="selectors-container">
+                <Container>
+                    {/* <div id="fpsDisplay">FPS Max: {fps}</div> */}
+
+                    {/* <div id="selectors-container">
                 <select value={unit} onChange={handleUnitChange}>
                     <option value="familiares">Familiares</option>
                     <option value="colores">Colores</option>
@@ -148,24 +161,30 @@ export default function VideoStreamRemoto({ unit, lesson }) {
                 )}
             </div> */}
 
-            <img ref={outputRef} alt="Processed Video Stream" style={{ width: '80%', border: '2px solid #000' }} />
+                    <img ref={outputRef} style={{ width: '80%', border: '2px solid #000' }} />
 
-            <WebcamContainer>
-                <Webcam
-                    ref={webcamRef}
-                    audio={false}
-                    videoConstraints={{
-                        facingMode: 'user',
-                        width: 1920,
-                        height: 1080
-                    }}
-                    style={{ opacity: '0' }}
-                />
-            </WebcamContainer>
+                    <WebcamContainer>
+                        <Webcam
+                            ref={webcamRef}
+                            audio={false}
+                            videoConstraints={{
+                                facingMode: 'user',
+                                width: 1920,
+                                height: 1080
+                            }}
+                            style={{ opacity: '0' }}
+                        />
+                    </WebcamContainer>
 
-            <canvas ref={canvasRef} style={{ display: 'none' }} />
+                    <canvas ref={canvasRef} style={{ display: 'none' }} />
 
-            <Overlay />
-        </Container>
+                    <Overlay />
+                </Container>
+
+            ) : (
+                <Spinner />
+            )
+            }
+        </div>
     )
 }

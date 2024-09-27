@@ -9,6 +9,7 @@ import { io, Socket } from 'socket.io-client'
 import Spinner from '../Spinner/Spinner'
 import { Lesson, Unit, useNavigation } from '../../context/NavigationLearningContext'
 import { Container, Overlay, WebcamContainer } from './RecorderElements'
+import ResultModal from "../ResultModal/ResultModal"
 
 const unitWords = {
     familiares: ['papa', 'mama', 'hijo', 'hermana'],
@@ -19,13 +20,14 @@ export default function VideoStreamRemoto({ unit, lesson }) {
     const [socket, setSocket] = useState<Socket | null>(null)
     const [fps, setFps] = useState(0)
     const [reset, setReset] = useState(false)
+    const [border, setBorder] = useState('unset')
+    const [isGivingExam, setisGivingExam] = useState(true)
     const [isConnected, setIsConnected] = useState(false)
     const webcamRef = useRef<Webcam>(null)
     const canvasRef = useRef<HTMLCanvasElement>(null)
     const outputRef = useRef<HTMLImageElement>(null)
     const { currentLevel, setCurrentLevel, currentUnit, setCurrentUnit,
         currentLesson, setCurrentLesson, setTest } = useNavigation()
-
 
 
     useEffect(() => {
@@ -35,6 +37,7 @@ export default function VideoStreamRemoto({ unit, lesson }) {
         newSocket.on('connect', () => {
             console.log('Socket connected:', newSocket.id)
             setIsConnected(true)
+            setBorder('2px solid #000')
         })
 
         newSocket.on('disconnect', (reason) => {
@@ -42,15 +45,17 @@ export default function VideoStreamRemoto({ unit, lesson }) {
         })
 
         newSocket.on('processed_frame', (data) => {
+            console.log("palabra", data.palabra_detectada)
 
             setFps((1 / data.total_time_time))
             if (outputRef.current) {
                 outputRef.current.src = data.image
             }
         })
+
+
         setSocket(newSocket)
         newSocket.emit('unit_selected', { unidad: findUnit() })
-        newSocket.emit('key_pressed', { key: 32 })
         // console.log('New Socket', newSocket)
         // console.log('New Socket active', newSocket.active)
         // console.log('Socket', socket)
@@ -60,6 +65,8 @@ export default function VideoStreamRemoto({ unit, lesson }) {
 
             if (event.keyCode === 13) {
                 setReset(true)
+                setBorder('3px solid #039619')
+                setisGivingExam(false)
                 // socket.emit('corregir_video_stream', { reset: true })
                 // console.log("send")
             }
@@ -139,48 +146,36 @@ export default function VideoStreamRemoto({ unit, lesson }) {
     return (
         <div>
             {isConnected ? (
+                <div>
+                    {isGivingExam ? (
+                        <div>
+                            <Container>
 
-                <Container>
-                    {/* <div id="fpsDisplay">FPS Max: {fps}</div> */}
+                                <img ref={outputRef} style={{ width: '70%', height: '620px', border: border }} />
 
-                    {/* <div id="selectors-container">
-                <select value={unit} onChange={handleUnitChange}>
-                    <option value="familiares">Familiares</option>
-                    <option value="colores">Colores</option>
-                </select>
-                <select value={mode} onChange={handleModeChange}>
-                    <option value="Detectar">Detectar</option>
-                    <option value="Corregir">Corregir</option>
-                </select>
-                {mode === 'Corregir' && (
-                    <select value={selectedWord} onChange={handleWordChange}>
-                        {unitWords[unit as keyof typeof unitWords].map((word) => (
-                            <option key={word} value={word}>{word}</option>
-                        ))}
-                    </select>
-                )}
-            </div> */}
+                                <WebcamContainer>
+                                    <Webcam
+                                        ref={webcamRef}
+                                        audio={false}
+                                        videoConstraints={{
+                                            facingMode: 'user',
+                                            width: 1920,
+                                            height: 1080
+                                        }}
+                                        style={{ opacity: '0' }}
+                                    />
+                                </WebcamContainer>
 
-                    <img ref={outputRef} style={{ width: '80%', border: '2px solid #000' }} />
+                                <canvas ref={canvasRef} style={{ display: 'none' }} />
 
-                    <WebcamContainer>
-                        <Webcam
-                            ref={webcamRef}
-                            audio={false}
-                            videoConstraints={{
-                                facingMode: 'user',
-                                width: 1920,
-                                height: 1080
-                            }}
-                            style={{ opacity: '0' }}
-                        />
-                    </WebcamContainer>
+                                <Overlay />
 
-                    <canvas ref={canvasRef} style={{ display: 'none' }} />
-
-                    <Overlay />
-                </Container>
-
+                            </Container>
+                        </div>
+                    ) : (
+                        <ResultModal onNextWord={() => console.log("a")} onRestart={() => console.log("a")} />
+                    )}
+                </div>
             ) : (
                 <Spinner />
             )

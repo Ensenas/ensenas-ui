@@ -6,20 +6,24 @@
 import React, { useEffect, useRef, useState } from 'react'
 import Webcam from 'react-webcam'
 import { io, Socket } from 'socket.io-client'
+import Spinner from '../components/Spinner/Spinner'
 
 import HomeLayout from '../components/HomeLayout/HomeLayout'
 import ProtectedRoute from '../components/ProtectedRoute'
-import { Container, Overlay, SelectorsContainer, StyledSelect,WebcamContainer } from '../styles/FreeMode.styles'
+import { Container, Overlay, SelectorsContainer, StyledSelect, WebcamContainer } from '../styles/FreeMode.styles'
 
 const unitWords = {
     familiares: ['papa', 'mama', 'hijo', 'hermana'],
     colores: ['amarillo', 'negro', 'rojo', 'verde']
 }
 
-const FreeMode : React.FC = () => {
+const FreeMode: React.FC = () => {
     const [socket, setSocket] = useState<Socket | null>(null)
     const [mode, setMode] = useState('Corregir')
     const [unit, setUnit] = useState('familiares')
+    const [border, setBorder] = useState('unset')
+    const [isConnected, setIsConnected] = useState(false)
+    const [reset, setReset] = useState(false)
     const [selectedWord, setSelectedWord] = useState(unitWords.familiares[0])
     const [fps, setFps] = useState(0)
     const webcamRef = useRef<Webcam>(null)
@@ -31,25 +35,37 @@ const FreeMode : React.FC = () => {
 
         newSocket.on('connect', () => {
             console.log('Socket connected:', newSocket.id)
+            setIsConnected(true)
+            setBorder('2px solid #000')
         })
 
         newSocket.on('disconnect', (reason) => {
             console.log('Socket disconnected:', reason)
         })
         newSocket.on('processed_frame', (data) => {
-            // console.log('Received processed frame:', data)
+            console.log("status", data.detection_status)
             setFps((1 / data.total_time_time))
             if (outputRef.current) {
                 outputRef.current.src = data.image
             }
         })
         setSocket(newSocket)
-        newSocket.emit('unit_selected', { unidad: unit})
-        newSocket.emit('key_pressed', { key: 32 })
+        newSocket.emit('unit_selected', { unidad: unit })
+
+        const handleKeyPress = (event) => {
+
+            if (event.keyCode === 13) {
+                setReset(true)
+                setBorder('3px solid #039619')
+            }
+        }
+
+        document.addEventListener('keydown', handleKeyPress);
+
 
         return () => {
             newSocket.disconnect()
-            // document.removeEventListener('keydown', handleKeyPress);
+            document.removeEventListener('keydown', handleKeyPress);
             console.log('Socket disconnected:', newSocket.id)
         }
     }, [])
@@ -67,7 +83,8 @@ const FreeMode : React.FC = () => {
 
                 const dataURL = canvas.toDataURL('image/jpeg', 0.5)
                 if (socket) {
-                    socket.emit('video_frame', { palabra: selectedWord, image: dataURL })
+                    socket.emit('video_frame', { palabra: selectedWord, image: dataURL, reset: reset })
+                    setReset(false)
                 }
             }
         }
@@ -76,7 +93,7 @@ const FreeMode : React.FC = () => {
     useEffect(() => {
         const interval = setInterval(sendFrame, 250)
         return () => clearInterval(interval)
-    }, [socket,sendFrame])
+    }, [socket, sendFrame])
 
     const handleUnitChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const newUnit = e.target.value as keyof typeof unitWords
@@ -99,38 +116,45 @@ const FreeMode : React.FC = () => {
     return (
         <ProtectedRoute>
             <HomeLayout activePage='/freeMode'>
-                <Container>
-                    <div id="fpsDisplay">FPS Max: {fps}</div>
+                {isConnected ? (
+                    <div>
+                        <Container>
+                            <div id="fpsDisplay">FPS Max: {fps}</div>
 
-                    <SelectorsContainer>
-                        <StyledSelect value={unit} onChange={handleUnitChange}>
-                            <option value="familiares">Familiares</option>
-                            <option value="colores">Colores</option>
-                        </StyledSelect>
+                            <SelectorsContainer>
+                                <StyledSelect value={unit} onChange={handleUnitChange}>
+                                    <option value="familiares">Familiares</option>
+                                    <option value="colores">Colores</option>
+                                </StyledSelect>
 
-                    </SelectorsContainer>
+                            </SelectorsContainer>
 
-                    <img ref={outputRef} alt="Processed Video Stream" style={{ width: '80%', border: '2px solid #000' }} />
+                            <img ref={outputRef} style={{ width: '70%', height: '620px', border: border }} />
 
-                    <WebcamContainer>
-                        <Webcam 
-                            ref={webcamRef}
-                            audio={false}
-                            videoConstraints={{
-                                facingMode: 'user',
-                                width: 1920,
-                                height: 1080
-                            }}
-                            style={{opacity: 0}}
-                        />
-                    </WebcamContainer>
+                            <WebcamContainer>
+                                <Webcam
+                                    ref={webcamRef}
+                                    audio={false}
+                                    videoConstraints={{
+                                        facingMode: 'user',
+                                        width: 1920,
+                                        height: 1080
+                                    }}
+                                    style={{ opacity: 0 }}
+                                />
+                            </WebcamContainer>
 
-                    <canvas ref={canvasRef} style={{ display: 'none' }} />
-                    
-                    <Overlay />
-                </Container>
+                            <canvas ref={canvasRef} style={{ display: 'none' }} />
+
+                            <Overlay />
+                        </Container>
+                    </div>
+                ) : (
+                    <Spinner />
+                )}
             </HomeLayout>
         </ProtectedRoute>
+
     )
 }
 

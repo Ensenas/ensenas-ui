@@ -33,6 +33,9 @@ export default function VideoStreamRemoto({ unit, lesson }) {
         currentLesson, setCurrentLesson, setTest } = useNavigation()
 
     useEffect(() => {
+        console.log(unit)
+        console.log(lesson)
+
         const newSocket = io('wss://alarma.mywire.org:3051')
 
         newSocket.on('connect', () => {
@@ -54,18 +57,20 @@ export default function VideoStreamRemoto({ unit, lesson }) {
             }
 
             // Check if the word is correct and show result screen
-            if (data.palabra_detectada === findWord()) {
-                console.log("CORRECTO")
-                console.log(data.palabra_detectada)
-                console.log(findWord())
+            if (data.palabra_detectada === findWord(lesson.description)) {
+                // console.log("CORRECTO")
+                // console.log(data.palabra_detectada)
+                // console.log(findWord())
                 setIsSuccess(true)
                 setShowResultScreen(true)
             } else {
-                console.log("INCORRECTO")
-                setAttempts(prev => prev + 1)
-                if (attempts >= 2) { // Show failure screen after 3 attempts
-                    setIsSuccess(false)
-                    setShowResultScreen(true)
+                if (data.palabra_detectada != undefined) {
+                    // console.log("INCORRECTO")
+                    setAttempts(prev => prev + 1)
+                    if (attempts >= 2) { // Show failure screen after 3 attempts
+                        setIsSuccess(false)
+                        setShowResultScreen(true)
+                    }
                 }
             }
         })
@@ -106,7 +111,7 @@ export default function VideoStreamRemoto({ unit, lesson }) {
                 const dataURL = canvas.toDataURL('image/jpeg', 0.5)
                 if (socket) {
                     const unit: string | undefined = findUnit()
-                    const word: string | undefined = findWord()
+                    const word: string | undefined = findWord(lesson.description)
 
                     socket.emit('corregir_video_stream', { frase: word, image: dataURL, reset: reset })
                     setReset(false)
@@ -125,11 +130,9 @@ export default function VideoStreamRemoto({ unit, lesson }) {
             return currentUnit.description.split(':').pop()?.trim().toLowerCase()
         }
     }
-    const findWord = (): string | undefined => {
-        // console.log(currentLesson)
-        if (currentLesson && currentLesson.title) {
-            return currentLesson.description.split(':').pop()?.trim().toLowerCase()
-        }
+
+    const findWord = (lesson_description): string | undefined => {
+        return lesson_description.split(':').pop()?.trim().toLowerCase()
     }
 
     const handleNextWord = () => {
@@ -194,7 +197,7 @@ export default function VideoStreamRemoto({ unit, lesson }) {
                     </div>
                     {showResultScreen && (
                         <ResultScreen
-                            isSuccess={isSuccess}
+                            isSuccess={false}
                             onNextWord={handleNextWord}
                             onRestart={handleRestart}
                         />

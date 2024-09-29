@@ -7,7 +7,7 @@ const OverlayContainer = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.9);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -77,16 +77,16 @@ export default function ResultScreen({ isSuccess, onNextWord, onRestart }: Resul
     <OverlayContainer>
       <ContentContainer>
         <Title isSuccess={isSuccess}>
-          {isSuccess ? '¡Excelente trabajo!' : '¡Inténtalo de nuevo!'}
+          {isSuccess ? '¡Excelente trabajo!' : '¡Probá de nuevo!'}
         </Title>
         <Message>
           {isSuccess
-            ? 'Has realizado correctamente el signo.'
-            : 'No se ha reconocido correctamente el signo. ¡Sigue practicando!'}
+            ? 'Realizaste correctamente la seña. ¡Seguí así!'
+            : 'No pudimos reconocer la seña. ¡Seguí practicando!'}
         </Message>
         <div>
           <PrimaryButton onClick={onNextWord}>
-            {isSuccess ? 'Siguiente palabra' : 'Intentar otra palabra'}
+            {isSuccess ? 'Siguiente lección' : 'Intentar otra lección'}
           </PrimaryButton>
           <SecondaryButton onClick={onRestart}>
             {isSuccess ? 'Reiniciar' : 'Reintentar'}

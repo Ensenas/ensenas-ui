@@ -9,7 +9,7 @@ import { io, Socket } from 'socket.io-client'
 import Spinner from '../Spinner/Spinner'
 import { Lesson, Unit, useNavigation } from '../../context/NavigationLearningContext'
 import { Container, Overlay, WebcamContainer } from './RecorderElements'
-import ResultModal from "../ResultModal/ResultModal"
+import ResultScreen from "../ResultScreen/ResultScreen"
 
 const unitWords = {
     familiares: ['papa', 'mama', 'hijo', 'hermana'],
@@ -19,20 +19,21 @@ const unitWords = {
 export default function VideoStreamRemoto({ unit, lesson }) {
     const [socket, setSocket] = useState<Socket | null>(null)
     const [fps, setFps] = useState(0)
+    const [attempts, setAttempts] = useState(0)
     const [reset, setReset] = useState(false)
+    const [isSuccess, setIsSuccess] = useState(false)
     const [border, setBorder] = useState('unset')
     const [isGivingExam, setisGivingExam] = useState(true)
     const [isConnected, setIsConnected] = useState(false)
+    const [showResultScreen, setShowResultScreen] = useState(false)
     const webcamRef = useRef<Webcam>(null)
     const canvasRef = useRef<HTMLCanvasElement>(null)
     const outputRef = useRef<HTMLImageElement>(null)
     const { currentLevel, setCurrentLevel, currentUnit, setCurrentUnit,
         currentLesson, setCurrentLesson, setTest } = useNavigation()
 
-
     useEffect(() => {
         const newSocket = io('wss://alarma.mywire.org:3051')
-
 
         newSocket.on('connect', () => {
             console.log('Socket connected:', newSocket.id)
@@ -51,18 +52,28 @@ export default function VideoStreamRemoto({ unit, lesson }) {
             if (outputRef.current) {
                 outputRef.current.src = data.image
             }
-        })
 
+            // Check if the word is correct and show result screen
+            if (data.palabra_detectada === findWord()) {
+                console.log("CORRECTO")
+                console.log(data.palabra_detectada)
+                console.log(findWord())
+                setIsSuccess(true)
+                setShowResultScreen(true)
+            } else {
+                console.log("INCORRECTO")
+                setAttempts(prev => prev + 1)
+                if (attempts >= 2) { // Show failure screen after 3 attempts
+                    setIsSuccess(false)
+                    setShowResultScreen(true)
+                }
+            }
+        })
 
         setSocket(newSocket)
         newSocket.emit('unit_selected', { unidad: findUnit() })
-        // console.log('New Socket', newSocket)
-        // console.log('New Socket active', newSocket.active)
-        // console.log('Socket', socket)
-        //}
-        // };
-        const handleKeyPress = (event) => {
 
+        const handleKeyPress = (event) => {
             if (event.keyCode === 13) {
                 setReset(true)
                 setBorder('3px solid #039619')
@@ -74,13 +85,12 @@ export default function VideoStreamRemoto({ unit, lesson }) {
 
         document.addEventListener('keydown', handleKeyPress);
 
-
         return () => {
             newSocket.disconnect()
             document.removeEventListener('keydown', handleKeyPress);
             console.log('Socket disconnected:', newSocket.id)
         }
-    }, [])
+    }, [attempts])
 
     const sendFrame = () => {
         if (webcamRef.current && canvasRef.current) {
@@ -95,11 +105,8 @@ export default function VideoStreamRemoto({ unit, lesson }) {
 
                 const dataURL = canvas.toDataURL('image/jpeg', 0.5)
                 if (socket) {
-                    // console.log('Sending frame:')
                     const unit: string | undefined = findUnit()
                     const word: string | undefined = findWord()
-                    // console.log('UNIT', unit)
-                    // console.log('WORD', word)
 
                     socket.emit('corregir_video_stream', { frase: word, image: dataURL, reset: reset })
                     setReset(false)
@@ -117,7 +124,6 @@ export default function VideoStreamRemoto({ unit, lesson }) {
         if (currentUnit) {
             return currentUnit.description.split(':').pop()?.trim().toLowerCase()
         }
-
     }
     const findWord = (): string | undefined => {
         // console.log(currentLesson)
@@ -125,6 +131,21 @@ export default function VideoStreamRemoto({ unit, lesson }) {
             return currentLesson.description.split(':').pop()?.trim().toLowerCase()
         }
     }
+
+    const handleNextWord = () => {
+        setShowResultScreen(false)
+        setAttempts(0)
+        // Logic to move to the next word
+        // This depends on how you manage your lessons and words
+        // Example: setCurrentLesson(nextLesson)
+    }
+
+    const handleRestart = () => {
+        setShowResultScreen(false)
+        setAttempts(0)
+        setReset(true)
+    }
+
     // const handleUnitChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     //     const newUnit = e.target.value as keyof typeof unitWords;
     //     setUnit(newUnit);
@@ -147,33 +168,36 @@ export default function VideoStreamRemoto({ unit, lesson }) {
         <div>
             {isConnected ? (
                 <div>
-                    {isGivingExam ? (
-                        <div>
-                            <Container>
+                    <div>
+                        <Container>
 
-                                <img ref={outputRef} style={{ width: '70%', height: '620px', border: border }} />
+                            <img ref={outputRef} style={{ width: '70%', height: '620px', border: border }} />
 
-                                <WebcamContainer>
-                                    <Webcam
-                                        ref={webcamRef}
-                                        audio={false}
-                                        videoConstraints={{
-                                            facingMode: 'user',
-                                            width: 1920,
-                                            height: 1080
-                                        }}
-                                        style={{ opacity: '0' }}
-                                    />
-                                </WebcamContainer>
+                            <WebcamContainer>
+                                <Webcam
+                                    ref={webcamRef}
+                                    audio={false}
+                                    videoConstraints={{
+                                        facingMode: 'user',
+                                        width: 1920,
+                                        height: 1080
+                                    }}
+                                    style={{ opacity: '0' }}
+                                />
+                            </WebcamContainer>
 
-                                <canvas ref={canvasRef} style={{ display: 'none' }} />
+                            <canvas ref={canvasRef} style={{ display: 'none' }} />
 
-                                <Overlay />
+                            <Overlay />
 
-                            </Container>
-                        </div>
-                    ) : (
-                        <ResultModal onNextWord={() => console.log("a")} onRestart={() => console.log("a")} />
+                        </Container>
+                    </div>
+                    {showResultScreen && (
+                        <ResultScreen
+                            isSuccess={isSuccess}
+                            onNextWord={handleNextWord}
+                            onRestart={handleRestart}
+                        />
                     )}
                 </div>
             ) : (

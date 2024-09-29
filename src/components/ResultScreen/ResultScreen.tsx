@@ -7,7 +7,7 @@ const OverlayContainer = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.9);
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -22,9 +22,9 @@ const ContentContainer = styled.div`
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 `
 
-const Title = styled.h2`
+const Title = styled.h2<{ isSuccess: boolean }>`
   font-size: 1.5rem;
-  color: #38a169;
+  color: ${props => props.isSuccess ? '#38a169' : '#e53e3e'};
   margin-bottom: 1rem;
 `
 
@@ -66,20 +66,31 @@ const SecondaryButton = styled(Button)`
   }
 `
 
-interface SuccessScreenProps {
+interface ResultScreenProps {
+  isSuccess: boolean
   onNextWord: () => void
   onRestart: () => void
 }
 
-export default function SuccessScreen({ onNextWord, onRestart }: SuccessScreenProps) {
+export default function ResultScreen({ isSuccess, onNextWord, onRestart }: ResultScreenProps) {
   return (
     <OverlayContainer>
       <ContentContainer>
-        <Title>¡Excelente trabajo!</Title>
-        <Message>Has realizado correctamente la seña.</Message>
+        <Title isSuccess={isSuccess}>
+          {isSuccess ? '¡Excelente trabajo!' : '¡Inténtalo de nuevo!'}
+        </Title>
+        <Message>
+          {isSuccess
+            ? 'Has realizado correctamente el signo.'
+            : 'No se ha reconocido correctamente el signo. ¡Sigue practicando!'}
+        </Message>
         <div>
-          <PrimaryButton onClick={onNextWord}>Siguiente palabra</PrimaryButton>
-          <SecondaryButton onClick={onRestart}>Reiniciar</SecondaryButton>
+          <PrimaryButton onClick={onNextWord}>
+            {isSuccess ? 'Siguiente palabra' : 'Intentar otra palabra'}
+          </PrimaryButton>
+          <SecondaryButton onClick={onRestart}>
+            {isSuccess ? 'Reiniciar' : 'Reintentar'}
+          </SecondaryButton>
         </div>
       </ContentContainer>
     </OverlayContainer>

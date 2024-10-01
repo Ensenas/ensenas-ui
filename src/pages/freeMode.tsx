@@ -44,6 +44,7 @@ const FreeMode: React.FC = () => {
         })
         newSocket.on('processed_frame', (data) => {
             console.log("status", data.detection_status)
+            console.log(data)
             setFps((1 / data.total_time_time))
             if (outputRef.current) {
                 outputRef.current.src = data.image

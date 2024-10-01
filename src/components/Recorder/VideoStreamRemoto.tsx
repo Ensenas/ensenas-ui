@@ -18,7 +18,7 @@ const unitWords = {
 
 export default function VideoStreamRemoto({ unit, lesson }) {
     const [socket, setSocket] = useState<Socket | null>(null)
-    const [fps, setFps] = useState(0)
+    // const [fps, setFps] = useState(0)
     const [attempts, setAttempts] = useState(0)
     const [reset, setReset] = useState(false)
     const [isSuccess, setIsSuccess] = useState(false)
@@ -33,8 +33,8 @@ export default function VideoStreamRemoto({ unit, lesson }) {
         currentLesson, setCurrentLesson, setTest } = useNavigation()
 
     useEffect(() => {
-        console.log(unit)
-        console.log(lesson)
+        // console.log(unit)
+        // console.log(lesson)
 
         const newSocket = io('wss://alarma.mywire.org:3051')
 
@@ -51,23 +51,22 @@ export default function VideoStreamRemoto({ unit, lesson }) {
         newSocket.on('processed_frame', (data) => {
             console.log("palabra", data.palabra_detectada)
 
-            setFps((1 / data.total_time_time))
+            // setFps((1 / data.total_time_time))
             if (outputRef.current) {
                 outputRef.current.src = data.image
             }
 
             // Check if the word is correct and show result screen
-            if (data.palabra_detectada === findWord(lesson.description)) {
-                // console.log("CORRECTO")
-                // console.log(data.palabra_detectada)
-                // console.log(findWord())
-                setIsSuccess(true)
-                setShowResultScreen(true)
-            } else {
-                if (data.palabra_detectada != undefined) {
-                    // console.log("INCORRECTO")
+            if (data.palabra_detectada != undefined) {
+                if (data.palabra_detectada === findWord(lesson.description)) {
+                    // console.log(data.palabra_detectada)
+                    // console.log(findWord())
+                    setIsSuccess(true)
+                    setShowResultScreen(true)
+                }
+                else {
                     setAttempts(prev => prev + 1)
-                    if (attempts >= 2) { // Show failure screen after 3 attempts
+                    if (attempts >= 2) {
                         setIsSuccess(false)
                         setShowResultScreen(true)
                     }

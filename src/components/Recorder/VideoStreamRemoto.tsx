@@ -6,11 +6,29 @@
 import React, { useEffect, useRef, useState } from 'react'
 import Webcam from 'react-webcam'
 import { io, Socket } from 'socket.io-client'
+import styled from 'styled-components'
 
 import { Lesson, Unit, useNavigation } from '../../context/NavigationLearningContext'
 import ResultScreen from '../ResultScreen/ResultScreen'
 import Spinner from '../Spinner/Spinner'
 import { Container, Overlay, WebcamContainer } from './RecorderElements'
+
+const PreviewContainer = styled.div`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 200px;
+  height: 150px;
+  border: 2px solid #000;
+  overflow: hidden;
+  z-index: 10;
+`
+
+const MainImageContainer = styled.div`
+  position: relative;
+  width: 70%;
+  height: 620px;
+`
 
 const unitWords = {
     familiares: ['papa', 'mama', 'hijo', 'hermana'],
@@ -58,7 +76,7 @@ export default function VideoStreamRemoto({ unit, lesson }) {
 
             // Check if the word is correct and show result screen
             if (data.palabra_detectada != null) {
-                
+
                 if (data.palabra_detectada == findWord(lesson.description)) {
                     // console.log(data.palabra_detectada)
                     // console.log(findWord())
@@ -70,7 +88,7 @@ export default function VideoStreamRemoto({ unit, lesson }) {
                 else {
                     // setAttempts(prev => prev + 1)
                     // if (attempts >= 2) {
-                        
+
                     // }
                     setIsSuccess(false)
                     setShowResultScreen(true)
@@ -174,12 +192,14 @@ export default function VideoStreamRemoto({ unit, lesson }) {
         <div>
             {isConnected ? (
                 <div>
-                    <div>
-                        <Container>
-
-                            <img ref={outputRef} style={{ width: '70%', height: '620px', border: border }} />
-
-                            <WebcamContainer>
+                    <Container>
+                        <MainImageContainer>
+                            <img
+                                ref={outputRef}
+                                style={{ width: '100%', height: '100%', border: border, objectFit: 'cover' }}
+                                alt="Processed output"
+                            />
+                            <PreviewContainer>
                                 <Webcam
                                     ref={webcamRef}
                                     audio={false}
@@ -188,16 +208,29 @@ export default function VideoStreamRemoto({ unit, lesson }) {
                                         width: 1920,
                                         height: 1080
                                     }}
-                                    style={{ top: '70', left: '70', border: border, position: 'absolute' }}
+                                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                                 />
-                            </WebcamContainer>
+                            </PreviewContainer>
+                        </MainImageContainer>
 
-                            <canvas ref={canvasRef} style={{ display: 'none' }} />
+                        <WebcamContainer>
+                            <Webcam
+                                audio={false}
+                                videoConstraints={{
+                                    facingMode: 'user',
+                                    width: 1920,
+                                    height: 1080
+                                }}
+                                style={{ opacity: '0' }}
+                            />
+                        </WebcamContainer>
 
-                            <Overlay />
 
-                        </Container>
-                    </div>
+                        <canvas ref={canvasRef} style={{ display: 'none' }} />
+
+                        <Overlay />
+
+                    </Container>
                     {showResultScreen && (
                         <ResultScreen
                             isSuccess={isSuccess}

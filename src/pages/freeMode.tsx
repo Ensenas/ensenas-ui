@@ -6,10 +6,10 @@
 import React, { useEffect, useRef, useState } from 'react'
 import Webcam from 'react-webcam'
 import { io, Socket } from 'socket.io-client'
-import Spinner from '../components/Spinner/Spinner'
 
 import HomeLayout from '../components/HomeLayout/HomeLayout'
 import ProtectedRoute from '../components/ProtectedRoute'
+import Spinner from '../components/Spinner/Spinner'
 import { Container, Overlay, SelectorsContainer, StyledSelect, WebcamContainer } from '../styles/FreeMode.styles'
 
 const unitWords = {
@@ -31,7 +31,7 @@ const FreeMode: React.FC = () => {
     const outputRef = useRef<HTMLImageElement>(null)
 
     useEffect(() => {
-        const newSocket = io('wss://alarma.mywire.org:3051')
+        const newSocket = io('wss://alarma.mywire.org:3050')
 
         newSocket.on('connect', () => {
             console.log('Socket connected:', newSocket.id)
@@ -43,9 +43,6 @@ const FreeMode: React.FC = () => {
             console.log('Socket disconnected:', reason)
         })
         newSocket.on('processed_frame', (data) => {
-            console.log("status", data.detection_status)
-            console.log(data)
-            setFps((1 / data.total_time_time))
             if (outputRef.current) {
                 outputRef.current.src = data.image
             }
@@ -61,12 +58,12 @@ const FreeMode: React.FC = () => {
             }
         }
 
-        document.addEventListener('keydown', handleKeyPress);
+        document.addEventListener('keydown', handleKeyPress)
 
 
         return () => {
             newSocket.disconnect()
-            document.removeEventListener('keydown', handleKeyPress);
+            document.removeEventListener('keydown', handleKeyPress)
             console.log('Socket disconnected:', newSocket.id)
         }
     }, [])
@@ -84,7 +81,7 @@ const FreeMode: React.FC = () => {
 
                 const dataURL = canvas.toDataURL('image/jpeg', 0.5)
                 if (socket) {
-                    socket.emit('video_frame', { palabra: selectedWord, image: dataURL, reset: reset })
+                    socket.emit('video_frame', { image: dataURL, reset: reset })
                     setReset(false)
                 }
             }

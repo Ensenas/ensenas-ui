@@ -7,7 +7,7 @@ interface VideoPlayerProps {
 
 const VideoPlayer: React.FC<VideoPlayerProps> = ({ src, onEnded }) => {
     return (
-        <video width="100%" height="10%" controls onEnded={onEnded}>
+        <video width="300" height="500" controls onEnded={onEnded}>
             <source src={src} type="video/mp4" />
             Your browser does not support the video tag.
         </video>

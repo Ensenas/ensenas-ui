@@ -54,8 +54,8 @@ const LevelUnits: React.FC = ({}) => {
                             filteredUnits?.map(unit => (
                                 <div key={unit.id} onClick={() => handleUnitClick(unit)}>
                                     <UnitCard>
-                                        <h1>{unit.title}</h1>
-                                        <h3>{unit.description}</h3>
+                                        <h1>{unit.description}</h1>
+                                        <h3>{unit.title}</h3>
                                     </UnitCard>
                                 </div>
                             )))}

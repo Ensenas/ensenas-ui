@@ -59,8 +59,10 @@ const LessonTest: React.FC<LessonProps> = ({ }) => {
                 <Section>
 
                     <Title>{currentLesson?.title}</Title>
-                    <LessonTitle>Deberás realizar con tu mano la siguiente seña: {currentLesson?.description}.</LessonTitle>
-                    <InstructionText>Por favor, sigue las instrucciones y graba tu respuesta. Para reintentar, presioná la tecla Enter.</InstructionText>
+                    <LessonTitle>Deberás realizar con tu mano la siguiente seña: 
+                        <div style={{color: '#0567b1', marginLeft: 10}}>{currentLesson?.description}</div>
+                    </LessonTitle>
+                    <InstructionText>Para reintentar, presioná la tecla Enter.</InstructionText>
                     <VideoStreamRemoto unit={currentUnit} lesson={currentLesson} />
 
                 </Section>

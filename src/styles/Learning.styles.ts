@@ -86,6 +86,8 @@ export const LessonCard = styled.a`
   h1 {
     color: #0567b1; /* Color del h1 por defecto */
     transition: color 0.3s; /* Opcional: añade transición al color del h1 */
+    margin: 0;
+    padding: 0;
   }
 
   &:hover h1, &:hover h3 {

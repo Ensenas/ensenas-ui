@@ -16,6 +16,7 @@ export const Title = styled.h2`
 export const LessonTitle = styled.h3`
   margin: 0;
   font-size: 1em;
+  display: flex;
 `
 
 export const CompletedLessonsList = styled.div`

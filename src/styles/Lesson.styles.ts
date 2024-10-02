@@ -17,6 +17,7 @@ export const LessonTitle = styled.h3`
   margin: 0;
   font-size: 1.2em;
   margin-bottom: 20px;
+
 `
 
 export const VideoContainer = styled.div`

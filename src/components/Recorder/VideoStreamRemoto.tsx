@@ -6,10 +6,11 @@
 import React, { useEffect, useRef, useState } from 'react'
 import Webcam from 'react-webcam'
 import { io, Socket } from 'socket.io-client'
-import Spinner from '../Spinner/Spinner'
+
 import { Lesson, Unit, useNavigation } from '../../context/NavigationLearningContext'
+import ResultScreen from '../ResultScreen/ResultScreen'
+import Spinner from '../Spinner/Spinner'
 import { Container, Overlay, WebcamContainer } from './RecorderElements'
-import ResultScreen from "../ResultScreen/ResultScreen"
 
 const unitWords = {
     familiares: ['papa', 'mama', 'hijo', 'hermana'],
@@ -36,7 +37,7 @@ export default function VideoStreamRemoto({ unit, lesson }) {
         // console.log(unit)
         // console.log(lesson)
 
-        const newSocket = io('wss://alarma.mywire.org:3051')
+        const newSocket = io('wss://alarma.mywire.org:3050')
 
         newSocket.on('connect', () => {
             console.log('Socket connected:', newSocket.id)
@@ -49,7 +50,6 @@ export default function VideoStreamRemoto({ unit, lesson }) {
         })
 
         newSocket.on('processed_frame', (data) => {
-            console.log("palabra", data.palabra_detectada)
 
             // setFps((1 / data.total_time_time))
             if (outputRef.current) {
@@ -57,19 +57,23 @@ export default function VideoStreamRemoto({ unit, lesson }) {
             }
 
             // Check if the word is correct and show result screen
-            if (data.palabra_detectada != undefined) {
-                if (data.palabra_detectada === findWord(lesson.description)) {
+            if (data.palabra_detectada != null) {
+                
+                if (data.palabra_detectada == findWord(lesson.description)) {
                     // console.log(data.palabra_detectada)
                     // console.log(findWord())
+                    console.log('palabra', data.palabra_detectada)
+                    console.log(findWord(lesson.description))
                     setIsSuccess(true)
                     setShowResultScreen(true)
                 }
                 else {
-                    setAttempts(prev => prev + 1)
-                    if (attempts >= 2) {
-                        setIsSuccess(false)
-                        setShowResultScreen(true)
-                    }
+                    // setAttempts(prev => prev + 1)
+                    // if (attempts >= 2) {
+                        
+                    // }
+                    setIsSuccess(false)
+                    setShowResultScreen(true)
                 }
             }
         })
@@ -87,11 +91,11 @@ export default function VideoStreamRemoto({ unit, lesson }) {
             }
         }
 
-        document.addEventListener('keydown', handleKeyPress);
+        document.addEventListener('keydown', handleKeyPress)
 
         return () => {
             newSocket.disconnect()
-            document.removeEventListener('keydown', handleKeyPress);
+            document.removeEventListener('keydown', handleKeyPress)
             console.log('Socket disconnected:', newSocket.id)
         }
     }, [attempts])
@@ -184,7 +188,7 @@ export default function VideoStreamRemoto({ unit, lesson }) {
                                         width: 1920,
                                         height: 1080
                                     }}
-                                    style={{ opacity: '0' }}
+                                    style={{ top: '70', left: '70', border: border, position: 'absolute' }}
                                 />
                             </WebcamContainer>
 
@@ -196,7 +200,7 @@ export default function VideoStreamRemoto({ unit, lesson }) {
                     </div>
                     {showResultScreen && (
                         <ResultScreen
-                            isSuccess={false}
+                            isSuccess={isSuccess}
                             onNextWord={handleNextWord}
                             onRestart={handleRestart}
                         />

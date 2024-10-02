@@ -16,6 +16,7 @@ import {
     Section,
     Title
 } from '../../../../../../styles/Learning.styles'
+import { getFirstPartString, getSecondPartString } from '../../../../../../utils'
 
 
 const UnitLessons: React.FC = ({}) => {
@@ -55,8 +56,9 @@ const UnitLessons: React.FC = ({}) => {
                             filteredLessons?.map(lesson => (
                                 <LessonItem key={lesson.id} onClick={() => handleLessonClick(lesson)}>
                                     <LessonCard>
-                                        <h1>{lesson.title}</h1>
-                                        <h3>{lesson.description}</h3>
+                                        <h4>{getFirstPartString(lesson.description)}</h4>
+                                        <h1>{getSecondPartString(lesson.description)}</h1>
+                                        <h5>{lesson.title}</h5>
                                     </LessonCard>
                                 </LessonItem>
                             )))}

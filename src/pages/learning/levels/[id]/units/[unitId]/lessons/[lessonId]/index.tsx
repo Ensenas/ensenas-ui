@@ -17,6 +17,7 @@ import {
     Tooltip,
     TooltipContainer,
     VideoContainer} from '../../../../../../../../styles/Lesson.styles'
+import { getFirstPartString } from '../../../../../../../../utils/index'
 
 const Lesson: React.FC = ({ }) => {
     const [lesson, setLesson] = useState<any>(null)

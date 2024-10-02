@@ -80,8 +80,8 @@ export default function VideoStreamRemoto({ unit, lesson }) {
                 if (data.palabra_detectada == findWord(lesson.description)) {
                     // console.log(data.palabra_detectada)
                     // console.log(findWord())
-                    console.log('palabra', data.palabra_detectada)
-                    console.log(findWord(lesson.description))
+                    // console.log('palabra', data.palabra_detectada)
+                    // console.log(findWord(lesson.description))
                     setIsSuccess(true)
                     setShowResultScreen(true)
                 }

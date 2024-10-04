@@ -3,7 +3,7 @@
 /* eslint-disable no-console */
 'use client'
 
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import Webcam from 'react-webcam'
 import { io, Socket } from 'socket.io-client'
 import styled from 'styled-components'
@@ -118,7 +118,8 @@ export default function VideoStreamRemoto({ unit, lesson }) {
         }
     }, [attempts])
 
-    const sendFrame = () => {
+
+    const sendFrame = useCallback(() => {
         if (webcamRef.current && canvasRef.current) {
             const video = webcamRef.current.video
             const canvas = canvasRef.current
@@ -139,12 +140,12 @@ export default function VideoStreamRemoto({ unit, lesson }) {
                 }
             }
         }
-    }
+    }, [socket, reset]);
 
     useEffect(() => {
-        const interval = setInterval(sendFrame, 250)
-        return () => clearInterval(interval)
-    }, [socket, sendFrame])
+        const interval = setInterval(sendFrame, 250);
+        return () => clearInterval(interval);
+    }, [sendFrame]);
 
     const findUnit = (): string | undefined => {
         if (currentUnit) {
@@ -205,8 +206,8 @@ export default function VideoStreamRemoto({ unit, lesson }) {
                                     audio={false}
                                     videoConstraints={{
                                         facingMode: 'user',
-                                        width: 1920,
-                                        height: 1080
+                                        width: 1280,
+                                        height: 720
                                     }}
                                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                                 />

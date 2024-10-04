@@ -16,14 +16,15 @@ import {
     Title,
     Tooltip,
     TooltipContainer,
-    VideoContainer} from '../../../../../../../../styles/Lesson.styles'
+    VideoContainer
+} from '../../../../../../../../styles/Lesson.styles'
 import { getFirstPartString } from '../../../../../../../../utils/index'
 
 const Lesson: React.FC = ({ }) => {
     const [lesson, setLesson] = useState<any>(null)
     const [videoCompleted, setVideoCompleted] = useState(false)
     const [showTooltip, setShowTooltip] = useState(false)
-    const { currentLevel, setCurrentLevel, currentUnit, setCurrentUnit, currentLesson, 
+    const { currentLevel, setCurrentLevel, currentUnit, setCurrentUnit, currentLesson,
         setCurrentLesson, setTest } = useNavigation()
 
     const handleVideoEnd = () => {
@@ -41,31 +42,31 @@ const Lesson: React.FC = ({ }) => {
             <HomeLayout activePage={`/learning/levels/${currentLevel?.description}
                 /units/${currentUnit?.description}/levels/${currentLesson?.description}`}>
                 <Section>
-                                <Title>{currentLesson?.title}</Title>
-                                <LessonTitle>{currentLesson?.description}</LessonTitle>
-                                <VideoContainer>
-                                    <VideoPlayer
-                                        src={currentLesson ? currentLesson.videoSrc : 
-                                            ''}
-                                        onEnded={handleVideoEnd}
-                                    />
-                                </VideoContainer>
-                                <TooltipContainer>
-                                    <TestButton
-                                        disabled={!videoCompleted}
-                                        onClick={() => handleStartTest()}
-                                        onMouseOver={() => !videoCompleted && setShowTooltip(true)}
-                                        onMouseOut={() => setShowTooltip(false)}
-                                    >
-                                        Realizar Test
-                                    </TestButton>
-                                    <Tooltip show={showTooltip}>
-                                        Deber terminar el video antes
-                                    </Tooltip>
-                                </TooltipContainer>
+                    <Title>{currentLesson?.title}</Title>
+                    <LessonTitle>{currentLesson?.description}</LessonTitle>
+                    <VideoContainer>
+                        <VideoPlayer
+                            src={currentLesson ? currentLesson.videoSrc :
+                                ''}
+                            onEnded={handleVideoEnd}
+                        />
+                    </VideoContainer>
+                    <TooltipContainer>
+                        <TestButton
+                            disabled={!videoCompleted}
+                            onClick={() => handleStartTest()}
+                            onMouseOver={() => !videoCompleted && setShowTooltip(true)}
+                            onMouseOut={() => setShowTooltip(false)}
+                        >
+                            Realizar Test
+                        </TestButton>
+                        <Tooltip show={showTooltip}>
+                            Antes de realizar el test, debe terminar de ver el video.
+                        </Tooltip>
+                    </TooltipContainer>
                 </Section>
             </HomeLayout>
-            
+
         </ProtectedRoute>
     )
 }

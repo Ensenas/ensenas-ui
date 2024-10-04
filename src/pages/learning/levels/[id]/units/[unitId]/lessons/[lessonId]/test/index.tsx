@@ -59,10 +59,14 @@ const LessonTest: React.FC<LessonProps> = ({ }) => {
                 <Section>
 
                     <Title>{currentLesson?.title}</Title>
-                    <LessonTitle>Deberás realizar con tu mano la siguiente seña: 
-                        <div style={{color: '#0567b1', marginLeft: 10}}>{currentLesson?.description}</div>
+                    <LessonTitle>Deberás realizar con sus manos la siguiente seña:
+                        <div style={{ color: '#0567b1', marginLeft: 10 }}>{currentLesson?.description}</div>
                     </LessonTitle>
                     <InstructionText>Para reintentar, presioná la tecla Enter.</InstructionText>
+                    <InstructionText>Es necesario que para la realización de la seña se encuentre sentado,
+                        con una distancia de aproximadamente 2 metros de la camara de manera que se vea hasta la mitad del torso.
+                    </InstructionText>
+
                     <VideoStreamRemoto unit={currentUnit} lesson={currentLesson} />
 
                 </Section>

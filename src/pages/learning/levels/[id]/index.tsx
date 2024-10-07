@@ -14,7 +14,7 @@ import {
     UnitCard
 } from '../../../../styles/Learning.styles'
 
-const LevelUnits: React.FC = ({}) => {
+const LevelUnits: React.FC = ({ }) => {
     const [filteredUnits, setFilteredUnits] = useState<Unit[]>()
     const { currentLevel, setCurrentLevel, currentUnit, setCurrentUnit, currentLesson, setCurrentLesson,
         units, isLoading
@@ -29,9 +29,12 @@ const LevelUnits: React.FC = ({}) => {
                     break
                 case 2:
                     setFilteredUnits(units?.filter(unit => unit.title.startsWith('I')))
+                    console.log(units)
+
                     break
                 case 1:
                     setFilteredUnits(units?.filter(unit => unit.title.startsWith('A')))
+                    console.log(units)
                     break
             }
         }

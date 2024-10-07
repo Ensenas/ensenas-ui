@@ -45,16 +45,28 @@ export default function VideoStreamRemoto({ unit, lesson }) {
     const [isGivingExam, setisGivingExam] = useState(true)
     const [isConnected, setIsConnected] = useState(false)
     const [showResultScreen, setShowResultScreen] = useState(false)
+    const [frase, setFrase] = useState([''])
+    const [fraseIndex, setFraseIndex] = useState(0)
+    const [expectedFrase, setExpectedFrase] = useState([''])
     const webcamRef = useRef<Webcam>(null)
     const canvasRef = useRef<HTMLCanvasElement>(null)
     const outputRef = useRef<HTMLImageElement>(null)
     const { currentLevel, setCurrentLevel, currentUnit, setCurrentUnit,
         currentLesson, setCurrentLesson, setTest } = useNavigation()
 
+
+    useEffect(() => {
+        if (lesson && lesson.description) {
+            const fraseInicial = findWord(lesson.description).split(' ')
+            setExpectedFrase(fraseInicial)
+            console.log(expectedFrase)
+            console.log('Expected Frase set:', fraseInicial) // Para depurar el valor inicial
+        }
+    }, [lesson.description]);  // Añade lesson.description como dependencia
+
     useEffect(() => {
         // console.log(unit)
         // console.log(lesson)
-
         const newSocket = io('wss://alarma.mywire.org:3050')
 
         newSocket.on('connect', () => {
@@ -68,7 +80,6 @@ export default function VideoStreamRemoto({ unit, lesson }) {
         })
 
         newSocket.on('processed_frame', (data) => {
-
             // setFps((1 / data.total_time_time))
             if (outputRef.current) {
                 outputRef.current.src = data.image
@@ -77,13 +88,18 @@ export default function VideoStreamRemoto({ unit, lesson }) {
             // Check if the word is correct and show result screen
             if (data.palabra_detectada != null) {
 
-                if (data.palabra_detectada == findWord(lesson.description)) {
+                if (frase == expectedFrase) {
+                    setIsSuccess(true)
+                    setShowResultScreen(true)
+                }
+
+                else if (data.palabra_detectada == expectedFrase[fraseIndex]) {
+                    checkWords(data.palabra_detectada)
                     // console.log(data.palabra_detectada)
                     // console.log(findWord())
                     // console.log('palabra', data.palabra_detectada)
                     // console.log(findWord(lesson.description))
-                    setIsSuccess(true)
-                    setShowResultScreen(true)
+
                 }
                 else {
                     // setAttempts(prev => prev + 1)
@@ -116,7 +132,7 @@ export default function VideoStreamRemoto({ unit, lesson }) {
             document.removeEventListener('keydown', handleKeyPress)
             console.log('Socket disconnected:', newSocket.id)
         }
-    }, [attempts])
+    }, [])
 
 
     const sendFrame = useCallback(() => {
@@ -149,13 +165,21 @@ export default function VideoStreamRemoto({ unit, lesson }) {
 
     const findUnit = (): string | undefined => {
         if (currentUnit) {
-            return currentUnit.description.split(':').pop()?.trim().toLowerCase()
+            return (currentUnit.description.split(':').pop()?.trim().toLowerCase())?.replace(' ', '_')
         }
     }
 
-    const findWord = (lesson_description): string | undefined => {
+    const findWord = (lesson_description): string => {
         return lesson_description.split(':').pop()?.trim().toLowerCase()
     }
+
+    const checkWords = (word) => {
+        setFrase(Array.from(findWord(lesson.description).split(' ')[fraseIndex]));
+        console.log("OK")
+        setFraseIndex(fraseIndex + 1)
+        console.log(fraseIndex)
+    }
+
 
     const handleNextWord = () => {
         setShowResultScreen(false)

@@ -54,7 +54,6 @@ export default function VideoStreamRemoto({ unit, lesson }) {
     const { currentLevel, setCurrentLevel, currentUnit, setCurrentUnit,
         currentLesson, setCurrentLesson, setTest } = useNavigation()
 
-
     useEffect(() => {
         if (lesson && lesson.description) {
             const fraseInicial = findWord(lesson.description).split(' ')
@@ -65,75 +64,64 @@ export default function VideoStreamRemoto({ unit, lesson }) {
     }, [lesson.description]);  // Añade lesson.description como dependencia
 
     useEffect(() => {
-        // console.log(unit)
-        // console.log(lesson)
-        const newSocket = io('wss://alarma.mywire.org:3050')
+        console.log('Expected Frase updated:', expectedFrase)
+    }, [expectedFrase])
+
+    useEffect(() => {
+        const newSocket = io('wss://alarma.mywire.org:3050');
+        setSocket(newSocket);
 
         newSocket.on('connect', () => {
-            console.log('Socket connected:', newSocket.id)
-            setIsConnected(true)
-            setBorder('2px solid #000')
-        })
+            console.log('Socket connected:', newSocket.id);
+            setIsConnected(true);
+            setBorder('2px solid #000');
+        });
 
         newSocket.on('disconnect', (reason) => {
-            console.log('Socket disconnected:', reason)
-        })
+            console.log('Socket disconnected:', reason);
+            setIsConnected(false);
+        });
 
-        newSocket.on('processed_frame', (data) => {
-            // setFps((1 / data.total_time_time))
+        newSocket.emit('unit_selected', { unidad: findUnit() })
+
+        return () => {
+            newSocket.disconnect();
+            console.log('Socket disconnected:', newSocket.id);
+        };
+    }, []); // Solo se ejecuta una vez al montar
+
+    useEffect(() => {
+        if (!socket) return;
+
+        const handleProcessedFrame = (data) => {
             if (outputRef.current) {
-                outputRef.current.src = data.image
+                outputRef.current.src = data.image;
             }
 
             // Check if the word is correct and show result screen
             if (data.palabra_detectada != null) {
-
+                console.log(expectedFrase);
                 if (frase == expectedFrase) {
-                    setIsSuccess(true)
-                    setShowResultScreen(true)
-                }
+                    console.log(frase)
+                    setIsSuccess(true);
+                    setShowResultScreen(true);
+                } else if (data.palabra_detectada === expectedFrase[fraseIndex]) {
+                    console.log(frase)
 
-                else if (data.palabra_detectada == expectedFrase[fraseIndex]) {
-                    checkWords(data.palabra_detectada)
-                    // console.log(data.palabra_detectada)
-                    // console.log(findWord())
-                    // console.log('palabra', data.palabra_detectada)
-                    // console.log(findWord(lesson.description))
-
-                }
-                else {
-                    // setAttempts(prev => prev + 1)
-                    // if (attempts >= 2) {
-
-                    // }
-                    setIsSuccess(false)
-                    setShowResultScreen(true)
+                    checkWords(data.palabra_detectada);
+                } else {
+                    setIsSuccess(false);
+                    setShowResultScreen(true);
                 }
             }
-        })
+        };
 
-        setSocket(newSocket)
-        newSocket.emit('unit_selected', { unidad: findUnit() })
-
-        const handleKeyPress = (event) => {
-            if (event.keyCode === 13) {
-                setReset(true)
-                setBorder('3px solid #039619')
-                setisGivingExam(false)
-                // socket.emit('corregir_video_stream', { reset: true })
-                // console.log("send")
-            }
-        }
-
-        document.addEventListener('keydown', handleKeyPress)
+        socket.on('processed_frame', handleProcessedFrame);
 
         return () => {
-            newSocket.disconnect()
-            document.removeEventListener('keydown', handleKeyPress)
-            console.log('Socket disconnected:', newSocket.id)
-        }
-    }, [])
-
+            socket.off('processed_frame', handleProcessedFrame);
+        };
+    }, [socket, expectedFrase, fraseIndex, frase]);
 
     const sendFrame = useCallback(() => {
         if (webcamRef.current && canvasRef.current) {

@@ -60,7 +60,7 @@ export const Image = styled.img`
 
 export const Recommendations = styled.div`
   margin: 40px;
-  overflow-x: hidden;
+  // overflow-x: hidden;
 `
 
 export const RecommendationsTitle = styled.h3`
@@ -71,11 +71,12 @@ export const RecommendationsTitle = styled.h3`
 
 export const VideoList = styled.div`
   display: flex;
-  flex-wrap: nowrap; /* Evita que los elementos se muevan a la siguiente línea */
+  flex-wrap: wrap; /* Evita que los elementos se muevan a la siguiente línea */
   overflow-x: auto; /* Permite desplazamiento horizontal */
   padding: 10px 0;
   max-width: 100%; /* Asegura que no sobrepase el ancho del contenedor */
   box-sizing: border-box;
+  gap: 20px;
 `
 
 export const VideoItem = styled.div`

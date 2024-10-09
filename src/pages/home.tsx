@@ -37,9 +37,11 @@ const HomePage: React.FC = () => {
   const [activePage, setActivePage] = useState('/home')
   const [test, setTest] = useState<Boolean>(false)
 
+  const router = useRouter()
+
   useEffect(() => {
     const hasShownModal = localStorage.getItem('hasShownModal')
-    console.log('hasshown',hasShownModal)
+    console.log('hasshown', hasShownModal)
     if (!hasShownModal) {
       setIsModalVisible(true)
       localStorage.setItem('hasShownModal', 'true') // Marca que el modal ya se ha mostrado
@@ -49,33 +51,33 @@ const HomePage: React.FC = () => {
 
 
   useEffect(() => {
-    setfilteredLessons(lessons?.filter(lesson => lesson.title.startsWith('E-01') || 
-    lesson.title.startsWith('B-01') || lesson.title.startsWith('I-01')) )
+    setfilteredLessons(lessons?.filter(lesson => lesson.title.startsWith('E-01') ||
+      lesson.title.startsWith('B-01') || lesson.title.startsWith('I-01')))
   }, [lessons])
 
   const handleLessonClick = (lesson: Lesson) => {
     setCurrentLesson(lesson) // Actualiza el estado de la unidad actual
     setCurrentLevel(findLevel(lesson))
-    setCurrentUnit(findUnit(lesson)) 
-    setActivePage(`/learning/levels/${currentLevel?.description}/units/${currentUnit?.description}/${currentLesson?.description}`)
+    setCurrentUnit(findUnit(lesson))
+    router.push(`/learning/levels/${currentLevel?.description}/units/${currentUnit?.description}/lessons/${currentLesson?.description}`)
   }
 
-  const findLevel = (lesson : Lesson) : Level | null => {
-    console.log('substringgg', lesson.title.substring(0,1))
-    const currLevel = levels?.find((level : Level) => level.title.startsWith(lesson.title.substring(0,1)))
-    if(currLevel != undefined)
+  const findLevel = (lesson: Lesson): Level | null => {
+    console.log('substringgg', lesson.title.substring(0, 1))
+    const currLevel = levels?.find((level: Level) => level.title.startsWith(lesson.title.substring(0, 1)))
+    if (currLevel != undefined)
       return currLevel
     else
-      return null 
+      return null
   }
 
-  const findUnit = (lesson : Lesson) : Unit | null => {
-    console.log('substringgg', lesson.title.substring(0,1))
-    const currUnit =  units?.find((level : Level) => level.title.startsWith(lesson.title.substring(0,3)))
-    if(currUnit != undefined)
+  const findUnit = (lesson: Lesson): Unit | null => {
+    console.log('substringgg', lesson.title.substring(0, 1))
+    const currUnit = units?.find((level: Level) => level.title.startsWith(lesson.title.substring(0, 3)))
+    if (currUnit != undefined)
       return currUnit
     else
-      return null 
+      return null
   }
 
 
@@ -83,7 +85,7 @@ const HomePage: React.FC = () => {
     if (activePage.startsWith('/learning') && currentLevel) {
       if (currentUnit) {
         setActivePage(`/learning/levels/${currentLevel.description}/units/${currentUnit.description}`)
-        if(currentLesson){
+        if (currentLesson) {
           setActivePage(`/learning/levels/${currentLevel.description}
             /units/${currentUnit.description}/${currentLesson.description}`)
         }
@@ -102,7 +104,7 @@ const HomePage: React.FC = () => {
   const getFirstPartString = (string: string): string | undefined => {
     return string.split(':')[0]?.trim()
   }
-  
+
   const getSecondPartString = (string: string): string | undefined => {
     return string.split(':')[1]?.trim()
   }
@@ -110,43 +112,43 @@ const HomePage: React.FC = () => {
 
   return (
     <ProtectedRoute>
-      { !hasShownModal ? (
+      {!hasShownModal ? (
         <HomeModal isVisible={isModalVisible} onClose={handleCloseModal} />
-      ): (
+      ) : (
         <HomeLayout activePage={activePage}>
           <Section>
             <TextContainer>
               <WelcomeTitle>¡Bienvenid@, {session?.user?.name}!</WelcomeTitle>
-                <div style={{ width: '90%', display: 'inline-block'}}>
-                  <p style={{ fontSize: '1.2em', color: '#fff' }}>
-                    ¡Te damos la bienvenida a nuestra plataforma de aprendizaje de lenguaje de señas!
-                  </p>
-                  <p style={{ fontSize: '1.2em', color: '#fff' }}>
-                    Estamos emocionados de que te hayas unido a nosotros en esta jornada para aprender y
-                    conectar a través de este hermoso y esencial lenguaje.
-                  </p>
-                  <p style={{ fontSize: '1.2em', color: '#fff' }}>
-                    ¡Buena suerte y disfruta del proceso de aprendizaje!
-                  </p>
-                </div>
+              <div style={{ width: '90%', display: 'inline-block' }}>
+                <p style={{ fontSize: '1.2em', color: '#fff' }}>
+                  ¡Te damos la bienvenida a nuestra plataforma de aprendizaje de lenguaje de señas!
+                </p>
+                <p style={{ fontSize: '1.2em', color: '#fff' }}>
+                  Estamos emocionados de que te hayas unido a nosotros en esta jornada para aprender y
+                  conectar a través de este hermoso y esencial lenguaje.
+                </p>
+                <p style={{ fontSize: '1.2em', color: '#fff' }}>
+                  ¡Buena suerte y disfruta del proceso de aprendizaje!
+                </p>
+              </div>
             </TextContainer>
             <Recommendations>
               <RecommendationsTitle>Recomendaciones para ti</RecommendationsTitle>
               <VideoList>
-                  {isLoading ? (
-                      <LoadingSpinner /> // Muestra el spinner mientras se está cargando
-                  ) : (
-                      filteredLessons?.map(lesson => (
-                        <VideoItem key={lesson.id}>
-                          <LessonItem key={lesson.id} onClick={() => handleLessonClick(lesson)}>
-                              <LessonCard>
-                                  <h3>{getFirstPartString(lesson.description)}</h3>
-                                  <h1>{getSecondPartString(lesson.description)}</h1>
-                                  <h5>{lesson.title}</h5>
-                              </LessonCard>
-                          </LessonItem>
-                        </VideoItem>  
-                      )))}
+                {isLoading ? (
+                  <LoadingSpinner /> // Muestra el spinner mientras se está cargando
+                ) : (
+                  filteredLessons?.map(lesson => (
+                    <VideoItem key={lesson.id}>
+                      <LessonItem key={lesson.id} onClick={() => handleLessonClick(lesson)}>
+                        <LessonCard>
+                          <h3>{getFirstPartString(lesson.description)}</h3>
+                          <h1>{getSecondPartString(lesson.description)}</h1>
+                          <h5>{lesson.title}</h5>
+                        </LessonCard>
+                      </LessonItem>
+                    </VideoItem>
+                  )))}
               </VideoList>
             </Recommendations>
           </Section>

@@ -45,7 +45,7 @@ export default function VideoStreamRemoto({ unit, lesson }) {
     const [isGivingExam, setisGivingExam] = useState(true)
     const [isConnected, setIsConnected] = useState(false)
     const [showResultScreen, setShowResultScreen] = useState(false)
-    const [frase, setFrase] = useState([''])
+    const [frase, setFrase] = useState<string[]>([]);
     const [fraseIndex, setFraseIndex] = useState(0)
     const [expectedFrase, setExpectedFrase] = useState([''])
     const webcamRef = useRef<Webcam>(null)
@@ -100,14 +100,8 @@ export default function VideoStreamRemoto({ unit, lesson }) {
 
             // Check if the word is correct and show result screen
             if (data.palabra_detectada != null) {
-                console.log(expectedFrase);
-                if (frase == expectedFrase) {
+                if (data.palabra_detectada === expectedFrase[fraseIndex]) {
                     console.log(frase)
-                    setIsSuccess(true);
-                    setShowResultScreen(true);
-                } else if (data.palabra_detectada === expectedFrase[fraseIndex]) {
-                    console.log(frase)
-
                     checkWords(data.palabra_detectada);
                 } else {
                     setIsSuccess(false);
@@ -122,6 +116,7 @@ export default function VideoStreamRemoto({ unit, lesson }) {
             socket.off('processed_frame', handleProcessedFrame);
         };
     }, [socket, expectedFrase, fraseIndex, frase]);
+
 
     const sendFrame = useCallback(() => {
         if (webcamRef.current && canvasRef.current) {
@@ -162,10 +157,16 @@ export default function VideoStreamRemoto({ unit, lesson }) {
     }
 
     const checkWords = (word) => {
-        setFrase(Array.from(findWord(lesson.description).split(' ')[fraseIndex]));
+        setFrase([...frase, expectedFrase[fraseIndex]]);
         console.log("OK")
+
         setFraseIndex(fraseIndex + 1)
         console.log(fraseIndex)
+        if (expectedFrase.length - 1 == fraseIndex) {
+            console.log(frase)
+            setIsSuccess(true);
+            setShowResultScreen(true);
+        }
     }
 
 

@@ -54,8 +54,7 @@ const LessonTest: React.FC<LessonProps> = ({ }) => {
 
     return (
         <ProtectedRoute>
-            <HomeLayout activePage={`/learning/levels/${currentLevel?.description}
-                /units/${currentUnit?.description}/levels/${currentLesson?.description}`}>
+            <HomeLayout activePage={`/learning`}>
                 <Section>
 
                     <Title>{currentLesson?.title}</Title>

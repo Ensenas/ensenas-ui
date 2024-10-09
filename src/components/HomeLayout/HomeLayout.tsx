@@ -1,28 +1,45 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable @next/next/no-img-element */
-/* eslint-disable no-console */
-import { useRouter } from 'next/router'
-import React from 'react'
+'use client'
+
+import { useRouter } from 'next/navigation'
+import React, { useState, useEffect } from 'react'
 
 import HomeHeader from '../HomeHeader/HomeHeader'
-import { ContentContainer, HomePageWrapper, NavIcon, NavItem,SidebarContainer, SidebarNav } from './HomeLayout.styles'
+import { ContentContainer, HomePageWrapper, NavIcon, NavItem, SidebarContainer, SidebarNav } from './HomeLayout.styles'
 
-const navItems = [
-  { label: 'Inicio', icon: '/icons/home-icon.png', href: '/home' },
-  { label: 'Mi Aprendizaje', icon: '/icons/learning-icon.png', href: '/learning' },
-  { label: 'Modo Libre', icon: '/icons/freeMode-icon.png', href: '/freeMode' },
-  { label: 'Perfil', icon: '/icons/profile-icon.png', href: '/profile' },
-  { label: 'Mis Logros', icon: '/icons/achievement-icon.png', href: '/achievements' },
-  { label: 'Estadísticas', icon: '/icons/statistics-icon.png', href: '/statistics' },
-  { label: 'Suscripciones', icon: '/icons/suscription-icon.png', href: '/suscriptions' }
-]
+interface NavItem {
+  label: string
+  icon: string
+  href: string
+}
 
-const HomeLayout: React.FC<{ children: React.ReactNode, activePage: string}> 
-    = ({ children, activePage }) => {
-    const router = useRouter()
-    const handleNavigation = (href: string) => {
-        router.replace(href)
+export default function HomeLayout({ children, activePage }: { children: React.ReactNode, activePage: string }) {
+  const router = useRouter()
+
+  const [navItems, setNavItems] = useState<NavItem[]>([
+    { label: 'Inicio', icon: '/icons/home-icon.png', href: '/home' },
+    { label: 'Mi Aprendizaje', icon: '/icons/learning-icon.png', href: '/learning' },
+    { label: 'Perfil', icon: '/icons/profile-icon.png', href: '/profile' },
+    { label: 'Mis Logros', icon: '/icons/achievement-icon.png', href: '/achievements' },
+    { label: 'Estadísticas', icon: '/icons/statistics-icon.png', href: '/statistics' },
+    { label: 'Suscripciones', icon: '/icons/suscription-icon.png', href: '/suscriptions' }
+  ])
+
+  useEffect(() => {
+    const isPremium = JSON.parse(localStorage.getItem('premium') || 'false')
+
+    if (isPremium) {
+      setNavItems(prevItems => [
+        ...prevItems.slice(0, 2),
+        { label: 'Modo Libre', icon: '/icons/freeMode-icon.png', href: '/freeMode' },
+        ...prevItems.slice(2)
+      ])
     }
+  }, [])
+
+  const handleNavigation = (href: string) => {
+    router.push(href)
+  }
+
   return (
     <div>
       <HomeHeader />
@@ -36,6 +53,7 @@ const HomeLayout: React.FC<{ children: React.ReactNode, activePage: string}>
                 onClick={() => handleNavigation(item.href)}
               >
                 <NavIcon>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={item.icon} alt={`${item.label} Icon`} />
                 </NavIcon>
                 <span>{item.label}</span>
@@ -50,5 +68,3 @@ const HomeLayout: React.FC<{ children: React.ReactNode, activePage: string}>
     </div>
   )
 }
-
-export default HomeLayout

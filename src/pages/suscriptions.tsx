@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import Image from "next/image";
 import PaymentStyles from "../styles/Payment.module.scss";
 
@@ -71,7 +71,7 @@ const Subscriptions: React.FC = () => {
       const status = urlParams.get("status");
 
       const newUrl = window.location.pathname + window.location.hash
-      router.replace(newUrl, undefined, { shallow: true })
+      router.replace(newUrl, undefined)
 
       if (status === "approved") {
         setNotification({
@@ -156,6 +156,8 @@ const Subscriptions: React.FC = () => {
 
   const handleConfirmCancel = () => {
     console.log(`Cancelando suscripción: ${selectedSubscription?.name}`)
+
+    router.refresh()
     updatePlan(false)
     setConfirmationVisible(false)
     setSelectedSubscription(null)
@@ -168,7 +170,7 @@ const Subscriptions: React.FC = () => {
 
   return (
     <ProtectedRoute>
-      <HomeLayout activePage='/admin/subscriptions'>
+      <HomeLayout activePage='/suscriptions'>
         <Section>
           <Title>Administrar Suscripciones</Title>
           {loading ? (
@@ -192,11 +194,22 @@ const Subscriptions: React.FC = () => {
                     ) : (
                       <div>
                         <CardTitle>{sub.name}</CardTitle>
-                        <PriceContent>
-                          <CardPrice>{sub.price}</CardPrice>
-                          <p style={{ fontSize: '20px', color: '#fff', marginLeft: '10px' }}>/ mes</p>
-                        </PriceContent>
-                        <CardContent><Status status={sub.status}>{sub.status}</Status></CardContent>
+                        {sub.isPremium ? (
+                          <div>
+                            <PriceContent>
+                              <CardPrice>{sub.price}</CardPrice>
+                              <p style={{ fontSize: '20px', color: '#fff', marginLeft: '10px' }}>/ mes</p>
+                            </PriceContent>
+                            <CardContent><Status status={sub.status}>{sub.status}</Status></CardContent>
+                          </div>
+                        ) : (
+                          <div>
+                            <PriceContent>
+                              <CardPrice>Gratis</CardPrice>
+                            </PriceContent>
+                            <CardContent><Status status={sub.status}>{sub.status}</Status></CardContent>
+                          </div>
+                        )}
 
                       </div>
                     )}
@@ -205,9 +218,12 @@ const Subscriptions: React.FC = () => {
                     </CardLogo>
                     <CardActions>
                       <ActionButton onClick={() => handleViewDetails(sub)}>Ver Detalles</ActionButton>
-                      {sub.status === 'Activo' ? (
-                        <ActionButton onClick={() => handleCancelSubscription(sub)}>Cancelar Suscripción</ActionButton>
-                      ) : (
+                      {sub.status === 'Activo' && (
+                        <div>
+                          <ActionButton onClick={() => handleCancelSubscription(sub)}>Cancelar Suscripción</ActionButton>
+                        </div>
+                      )}
+                      {sub.status === 'Inactivo' && sub.isPremium && (
                         <MercadoPagoButton product={sub.plan} />
                       )}
                     </CardActions>

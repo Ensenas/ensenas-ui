@@ -47,7 +47,7 @@ const LevelUnits: React.FC = ({ }) => {
 
     return (
         <ProtectedRoute>
-            <HomeLayout activePage={`/learning/levels/${currentLevel?.description}/units`}>
+            <HomeLayout activePage={`/learning`}>
                 <Section>
                     <Title>Unidades del Nivel</Title>
                     <div>

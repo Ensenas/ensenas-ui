@@ -15,22 +15,22 @@ import {
 } from '../../styles/Learning.styles'
 
 
-const MyLearning: React.FC = ({}) => {
+const MyLearning: React.FC = ({ }) => {
   const { currentLevel, setCurrentLevel, currentUnit, setCurrentUnit, currentLesson, setCurrentLesson,
-          levels, isLoading
+    levels, isLoading
   } = useNavigation()
-  
 
-  
+
+
   const handleLevelClick = (level: Level) => {
     setCurrentLevel(level)// Actualiza el nivel actual
     router.push(`/learning/levels/${level.description}`)
     // Aquí no cambiamos la URL, solo actualizamos el estado de la página
   }
-  
+
   return (
     <ProtectedRoute>
-      <HomeLayout activePage='/learning/levels'>
+      <HomeLayout activePage='/learning'>
         <Section>
           <Title>Niveles de Aprendizaje</Title>
           <div>

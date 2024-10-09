@@ -39,8 +39,7 @@ const Lesson: React.FC = ({ }) => {
 
     return (
         <ProtectedRoute>
-            <HomeLayout activePage={`/learning/levels/${currentLevel?.description}
-                /units/${currentUnit?.description}/levels/${currentLesson?.description}`}>
+            <HomeLayout activePage={`/learning`}>
                 <Section>
                     <Title>{currentLesson?.title}</Title>
                     <LessonTitle>{currentLesson?.description}</LessonTitle>

@@ -19,18 +19,18 @@ import {
 import { getFirstPartString, getSecondPartString } from '../../../../../../utils'
 
 
-const UnitLessons: React.FC = ({}) => {
+const UnitLessons: React.FC = ({ }) => {
     const [filteredLessons, setFilteredLessons] = useState<Lesson[]>()
     const { currentLevel, setCurrentLevel, currentUnit, setCurrentUnit, currentLesson, setCurrentLesson,
         lessons, isLoading
-     } = useNavigation()
-  
+    } = useNavigation()
+
 
     useEffect(() => {
 
         if (currentUnit && currentLevel) {
             setFilteredLessons(lessons?.filter(lesson => lesson.title.startsWith(currentUnit.title)).
-            sort((a, b) => a.order - b.order))
+                sort((a, b) => a.order - b.order))
         }
     }, [currentUnit, lessons, currentLevel])
 
@@ -46,7 +46,7 @@ const UnitLessons: React.FC = ({}) => {
 
     return (
         <ProtectedRoute>
-            <HomeLayout activePage={`/learning/levels/${currentLevel?.description}/units/${currentUnit?.description}`}>
+            <HomeLayout activePage={`/learning`}>
                 <Section>
                     <Title>Lecciones de la Unidad</Title>
                     <div>

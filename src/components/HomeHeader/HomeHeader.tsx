@@ -2,9 +2,9 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable no-console */
 import axios from 'axios'
-import router from 'next/router'
 import { signOut } from 'next-auth/react'
 import React, { useEffect, useState } from 'react'
+import { usePathname, useRouter } from 'next/navigation'
 
 import { useNavigation } from '../../context/NavigationLearningContext'
 import { HeaderContainer, Logo, LogoutButton, SearchButton, SearchInput } from './HomeHeader.styles'
@@ -12,49 +12,49 @@ import SearchResults from './SearchResult'
 
 const HomeHeader: React.FC = () => {
 
-  const [lessons, setLessons] = useState<any[]>([])
-  const [allLessons, setAllLessons] = useState<any[]>([])
-  const [isLoading, setIsLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
-  const { currentLevel, setCurrentLevel, currentUnit, setCurrentUnit, currentLesson, setCurrentLesson } = useNavigation()
-  
+  const { currentLevel, setCurrentLevel, currentUnit, setCurrentUnit, currentLesson, setCurrentLesson, levels, units, lessons } = useNavigation()
+  const pathname = usePathname()
+  const [currentPage, setCurrentPage] = useState<string>('')
+  const router = useRouter()
+
+  const getFirstPartString = (string: string): string | undefined => {
+    return string.split(':')[0]?.trim().toLowerCase()
+
+  }
+
+  const getSecondPartString = (string: string): string | undefined => {
+    return string.split(':')[1]?.trim().toLowerCase()
+  }
+
   useEffect(() => {
-    const fetchLessons = async () => {
-        try {
-            const response = await axios.get('/ens-api/lessons')
-            console.log('DATA', response.data)
-            const lessonsList = response.data.map((lesson: any) => ({
-                id: lesson.id,
-                title: lesson.title,
-                description: lesson.description,
-                order: lesson.order
-            }))
-            lessonsList.sort((a, b) => a.order < b.order)
-            setAllLessons(lessonsList)
-        } catch (error) {
-            console.error('Error fetching lessons:', error)
-        } finally {
-            setIsLoading(false) // Termina la carga, incluso si hay error
-        }
-    }
-    fetchLessons()
-  }, [])
+    setCurrentPage(pathname || '')
+  }, [pathname])
+
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value)
   }
 
-  const filteredLessons = allLessons.filter(lesson =>
+  const filteredLessons = lessons!.filter(lesson =>
     lesson.description.toLowerCase().includes(searchTerm.toLowerCase())
   )
 
-  const handleSelectLesson = (lesson: any) => {
-    // Maneja la selección de la lección (puedes cambiar el estado o redirigir, etc.)
-    console.log('Lección seleccionada:', lesson)
-    setSearchTerm('') // Opcional: limpiar el campo de búsqueda después de seleccionar
-    // setCurrentLevel(determineLevel(lesson))
-    // setCurrentUnit(determineUnit(lesson))
-    // router.push(`/learning/levels/${level}/units/${unit}/lessons/${lesson.id}`)
+  const handleSelectLesson = (selectedLesson: any) => {
+    let level, unit, lesson
+
+    level = selectedLesson.title[0] == "A" ? "Nivel avanzado" : selectedLesson.title[0] == "I" ? "Nivel intermedio" : "Nivel básico"
+    unit = `Unidad ${selectedLesson.title.split("-")[1]}: ${selectedLesson.description.split(":")[0]}`
+    lesson = selectedLesson.description
+
+
+    setCurrentLesson(lessons!.find(e => e.id == selectedLesson.id)!)
+    setCurrentLevel(levels!.find(e => e.description == level)!)
+    setCurrentUnit(units!.find(e => e.description == unit)!)
+
+    setSearchTerm('')
+    router.push(`/learning/levels/${level}/units/${unit}/lessons/${lesson}`)
+
   }
 
   // const determineLevel :  (number | null) = (lesson : any) => {
@@ -80,20 +80,23 @@ const HomeHeader: React.FC = () => {
         <img src="/logo.png" alt="Enseñas Logo" />
         <span>Enseñas</span>
       </Logo>
-      <SearchInput>
-        <SearchButton>
-          <img src="/search-icon.png" alt="Buscar" />
-        </SearchButton>
-        <input
-          type="text"
-          placeholder="Buscar lección"
-          value={searchTerm}
-          onChange={handleSearchChange}
-        />
-        {searchTerm && filteredLessons.length > 0 && (
-          <SearchResults lessons={filteredLessons} onSelect={handleSelectLesson} />
-        )}
-      </SearchInput>
+      {(currentPage == "/home" || currentPage == '/learning') && (
+        <SearchInput>
+          <SearchButton>
+            <img src="/search-icon.png" alt="Buscar" />
+          </SearchButton>
+          <input
+            type="text"
+            placeholder="Buscar lección"
+            value={searchTerm}
+            onChange={handleSearchChange}
+          />
+          {searchTerm && filteredLessons.length > 0 && (
+            <SearchResults lessons={filteredLessons} onSelect={handleSelectLesson} />
+          )}
+        </SearchInput>
+      )}
+
       <LogoutButton onClick={handleSignOut}>Cerrar Sesión</LogoutButton>
     </HeaderContainer>
   )

@@ -21,7 +21,8 @@ export default function HomeLayout({ children, activePage }: { children: React.R
     { label: 'Perfil', icon: '/icons/profile-icon.png', href: '/profile' },
     { label: 'Mis Logros', icon: '/icons/achievement-icon.png', href: '/achievements' },
     { label: 'Estadísticas', icon: '/icons/statistics-icon.png', href: '/statistics' },
-    { label: 'Suscripciones', icon: '/icons/suscription-icon.png', href: '/suscriptions' }
+    { label: 'Suscripciones', icon: '/icons/suscription-icon.png', href: '/suscriptions' },
+    { label: 'Social Media', icon: '/icons/suscription-icon.png', href: '/social' }
   ])
 
   useEffect(() => {

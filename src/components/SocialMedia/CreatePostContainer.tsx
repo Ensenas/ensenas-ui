@@ -1,9 +1,10 @@
 import React, { useState, useRef } from 'react'
 import styled from 'styled-components'
+import { usePostContext } from './PostContext'
 
 const CreatePostContainer = styled.div`
   max-width: 600px;
-  margin: 0 auto;
+  margin: 0 auto 20px;
   padding: 20px;
   background-color: #f0f2f5;
   border-radius: 8px;
@@ -58,6 +59,7 @@ export default function CreatePost() {
   const [text, setText] = useState('')
   const [video, setVideo] = useState<File | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const { addPost } = usePostContext()
 
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setText(e.target.value)
@@ -71,8 +73,18 @@ export default function CreatePost() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    // Here you would typically send the post data to your backend
-    console.log('Submitting post:', { text, video })
+    if (text.trim() === '') return
+
+    const videoUrl = video ? URL.createObjectURL(video) : ''
+    addPost({
+      text,
+      videoUrl,
+      user: {
+        name: 'Current User', // This would typically come from authentication
+        avatar: 'https://i.pravatar.cc/150?img=3' // This would typically come from authentication
+      }
+    })
+
     // Reset form after submission
     setText('')
     setVideo(null)

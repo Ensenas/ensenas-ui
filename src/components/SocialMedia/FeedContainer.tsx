@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import { Heart, MessageCircle, Share2 } from 'lucide-react'
+import { usePostContext } from './PostContext'
 
 const FeedContainer = styled.div`
   max-width: 600px;
@@ -82,108 +83,8 @@ const ActionButton = styled.button`
   }
 `
 
-const LoadMoreButton = styled.button`
-  background-color: #1877f2;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 16px;
-  width: 100%;
-  margin-top: 20px;
-
-  &:hover {
-    background-color: #166fe5;
-  }
-`
-
-interface PostData {
-  id: number
-  text: string
-  videoUrl: string
-  date: string
-  user: {
-    name: string
-    avatar: string
-  }
-  likes: number
-  comments: number
-}
-
-const samplePosts: PostData[] = [
-  {
-    id: 1,
-    text: "Just finished my first React project! It's been a great learning experience.",
-    videoUrl: "https://example.com/video1.mp4",
-    date: "2023-05-15T10:30:00Z",
-    user: {
-      name: "Jane Doe",
-      avatar: "https://i.pravatar.cc/150?img=1"
-    },
-    likes: 15,
-    comments: 3
-  },
-  {
-    id: 2,
-    text: "Beautiful sunset at the beach today. Nature never fails to amaze me!",
-    videoUrl: "https://example.com/video2.mp4",
-    date: "2023-05-14T19:45:00Z",
-    user: {
-      name: "John Smith",
-      avatar: "https://i.pravatar.cc/150?img=2"
-    },
-    likes: 32,
-    comments: 7
-  },
-  {
-    id: 3,
-    text: "Just learned about React hooks. They're game-changing!",
-    videoUrl: "https://example.com/video3.mp4",
-    date: "2023-05-13T14:20:00Z",
-    user: {
-      name: "Alice Johnson",
-      avatar: "https://i.pravatar.cc/150?img=3"
-    },
-    likes: 24,
-    comments: 5
-  }
-]
-
 export default function PostFeed() {
-  const [posts, setPosts] = useState<PostData[]>([])
-  const [loading, setLoading] = useState(true)
-  const [page, setPage] = useState(1)
-
-  useEffect(() => {
-    // Simulating API call
-    setTimeout(() => {
-      setPosts(samplePosts)
-      setLoading(false)
-    }, 1000)
-  }, [])
-
-  const loadMorePosts = () => {
-    setLoading(true)
-    // Simulating API call for more posts
-    setTimeout(() => {
-      setPosts(prevPosts => [...prevPosts, ...samplePosts])
-      setPage(prevPage => prevPage + 1)
-      setLoading(false)
-    }, 1000)
-  }
-
-  const handleLike = (postId: number) => {
-    setPosts(prevPosts =>
-      prevPosts.map(post =>
-        post.id === postId ? { ...post, likes: post.likes + 1 } : post
-      )
-    )
-  }
-
-  if (loading && posts.length === 0) {
-    return <FeedContainer>Loading posts...</FeedContainer>
-  }
+  const { posts } = usePostContext()
 
   return (
     <FeedContainer>
@@ -197,12 +98,14 @@ export default function PostFeed() {
             </UserInfo>
           </PostHeader>
           <PostText>{post.text}</PostText>
-          <PostVideo controls>
-            <source src={post.videoUrl} type="video/mp4" />
-            Your browser does not support the video tag.
-          </PostVideo>
+          {post.videoUrl && (
+            <PostVideo controls>
+              <source src={post.videoUrl} type="video/mp4" />
+              Your browser does not support the video tag.
+            </PostVideo>
+          )}
           <PostActions>
-            <ActionButton onClick={() => handleLike(post.id)}>
+            <ActionButton>
               <Heart size={18} /> {post.likes} Likes
             </ActionButton>
             <ActionButton>
@@ -214,10 +117,6 @@ export default function PostFeed() {
           </PostActions>
         </Post>
       ))}
-      {loading && <div>Loading more posts...</div>}
-      <LoadMoreButton onClick={loadMorePosts} disabled={loading}>
-        {loading ? 'Loading...' : 'Load More'}
-      </LoadMoreButton>
     </FeedContainer>
   )
 }

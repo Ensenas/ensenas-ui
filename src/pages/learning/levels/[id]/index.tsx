@@ -16,10 +16,10 @@ import {
 
 const LevelUnits: React.FC = ({ }) => {
     const [filteredUnits, setFilteredUnits] = useState<Unit[]>()
+    const [lastSelectedUnit, setLastSelectedUnit] = useState<string | null>(null) // Estado para la última unidad seleccionada
     const { currentLevel, setCurrentLevel, currentUnit, setCurrentUnit, currentLesson, setCurrentLesson,
         units, isLoading
     } = useNavigation()
-
 
     useEffect(() => {
         if (currentLevel) {
@@ -30,7 +30,6 @@ const LevelUnits: React.FC = ({ }) => {
                 case 2:
                     setFilteredUnits(units?.filter(unit => unit.title.startsWith('I')))
                     console.log(units)
-
                     break
                 case 1:
                     setFilteredUnits(units?.filter(unit => unit.title.startsWith('A')))
@@ -40,7 +39,33 @@ const LevelUnits: React.FC = ({ }) => {
         }
     }, [currentLevel, units])
 
+    // Función para enviar la unidad seleccionada al backend
+    const sendUnitSelected = async (unidad: string | undefined) => {
+        try {
+            console.log(unidad)
+            const response = await axios.post(
+                'https://alarma.mywire.org:3050/unit_selected',
+                { unidad },
+                {
+                    headers: {
+                        'Content-Type': 'application/json'  // Encabezado para JSON
+                    }
+                }
+            )
+            console.log('Respuesta del servidor:', response.data)
+        } catch (error) {
+            console.error('Error al seleccionar la unidad:', error)
+        }
+    }
+
     const handleUnitClick = (unit: Unit) => {
+        if (!currentUnit || unit.title !== lastSelectedUnit) {
+            // Si la unidad es diferente a la última seleccionada, hacer la solicitud POST
+
+            sendUnitSelected(unit.description.split(':').pop()?.trim().toLowerCase())
+            setLastSelectedUnit(unit.title) // Actualizar la última unidad seleccionada
+        }
+
         setCurrentUnit(unit) // Actualiza el estado de la unidad actual
         router.push(`/learning/levels/${currentLevel?.description}/units/${unit.description}`)
     }

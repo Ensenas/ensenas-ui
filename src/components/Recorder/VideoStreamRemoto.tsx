@@ -82,7 +82,7 @@ export default function VideoStreamRemoto({ unit, lesson }) {
             setIsConnected(false);
         });
 
-        newSocket.emit('unit_selected', { unidad: findUnit() })
+        //newSocket.emit('unit_selected', { unidad: findUnit() })
 
         return () => {
             newSocket.disconnect();

@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 // context/NavigationContext.tsx
-import React, { createContext, ReactNode,useContext, useEffect, useState } from 'react'
+import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react'
 
 // Define una interfaz de Usuario con campos opcionales si es necesario
 interface User {
@@ -21,19 +21,19 @@ interface UserContextType {
 const UserContext = createContext<UserContextType | undefined>(undefined)
 
 export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-    
-    const isBrowser = typeof window !== 'undefined' && typeof window.localStorage !== 'undefined'
 
-    const [currentUser, setCurrentUser] = useState<User | null>(() => {
-        return isBrowser ? JSON.parse(localStorage.getItem('user') || 'null') : null
-    })
+  const isBrowser = typeof window !== 'undefined' && typeof window.localStorage !== 'undefined'
 
-    
-    useEffect(() => {
+  const [currentUser, setCurrentUser] = useState<User | null>(() => {
+    return isBrowser ? JSON.parse(localStorage.getItem('user') || 'null') : null
+  })
+
+
+  useEffect(() => {
     // Guarda el estado en localStorage cada vez que cambie
     localStorage.setItem('currentLevel', JSON.stringify(currentUser))
 
-    }, [currentUser])
+  }, [currentUser])
 
   return (
     <UserContext.Provider

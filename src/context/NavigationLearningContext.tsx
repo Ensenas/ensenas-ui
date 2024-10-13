@@ -23,6 +23,7 @@ export interface Lesson {
   id: number,
   title: string,
   description: string,
+  detailedDescription: string,
   order: number,
   videoSrc: string
 }
@@ -159,6 +160,7 @@ export const NavigationProvider: React.FC<{ children: ReactNode }> = ({ children
           id: lesson.id,
           title: lesson.title,
           description: lesson.description,
+          detailedDescription: lesson.detailedDescription,
           order: lesson.order,
           videoSrc: `https://ensenas-videos.s3.us-west-1.amazonaws.com/${getFirstPartString(lesson.description)}/${getSecondPartString(lesson.description)}.mp4`
         }))

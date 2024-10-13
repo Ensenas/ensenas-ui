@@ -42,7 +42,6 @@ const LevelUnits: React.FC = ({ }) => {
     // Función para enviar la unidad seleccionada al backend
     const sendUnitSelected = async (unidad: string | undefined) => {
         try {
-            console.log(unidad)
             const response = await axios.post(
                 'https://alarma.mywire.org:3050/unit_selected',
                 { unidad },
@@ -62,7 +61,7 @@ const LevelUnits: React.FC = ({ }) => {
         if (!currentUnit || unit.title !== lastSelectedUnit) {
             // Si la unidad es diferente a la última seleccionada, hacer la solicitud POST
 
-            sendUnitSelected(unit.description.split(':').pop()?.trim().toLowerCase())
+            sendUnitSelected(unit.description.split(':').pop()?.trim().toLowerCase().replace(" ", "_"))
             setLastSelectedUnit(unit.title) // Actualizar la última unidad seleccionada
         }
 

@@ -3,15 +3,16 @@
 /* eslint-disable no-console */
 'use client'
 
-import React, { useCallback, useEffect, useRef, useState } from 'react'
-import Webcam from 'react-webcam'
-import { io, Socket } from 'socket.io-client'
-import styled from 'styled-components'
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import Webcam from 'react-webcam';
+import { io, Socket } from 'socket.io-client';
+import styled from 'styled-components';
 
-import { Lesson, Unit, useNavigation } from '../../context/NavigationLearningContext'
-import ResultScreen from '../ResultScreen/ResultScreen'
-import Spinner from '../Spinner/Spinner'
-import { Container, Overlay, WebcamContainer } from './RecorderElements'
+import { useNavigation } from '../../context/NavigationLearningContext';
+import ResultScreen from '../ResultScreen/ResultScreen';
+import Spinner from '../Spinner/Spinner';
+import { Container, Overlay, WebcamContainer } from './RecorderElements';
+import { useRouter } from 'next/router';
 
 const PreviewContainer = styled.div`
   position: absolute;
@@ -22,50 +23,37 @@ const PreviewContainer = styled.div`
   border: 2px solid #000;
   overflow: hidden;
   z-index: 10;
-`
+`;
 
 const MainImageContainer = styled.div`
   position: relative;
   width: 70%;
   height: 620px;
-`
+`;
 
-const unitWords = {
-    familiares: ['papa', 'mama', 'hijo', 'hermana'],
-    colores: ['amarillo', 'negro', 'rojo', 'verde']
-}
-
-export default function VideoStreamRemoto({ unit, lesson }) {
-    const [socket, setSocket] = useState<Socket | null>(null)
-    // const [fps, setFps] = useState(0)
-    const [attempts, setAttempts] = useState(0)
-    const [reset, setReset] = useState(false)
-    const [isSuccess, setIsSuccess] = useState(false)
-    const [border, setBorder] = useState('unset')
-    const [isGivingExam, setisGivingExam] = useState(true)
-    const [isConnected, setIsConnected] = useState(false)
-    const [showResultScreen, setShowResultScreen] = useState(false)
+export default function VideoStreamRemoto({ level, unit, lesson, onComplete }) {
+    const [socket, setSocket] = useState<Socket | null>(null);
+    const [attempts, setAttempts] = useState(0);
+    const [reset, setReset] = useState(false);
+    const [isSuccess, setIsSuccess] = useState(false);
+    const [border, setBorder] = useState('unset');
+    const [isConnected, setIsConnected] = useState(false);
+    const [showResultScreen, setShowResultScreen] = useState(false);
     const [frase, setFrase] = useState<string[]>([]);
-    const [fraseIndex, setFraseIndex] = useState(0)
-    const [expectedFrase, setExpectedFrase] = useState([''])
-    const webcamRef = useRef<Webcam>(null)
-    const canvasRef = useRef<HTMLCanvasElement>(null)
-    const outputRef = useRef<HTMLImageElement>(null)
-    const { currentLevel, setCurrentLevel, currentUnit, setCurrentUnit,
-        currentLesson, setCurrentLesson, setTest } = useNavigation()
+    const [fraseIndex, setFraseIndex] = useState(0);
+    const [expectedFrase, setExpectedFrase] = useState(['']);
+    const webcamRef = useRef<Webcam>(null);
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+    const outputRef = useRef<HTMLImageElement>(null);
+    const router = useRouter()
+    const { currentUnit } = useNavigation();
 
     useEffect(() => {
         if (lesson && lesson.description) {
-            const fraseInicial = findWord(lesson.description).split(' ')
-            setExpectedFrase(fraseInicial)
-            console.log(expectedFrase)
-            console.log('Expected Frase set:', fraseInicial) // Para depurar el valor inicial
+            const fraseInicial = findWord(lesson.description).split(' ');
+            setExpectedFrase(fraseInicial);
         }
-    }, [lesson.description]);  // Añade lesson.description como dependencia
-
-    useEffect(() => {
-        console.log('Expected Frase updated:', expectedFrase)
-    }, [expectedFrase])
+    }, [lesson.description]);
 
     useEffect(() => {
         const newSocket = io('wss://alarma.mywire.org:3050');
@@ -101,7 +89,6 @@ export default function VideoStreamRemoto({ unit, lesson }) {
             // Check if the word is correct and show result screen
             if (data.palabra_detectada != null) {
                 if (data.palabra_detectada === expectedFrase[fraseIndex]) {
-                    console.log(frase)
                     checkWords(data.palabra_detectada);
                 } else {
                     setIsSuccess(false);
@@ -117,25 +104,24 @@ export default function VideoStreamRemoto({ unit, lesson }) {
         };
     }, [socket, expectedFrase, fraseIndex, frase]);
 
-
     const sendFrame = useCallback(() => {
         if (webcamRef.current && canvasRef.current) {
-            const video = webcamRef.current.video
-            const canvas = canvasRef.current
-            const context = canvas.getContext('2d')
+            const video = webcamRef.current.video;
+            const canvas = canvasRef.current;
+            const context = canvas.getContext('2d');
 
             if (video && context) {
-                canvas.width = video.videoWidth
-                canvas.height = video.videoHeight
-                context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight)
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
 
-                const dataURL = canvas.toDataURL('image/jpeg', 0.5)
+                const dataURL = canvas.toDataURL('image/jpeg', 0.5);
                 if (socket) {
-                    const unit: string | undefined = findUnit()
-                    const word: string | undefined = findWord(lesson.description)
+                    const unit: string | undefined = findUnit();
+                    const word: string | undefined = findWord(lesson.description);
 
-                    socket.emit('corregir_video_stream', { frase: word, image: dataURL, reset: reset })
-                    setReset(false)
+                    socket.emit('corregir_video_stream', { frase: word, image: dataURL, reset: reset });
+                    setReset(false);
                 }
             }
         }
@@ -158,49 +144,31 @@ export default function VideoStreamRemoto({ unit, lesson }) {
 
     const checkWords = (word) => {
         setFrase([...frase, expectedFrase[fraseIndex]]);
-        console.log("OK")
+        setFraseIndex(fraseIndex + 1);
 
-        setFraseIndex(fraseIndex + 1)
-        console.log(fraseIndex)
-        if (expectedFrase.length - 1 == fraseIndex) {
-            console.log(frase)
+        if (expectedFrase.length - 1 === fraseIndex) {
             setIsSuccess(true);
             setShowResultScreen(true);
-        }
-    }
 
+            // Llamar a onComplete cuando se complete la lección
+            if (onComplete) {
+                onComplete();
+            }
+        }
+    };
 
     const handleNextWord = () => {
-        setShowResultScreen(false)
-        setAttempts(0)
-        // Logic to move to the next word
-        // This depends on how you manage your lessons and words
-        // Example: setCurrentLesson(nextLesson)
-    }
+        setShowResultScreen(false);
+        setAttempts(0);
+        router.push(`/learning/levels/${level?.description}/units/${unit.description}`)
+
+    };
 
     const handleRestart = () => {
-        setShowResultScreen(false)
-        setAttempts(0)
-        setReset(true)
-    }
-
-    // const handleUnitChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    //     const newUnit = e.target.value as keyof typeof unitWords;
-    //     setUnit(newUnit);
-    //     setSelectedWord(unitWords[newUnit][0]);
-    //     socket?.emit('unit_selected', { unidad: newUnit });
-    // }
-
-    // const handleModeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    //     const newMode = e.target.value;
-    //     setMode(newMode);
-    //     socket?.emit('reset_text');
-    // }
-
-    // const handleWordChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    //     setSelectedWord(e.target.value);
-    //     socket?.emit('reset_text');
-    // }
+        setShowResultScreen(false);
+        setAttempts(0);
+        setReset(true);
+    };
 
     return (
         <div>
@@ -239,11 +207,9 @@ export default function VideoStreamRemoto({ unit, lesson }) {
                             />
                         </WebcamContainer>
 
-
                         <canvas ref={canvasRef} style={{ display: 'none' }} />
 
                         <Overlay />
-
                     </Container>
                     {showResultScreen && (
                         <ResultScreen
@@ -255,8 +221,7 @@ export default function VideoStreamRemoto({ unit, lesson }) {
                 </div>
             ) : (
                 <Spinner />
-            )
-            }
+            )}
         </div>
-    )
+    );
 }

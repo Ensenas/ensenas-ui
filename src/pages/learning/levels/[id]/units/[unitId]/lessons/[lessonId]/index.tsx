@@ -18,6 +18,9 @@ import {
     TooltipContainer,
     VideoContainer
 } from '../../../../../../../../styles/Lesson.styles'
+import {
+    InstructionText,
+} from '../../../../../../../../styles/test.styles';
 import { getFirstPartString } from '../../../../../../../../utils/index'
 
 const Lesson: React.FC = ({ }) => {
@@ -43,6 +46,9 @@ const Lesson: React.FC = ({ }) => {
                 <Section>
                     <Title>{currentLesson?.title}</Title>
                     <LessonTitle>{currentLesson?.description}</LessonTitle>
+                    <InstructionText>
+                        {currentLesson?.detailedDescription}
+                    </InstructionText>
                     <VideoContainer>
                         <VideoPlayer
                             src={currentLesson ? currentLesson.videoSrc :

@@ -31,6 +31,14 @@ const MainImageContainer = styled.div`
   height: 620px;
 `
 
+const FraseContainer = styled.div`
+  margin-bottom: 20px;
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+  letter-spacing: 2px;
+`;
+
 export default function VideoStreamRemoto({ level, unit, lesson, onComplete }) {
     const [socket, setSocket] = useState<Socket | null>(null)
     const [attempts, setAttempts] = useState(0)
@@ -69,8 +77,6 @@ export default function VideoStreamRemoto({ level, unit, lesson, onComplete }) {
             console.log('Socket disconnected:', reason)
             setIsConnected(false)
         })
-
-        //newSocket.emit('unit_selected', { unidad: findUnit() })
 
         return () => {
             newSocket.disconnect()
@@ -161,20 +167,34 @@ export default function VideoStreamRemoto({ level, unit, lesson, onComplete }) {
         setShowResultScreen(false)
         setAttempts(0)
         router.push(`/learning/levels/${level?.description}/units/${unit.description}`)
-
     }
 
     const handleRestart = () => {
         setShowResultScreen(false)
         setAttempts(0)
         setReset(true)
+        if (fraseIndex === expectedFrase.length) {
+            setFraseIndex(0)
+            setFrase([])
+        }
     }
+
+    const renderFraseProgress = () => {
+        return expectedFrase.map((word, index) => (
+            <span key={index} style={{ margin: '0 10px', textDecoration: 'underline' }}>
+                {fraseIndex > index ? word : '_'.repeat(word.length)}
+            </span>
+        ));
+    };
 
     return (
         <div>
             {isConnected ? (
                 <div>
                     <Container>
+                        <FraseContainer>
+                            {renderFraseProgress()}
+                        </FraseContainer>
                         <MainImageContainer>
                             <img
                                 ref={outputRef}

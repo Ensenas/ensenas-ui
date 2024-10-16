@@ -49,7 +49,7 @@ const UnitLessons: React.FC = () => {
             try {
                 const response = await axios.get('/ens-api/users/challenge-progress', {
                     headers: {
-                        Authorization: `Bearer ${token}`
+                        Authorization: `bearer ${token}`
                     }
                 })
                 setUserProgress(response.data)

@@ -1,11 +1,12 @@
+/* eslint-disable no-unused-vars */
 import React from 'react'
 import styled from 'styled-components'
-import CreatePost from '../components/SocialMedia/CreatePostContainer'
-import { PostProvider } from '../components/SocialMedia/PostContext'
-import PostFeed from '../components/SocialMedia/FeedContainer'
+
 import HomeLayout from '../components/HomeLayout/HomeLayout'
 import ProtectedRoute from '../components/ProtectedRoute'
-import LoadingSpinner from '../components/Spinner/Spinner'
+import CreatePost from '../components/SocialMedia/CreatePostContainer'
+import PostFeed from '../components/SocialMedia/FeedContainer'
+import { PostProvider } from '../components/SocialMedia/PostContext'
 
 const SocialContainer = styled.div`
   padding: 20px;

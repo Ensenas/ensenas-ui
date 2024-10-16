@@ -1,12 +1,12 @@
 /* eslint-disable no-console */
 /* eslint-disable no-unused-vars */
-import axios from 'axios';
-import React, { useEffect } from 'react';
+import axios from 'axios'
+import React, { useEffect } from 'react'
 
-import HomeLayout from '../../../../../../../../../components/HomeLayout/HomeLayout';
-import ProtectedRoute from '../../../../../../../../../components/ProtectedRoute';
-import VideoStreamRemoto from '../../../../../../../../../components/Recorder/VideoStreamRemoto';
-import { useNavigation } from '../../../../../../../../../context/NavigationLearningContext';
+import HomeLayout from '../../../../../../../../../components/HomeLayout/HomeLayout'
+import ProtectedRoute from '../../../../../../../../../components/ProtectedRoute'
+import VideoStreamRemoto from '../../../../../../../../../components/Recorder/VideoStreamRemoto'
+import { useNavigation } from '../../../../../../../../../context/NavigationLearningContext'
 import {
     InstructionText,
     LessonTitle, Section, Title
@@ -21,24 +21,24 @@ interface LessonProps {
 }
 
 const LessonTest: React.FC<LessonProps> = () => {
-    const { currentLevel, currentUnit, currentLesson } = useNavigation();
+    const { currentLevel, currentUnit, currentLesson } = useNavigation()
 
     useEffect(() => {
         // Iniciar el challenge cuando se cargue la lección
         if (currentLesson) {
-            updateChallengeProgress('start');
+            updateChallengeProgress('start')
         }
-    }, [currentLesson]);
+    }, [currentLesson])
 
     // Función para enviar solicitud al backend y actualizar el progreso del challenge
     const updateChallengeProgress = async (action: 'start' | 'complete') => {
-        if (!currentLesson) return;
+        if (!currentLesson) return
 
         // Obtener el token JWT del localStorage
-        const token = localStorage.getItem('authToken');
+        const token = localStorage.getItem('authToken')
         if (!token) {
-            console.error('No se encontró el token JWT, el usuario no está autenticado.');
-            return;
+            console.error('No se encontró el token JWT, el usuario no está autenticado.')
+            return
         }
 
         try {
@@ -50,24 +50,24 @@ const LessonTest: React.FC<LessonProps> = () => {
                 },
                 {
                     headers: {
-                        Authorization: `Bearer ${token}`, // Incluir el token JWT en el encabezado
-                    },
+                        Authorization: `Bearer ${token}` // Incluir el token JWT en el encabezado
+                    }
                 }
-            );
-            console.log(`${action} challenge progress response:`, response.data);
+            )
+            console.log(`${action} challenge progress response:`, response.data)
         } catch (error) {
-            console.error(`Error while trying to ${action} challenge:`, error);
+            console.error(`Error while trying to ${action} challenge:`, error)
         }
-    };
+    }
 
     // Callback para manejar la finalización del challenge
     const handleChallengeComplete = () => {
-        updateChallengeProgress('complete');
-    };
+        updateChallengeProgress('complete')
+    }
 
     return (
         <ProtectedRoute>
-            <HomeLayout activePage={`/learning`}>
+            <HomeLayout activePage={'/learning'}>
                 <Section>
                     <Title>{currentLesson?.title}</Title>
                     <LessonTitle>
@@ -81,11 +81,12 @@ const LessonTest: React.FC<LessonProps> = () => {
                     </InstructionText>
 
                     {/* Agregar callback para cuando el desafío sea completado */}
-                    <VideoStreamRemoto level={currentLevel} unit={currentUnit} lesson={currentLesson} onComplete={handleChallengeComplete} />
+                    <VideoStreamRemoto level={currentLevel} unit={currentUnit} lesson={currentLesson} 
+                        onComplete={handleChallengeComplete} />
                 </Section>
             </HomeLayout>
         </ProtectedRoute>
-    );
-};
+    )
+}
 
-export default LessonTest;
+export default LessonTest

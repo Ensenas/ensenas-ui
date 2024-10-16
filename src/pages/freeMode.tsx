@@ -15,10 +15,10 @@ import { Container, Overlay, SelectorsContainer, StyledSelect, WebcamContainer }
 const unitWords = {
     familiares: ['papa', 'mama', 'hijo', 'hermana'],
     colores: ['amarillo', 'negro', 'rojo', 'verde'],
-    pronombres: ["el-ella", "nosotros", "ustedes", "vos", "yo"],
-    saludos: ["chau", "hola"],
-    frases_i: ["el-ella", "hambre", "medico", "mi", "tener", "trabajar", "yo"],
-    frases_ii: ["color", "estudiar", "favorito", "hermana", "mi", "rojo", "universidad"]
+    pronombres: ['el-ella', 'nosotros', 'ustedes', 'vos', 'yo'],
+    saludos: ['chau', 'hola'],
+    frases_i: ['el-ella', 'hambre', 'medico', 'mi', 'tener', 'trabajar', 'yo'],
+    frases_ii: ['color', 'estudiar', 'favorito', 'hermana', 'mi', 'rojo', 'universidad']
 }
 
 const FreeMode: React.FC = () => {

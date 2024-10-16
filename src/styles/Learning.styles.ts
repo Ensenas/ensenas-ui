@@ -93,7 +93,7 @@ export const LessonCard = styled.a<{ backgroundColor: string }>`
   &:hover h1, &:hover h3 {
     color: #ffffff; /* Color del h1 cuando se hace hover */
   }
-`;
+`
 export const LessonItem = styled.div`
   margin: 10px 0;
 `

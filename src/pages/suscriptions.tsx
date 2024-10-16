@@ -1,18 +1,18 @@
+/* eslint-disable no-console */
 'use client'
 
+import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation';
-import Image from "next/image";
-import PaymentStyles from "../styles/Payment.module.scss";
 
 import ConfirmationModal from '../components/ConfirmationModal/ConfirmationModal'
 import HomeLayout from '../components/HomeLayout/HomeLayout'
+import { MercadoPagoButton } from '../components/MercadoPagoButton'
+import { PlanBasico, PlanPremium } from '../components/Plan/Plan'
 import ProtectedRoute from '../components/ProtectedRoute'
 import LoadingSpinner from '../components/Spinner/Spinner'
 import SubscriptionDetailModal from '../components/SuscriptionDetailModal/SuscriptionDetailModal'
-import { MercadoPagoButton } from "../components/MercadoPagoButton";
-import { PlanBasico, PlanPremium } from "../components/Plan/Plan";
-
+import PaymentStyles from '../styles/Payment.module.scss'
 import {
   ActionButton,
   CardActions,
@@ -33,7 +33,7 @@ import {
 
 interface NotificationType {
   isOpen: boolean;
-  type: "approved" | "failure" | null;
+  type: 'approved' | 'failure' | null;
   content: string;
 }
 
@@ -47,8 +47,8 @@ const Subscriptions: React.FC = () => {
   const [notification, setNotification] = useState<NotificationType>({
     isOpen: false,
     type: null,
-    content: "",
-  });
+    content: ''
+  })
   const router = useRouter()
 
   function updatePlan(value: boolean) {
@@ -67,75 +67,75 @@ const Subscriptions: React.FC = () => {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const urlParams = new URLSearchParams(window.location.search);
-      const status = urlParams.get("status");
+      const urlParams = new URLSearchParams(window.location.search)
+      const status = urlParams.get('status')
 
       const newUrl = window.location.pathname + window.location.hash
       router.replace(newUrl, undefined)
 
-      if (status === "approved") {
+      if (status === 'approved') {
         setNotification({
-          content: "Pago aprobado!",
+          content: 'Pago aprobado!',
           isOpen: true,
-          type: "approved",
-        });
+          type: 'approved'
+        })
         updatePlan(true)
-      } else if (status === "failure") {
+      } else if (status === 'failure') {
         setNotification({
-          content: "Pago fallido!",
+          content: 'Pago fallido!',
           isOpen: true,
-          type: "failure",
-        });
+          type: 'failure'
+        })
       }
 
       setTimeout(() => {
         setNotification({
           isOpen: false,
           type: null,
-          content: "",
-        });
-      }, 5000);
+          content: ''
+        })
+      }, 5000)
     }
-  }, []);
+  }, [])
 
   useEffect(() => {
 
     try {
-      const isPremium = typeof window !== 'undefined' ? localStorage.getItem('premium') === 'true' : false;
+      const isPremium = typeof window !== 'undefined' ? localStorage.getItem('premium') === 'true' : false
 
       const subs = [
         {
           id: 1,
           name: 'Plan Básico',
           isPremium: false,
-          background: "/BasicPlan.jpg",
-          logo: "/hot-air-balloon.png",
+          background: '/BasicPlan.jpg',
+          logo: '/hot-air-balloon.png',
           status: isPremium ? 'Inactivo' : 'Activo',
           expirationDate: '31/12/2024',
-          detalle: "Detalle Plan Basico",
+          detalle: 'Detalle Plan Basico',
           plan: PlanBasico,
-          price: "$15000"
+          price: '$15000'
         },
         {
           id: 2,
           name: 'Plan Premium',
           isPremium: true,
-          background: "/PremiumPlan.jpg",
-          logo: "/air-plane.png",
+          background: '/PremiumPlan.jpg',
+          logo: '/air-plane.png',
           status: isPremium ? 'Activo' : 'Inactivo',
           expirationDate: '30/06/2024',
-          detalle: "Detalle Plan Premium",
+          detalle: 'Detalle Plan Premium',
           plan: PlanPremium,
-          price: "$22000"
-        },
-      ];
+          price: '$22000'
+        }
+      ]
 
-      setSubscriptions(subs);
-      setLoading(false);
+      setSubscriptions(subs)
+      setLoading(false)
     } catch (error) {
       setError('Error al obtener las suscripciones.')
       console.error('Error al obtener las suscripciones:', error)
-      setLoading(false);
+      setLoading(false)
     }
   }, [])
 
@@ -246,7 +246,8 @@ const Subscriptions: React.FC = () => {
       />
       {notification.isOpen && (
         <div className={PaymentStyles.notification}>
-          <div className={PaymentStyles.iconContainer} style={{ backgroundColor: notification.type === "approved" ? "#00cc99" : "#ee4646", }}>
+          <div className={PaymentStyles.iconContainer} 
+            style={{ backgroundColor: notification.type === 'approved' ? '#00cc99' : '#ee4646' }}>
             <Image
               src={`/${notification.type}.svg`}
               alt={notification.type!}

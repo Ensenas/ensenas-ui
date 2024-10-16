@@ -19,8 +19,8 @@ import {
     VideoContainer
 } from '../../../../../../../../styles/Lesson.styles'
 import {
-    InstructionText,
-} from '../../../../../../../../styles/test.styles';
+    InstructionText
+} from '../../../../../../../../styles/test.styles'
 import { getFirstPartString } from '../../../../../../../../utils/index'
 
 const Lesson: React.FC = ({ }) => {
@@ -42,7 +42,7 @@ const Lesson: React.FC = ({ }) => {
 
     return (
         <ProtectedRoute>
-            <HomeLayout activePage={`/learning`}>
+            <HomeLayout activePage={'/learning'}>
                 <Section>
                     <Title>{currentLesson?.title}</Title>
                     <LessonTitle>{currentLesson?.description}</LessonTitle>

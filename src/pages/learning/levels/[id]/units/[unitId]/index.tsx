@@ -40,26 +40,26 @@ const UnitLessons: React.FC = () => {
     useEffect(() => {
         // Obtener el progreso de los desafíos del usuario
         const fetchUserProgress = async () => {
-            const token = localStorage.getItem('authToken');
+            const token = localStorage.getItem('authToken')
             if (!token) {
-                console.error('No se encontró el token JWT, el usuario no está autenticado.');
-                return;
+                console.error('No se encontró el token JWT, el usuario no está autenticado.')
+                return
             }
 
             try {
                 const response = await axios.get('/ens-api/users/challenge-progress', {
                     headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
-                setUserProgress(response.data);
+                        Authorization: `Bearer ${token}`
+                    }
+                })
+                setUserProgress(response.data)
             } catch (error) {
-                console.error('Error al obtener el progreso del desafío:', error);
+                console.error('Error al obtener el progreso del desafío:', error)
             }
-        };
+        }
 
-        fetchUserProgress();
-    }, []);
+        fetchUserProgress()
+    }, [])
 
     useEffect(() => {
         if (currentUnit && currentLevel) {
@@ -70,26 +70,27 @@ const UnitLessons: React.FC = () => {
 
     const handleLessonClick = (lesson: Lesson) => {
         setCurrentLesson(lesson) // Actualiza el estado de la unidad actual
-        router.push(`/learning/levels/${currentLevel?.description}/units/${currentUnit?.description}/lessons/${lesson.description}`)
+        router.push(`/learning/levels/${currentLevel?.description}/units/${currentUnit?.description}
+            /lessons/${lesson.description}`)
     }
 
     // Función para determinar el color del LessonCard
     const getLessonCardColor = (lessonId: number) => {
-        const progress = userProgress.find((progress) => progress.challenge.id === lessonId);
+        const progress = userProgress.find((progress) => progress.challenge.id === lessonId)
         if (progress) {
             if (progress.started && !progress.completed) {
-                return '#b3b300';
+                return '#b3b300'
             }
             if (progress.completed) {
-                return '#9fe2bf';
+                return '#9fe2bf'
             }
         }
-        return '#f0f0f0'; // Color por defecto si no hay progreso
-    };
+        return '#f0f0f0' // Color por defecto si no hay progreso
+    }
 
     return (
         <ProtectedRoute>
-            <HomeLayout activePage={`/learning`}>
+            <HomeLayout activePage={'/learning'}>
                 <Section>
                     <Title>Lecciones de la Unidad</Title>
                     <div>

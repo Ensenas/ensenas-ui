@@ -1,4 +1,5 @@
-import React, { createContext, useState, useContext, ReactNode } from 'react'
+/* eslint-disable no-unused-vars */
+import React, { createContext, ReactNode,useContext, useState } from 'react'
 
 export interface Post {
     id: number
@@ -32,24 +33,24 @@ export const PostProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const [posts, setPosts] = useState<Post[]>([
         {
             id: 1,
-            text: "Just finished my first React project! It's been a great learning experience.",
-            videoUrl: "https://example.com/video1.mp4",
-            date: "2023-05-15T10:30:00Z",
+            text: 'Just finished my first React project! It\'s been a great learning experience.',
+            videoUrl: 'https://example.com/video1.mp4',
+            date: '2023-05-15T10:30:00Z',
             user: {
-                name: "Jane Doe",
-                avatar: "https://i.pravatar.cc/150?img=1"
+                name: 'Jane Doe',
+                avatar: 'https://i.pravatar.cc/150?img=1'
             },
             likes: 15,
             comments: 3
         },
         {
             id: 2,
-            text: "Beautiful sunset at the beach today. Nature never fails to amaze me!",
-            videoUrl: "https://example.com/video2.mp4",
-            date: "2023-05-14T19:45:00Z",
+            text: 'Beautiful sunset at the beach today. Nature never fails to amaze me!',
+            videoUrl: 'https://example.com/video2.mp4',
+            date: '2023-05-14T19:45:00Z',
             user: {
-                name: "John Smith",
-                avatar: "https://i.pravatar.cc/150?img=2"
+                name: 'John Smith',
+                avatar: 'https://i.pravatar.cc/150?img=2'
             },
             likes: 32,
             comments: 7

@@ -1,6 +1,7 @@
+import { Heart, MessageCircle, Share2 } from 'lucide-react'
 import React from 'react'
 import styled from 'styled-components'
-import { Heart, MessageCircle, Share2 } from 'lucide-react'
+
 import { usePostContext } from './PostContext'
 
 const FeedContainer = styled.div`

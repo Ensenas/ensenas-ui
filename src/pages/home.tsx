@@ -1,109 +1,158 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable no-console */
-// import { useRouter } from 'next/router'
+import axios from 'axios'
+import { useRouter } from 'next/router'
+import { useSession } from 'next-auth/react'
 import React, { useEffect, useState } from 'react'
 
-import HomeHeader from '../components/HomeHeader/HomeHeader'
+import HomeLayout from '../components/HomeLayout/HomeLayout'
+import HomeModal from '../components/HomeModal/HomeModal'
 import ProtectedRoute from '../components/ProtectedRoute'
+import LoadingSpinner from '../components/Spinner/Spinner'
+import { Lesson, Level, Unit, useNavigation } from '../context/NavigationLearningContext'
 import {
   ContentContainer,
-  HomePageWrapper,
-  NavIcon,
-  NavItem,
-  SidebarContainer,
-  SidebarNav
+  Image,
+  LessonCard,
+  LessonItem,
+  Recommendations,
+  RecommendationsTitle,
+  Section,
+  TextContainer,
+  VideoItem,
+  VideoList,
+  WelcomeTitle
 } from '../styles/HomePage.styles'
-import Achievements from './achievements'
-import HomeMain from './homeMain'
-import MyLearning from './learning'
-import LevelUnits from './learning/levels/[id]/index'
-import UnitLessons from './learning/levels/[id]/units'
-import Lesson from './learning/levels/[id]/units/lessons/index'
-import LessonTest from './learning/levels/[id]/units/lessons/test'
-import Profile from './profile'
-import Statistics from './statistics'
 
-const navItems = [
-  { label: 'Inicio', icon: '/icons/home-icon.png', href: '/home' },
-  { label: 'Mi Aprendizaje', icon: '/icons/learning-icon.png', href: '/learning' },
-  { label: 'Perfil', icon: '/icons/profile-icon.png', href: '/profile' },
-  { label: 'Mis Logros', icon: '/icons/achievement-icon.png', href: '/achievements' },
-  { label: 'Estadísticas', icon: '/icons/statistics-icon.png', href: '/statistics' }
-
-]
 
 const HomePage: React.FC = () => {
-  // const router = useRouter()
 
-  const [currentLevel, setCurrentLevel] = useState<number | null>(null)
-  const [currentUnit, setCurrentUnit] = useState<number | null>(null)
-  const [currentLesson, setCurrentLesson] = useState<number | null>(null)
+  const { data: session } = useSession()
+
+  const [filteredLessons, setfilteredLessons] = useState<Lesson[]>()
+  const { currentLevel, setCurrentLevel, currentUnit, setCurrentUnit, currentLesson, setCurrentLesson,
+    levels, units, lessons, isLoading, hasShownModal, setHasShownModal } = useNavigation()
+  const [isModalVisible, setIsModalVisible] = useState(true) // Estado para controlar la visibilidad del modal
   const [activePage, setActivePage] = useState('/home')
   const [test, setTest] = useState<Boolean>(false)
 
   useEffect(() => {
+    const hasShownModal = localStorage.getItem('hasShownModal')
+    console.log('hasshown',hasShownModal)
+    if (!hasShownModal) {
+      setIsModalVisible(true)
+      localStorage.setItem('hasShownModal', 'true') // Marca que el modal ya se ha mostrado
+      console.log('hasshown', hasShownModal)
+    }
+  }, [])
+
+
+  useEffect(() => {
+    setfilteredLessons(lessons?.filter(lesson => lesson.title.startsWith('E-01') || 
+    lesson.title.startsWith('B-01') || lesson.title.startsWith('I-01')) )
+  }, [lessons])
+
+  const handleLessonClick = (lesson: Lesson) => {
+    setCurrentLesson(lesson) // Actualiza el estado de la unidad actual
+    setCurrentLevel(findLevel(lesson))
+    setCurrentUnit(findUnit(lesson)) 
+    setActivePage(`/learning/levels/${currentLevel?.description}/units/${currentUnit?.description}/${currentLesson?.description}`)
+  }
+
+  const findLevel = (lesson : Lesson) : Level | null => {
+    console.log('substringgg', lesson.title.substring(0,1))
+    const currLevel = levels?.find((level : Level) => level.title.startsWith(lesson.title.substring(0,1)))
+    if(currLevel != undefined)
+      return currLevel
+    else
+      return null 
+  }
+
+  const findUnit = (lesson : Lesson) : Unit | null => {
+    console.log('substringgg', lesson.title.substring(0,1))
+    const currUnit =  units?.find((level : Level) => level.title.startsWith(lesson.title.substring(0,3)))
+    if(currUnit != undefined)
+      return currUnit
+    else
+      return null 
+  }
+
+
+  useEffect(() => {
     if (activePage.startsWith('/learning') && currentLevel) {
       if (currentUnit) {
-        setActivePage(`/learning/levels/${currentLevel}/units/${currentUnit}`)
+        setActivePage(`/learning/levels/${currentLevel.description}/units/${currentUnit.description}`)
         if(currentLesson){
-          setActivePage(`/learning/levels/${currentLevel}/units/${currentUnit}/${currentLesson}`)
+          setActivePage(`/learning/levels/${currentLevel.description}
+            /units/${currentUnit.description}/${currentLesson.description}`)
         }
       } else {
-        setActivePage(`/learning/levels/${currentLevel}`)
+        setActivePage(`/learning/levels/${currentLevel.description}`)
       }
     }
   }, [activePage, currentLevel, currentUnit, currentLesson])
 
-
-  const handleNavigation = (href: string) => {
-    setActivePage(href)
-    if (!activePage.startsWith('/learning)')) {
-      setCurrentLevel(null) // Reset level when navigating away from learning
-      setCurrentUnit(null)
-      setCurrentLesson(null)
-      setTest(false)
-    }
+  const handleCloseModal = () => {
+    setIsModalVisible(false)
+    localStorage.setItem('hasShownModal', 'true')
+    setHasShownModal(true)
   }
+
+  const getFirstPartString = (string: string): string | undefined => {
+    return string.split(':')[0]?.trim()
+  }
+  
+  const getSecondPartString = (string: string): string | undefined => {
+    return string.split(':')[1]?.trim()
+  }
+
 
   return (
     <ProtectedRoute>
-      <div>
-        <HomeHeader />
-        <HomePageWrapper>
-          <SidebarContainer>
-            <SidebarNav>
-              {navItems.map((item) => (
-                <NavItem
-                  key={item.label}
-                  isActive={activePage === item.href}
-                  onClick={() => handleNavigation(item.href)}
-                >
-                  <NavIcon>
-                    <img src={item.icon} alt={`${item.label} Icon`} />
-                  </NavIcon>
-                  <span>{item.label}</span>
-                </NavItem>
-              ))}
-            </SidebarNav>
-          </SidebarContainer>
-          <ContentContainer>
-            {activePage === '/home' && <HomeMain />}
-            {activePage === '/learning' && <MyLearning setCurrentLevel={setCurrentLevel} />}
-            {activePage === '/profile' && <Profile />}
-            {activePage === '/achievements' && <Achievements />}
-            {activePage === '/statistics' && <Statistics />}
-            {activePage.startsWith('/learning/levels/') && currentLevel && !currentUnit &&
-              <LevelUnits currentLevel={currentLevel} setCurrentUnit={setCurrentUnit} />}
-            {activePage.startsWith(`/learning/levels/${currentLevel}`) && currentUnit && !currentLesson &&
-              <UnitLessons currentLevel={currentLevel} currentUnit={currentUnit} setCurrentLesson={setCurrentLesson} />}
-            {activePage.startsWith(`/learning/levels/${currentLevel}`) && currentUnit && currentLesson && !test &&
-              <Lesson currentLevel={currentLevel} currentUnit={currentUnit} currentLesson={currentLesson} setTest={setTest} />}
-            {activePage.startsWith(`/learning/levels/${currentLevel}`) && currentUnit && currentLesson && test &&
-              <LessonTest currentLevel={currentLevel} currentUnit={currentUnit} 
-                currentLesson={currentLesson} setTest={setTest} />}
-          </ContentContainer>
-        </HomePageWrapper>
-      </div>
+      { !hasShownModal ? (
+        <HomeModal isVisible={isModalVisible} onClose={handleCloseModal} />
+      ): (
+        <HomeLayout activePage={activePage}>
+          <Section>
+            <TextContainer>
+              <WelcomeTitle>¡Bienvenid@, {session?.user?.name}!</WelcomeTitle>
+                <div style={{ width: '90%', display: 'inline-block'}}>
+                  <p style={{ fontSize: '1.2em', color: '#fff' }}>
+                    ¡Te damos la bienvenida a nuestra plataforma de aprendizaje de lenguaje de señas!
+                  </p>
+                  <p style={{ fontSize: '1.2em', color: '#fff' }}>
+                    Estamos emocionados de que te hayas unido a nosotros en esta jornada para aprender y
+                    conectar a través de este hermoso y esencial lenguaje.
+                  </p>
+                  <p style={{ fontSize: '1.2em', color: '#fff' }}>
+                    ¡Buena suerte y disfruta del proceso de aprendizaje!
+                  </p>
+                </div>
+            </TextContainer>
+            <Recommendations>
+              <RecommendationsTitle>Recomendaciones para ti</RecommendationsTitle>
+              <VideoList>
+                  {isLoading ? (
+                      <LoadingSpinner /> // Muestra el spinner mientras se está cargando
+                  ) : (
+                      filteredLessons?.map(lesson => (
+                        <VideoItem key={lesson.id}>
+                          <LessonItem key={lesson.id} onClick={() => handleLessonClick(lesson)}>
+                              <LessonCard>
+                                  <h3>{getFirstPartString(lesson.description)}</h3>
+                                  <h1>{getSecondPartString(lesson.description)}</h1>
+                                  <h5>{lesson.title}</h5>
+                              </LessonCard>
+                          </LessonItem>
+                        </VideoItem>  
+                      )))}
+              </VideoList>
+            </Recommendations>
+          </Section>
+          {/* Aquí puedes agregar más componentes según sea necesario */}
+        </HomeLayout>
+      )}
     </ProtectedRoute>
   )
 }

@@ -27,6 +27,7 @@ export const Logo = styled.div`
   }
 `
 export const SearchInput = styled.div`
+  position: relative;
   display: flex;
   align-items: center;
   background: #f4f4f4;

@@ -59,7 +59,9 @@ const HomePage: React.FC = () => {
     setCurrentLesson(lesson) // Actualiza el estado de la unidad actual
     setCurrentLevel(findLevel(lesson))
     setCurrentUnit(findUnit(lesson))
-    router.push(`/learning/levels/${currentLevel?.description}/units/${currentUnit?.description}/lessons/${currentLesson?.description}`)
+    router.push(`/learning/levels/${currentLevel?.description}/units/${currentUnit?.description}
+      /lessons/${currentLesson?.description}`)
+    setActivePage(`/learning/levels/${currentLevel?.description}/units/${currentUnit?.description}/${currentLesson?.description}`)
   }
 
   const findLevel = (lesson: Lesson): Level | null => {
@@ -78,48 +80,6 @@ const HomePage: React.FC = () => {
       return currUnit
     else
       return null
-  }
-
-
-  useEffect(() => {
-    const hasShownModal = localStorage.getItem('hasShownModal')
-    console.log('hasshown',hasShownModal)
-    if (!hasShownModal) {
-      setIsModalVisible(true)
-      localStorage.setItem('hasShownModal', 'true') // Marca que el modal ya se ha mostrado
-      console.log('hasshown', hasShownModal)
-    }
-  }, [])
-
-
-  useEffect(() => {
-    setfilteredLessons(lessons?.filter(lesson => lesson.title.startsWith('E-01') || 
-    lesson.title.startsWith('B-01') || lesson.title.startsWith('I-01')) )
-  }, [lessons])
-
-  const handleLessonClick = (lesson: Lesson) => {
-    setCurrentLesson(lesson) // Actualiza el estado de la unidad actual
-    setCurrentLevel(findLevel(lesson))
-    setCurrentUnit(findUnit(lesson)) 
-    setActivePage(`/learning/levels/${currentLevel?.description}/units/${currentUnit?.description}/${currentLesson?.description}`)
-  }
-
-  const findLevel = (lesson : Lesson) : Level | null => {
-    console.log('substringgg', lesson.title.substring(0,1))
-    const currLevel = levels?.find((level : Level) => level.title.startsWith(lesson.title.substring(0,1)))
-    if(currLevel != undefined)
-      return currLevel
-    else
-      return null 
-  }
-
-  const findUnit = (lesson : Lesson) : Unit | null => {
-    console.log('substringgg', lesson.title.substring(0,1))
-    const currUnit =  units?.find((level : Level) => level.title.startsWith(lesson.title.substring(0,3)))
-    if(currUnit != undefined)
-      return currUnit
-    else
-      return null 
   }
 
 
@@ -151,10 +111,6 @@ const HomePage: React.FC = () => {
     return string.split(':')[1]?.trim()
   }
 
-
-  const getSecondPartString = (string: string): string | undefined => {
-    return string.split(':')[1]?.trim()
-  }
 
 
   return (
@@ -195,7 +151,8 @@ const HomePage: React.FC = () => {
                         </LessonCard>
                       </LessonItem>
                     </VideoItem>
-                  )))}ist>
+                  )))}
+                </ VideoList>
             </Recommendations>
           </Section>
           {/* Aquí puedes agregar más componentes según sea necesario */}

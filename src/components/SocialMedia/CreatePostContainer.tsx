@@ -1,5 +1,6 @@
-import React, { useState, useRef } from 'react'
+import React, { useRef,useState } from 'react'
 import styled from 'styled-components'
+
 import { usePostContext } from './PostContext'
 
 const CreatePostContainer = styled.div`

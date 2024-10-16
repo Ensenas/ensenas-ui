@@ -61,7 +61,7 @@ const LevelUnits: React.FC = ({ }) => {
         if (!currentUnit || unit.title !== lastSelectedUnit) {
             // Si la unidad es diferente a la última seleccionada, hacer la solicitud POST
 
-            sendUnitSelected(unit.description.split(':').pop()?.trim().toLowerCase().replace(" ", "_"))
+            sendUnitSelected(unit.description.split(':').pop()?.trim().toLowerCase().replace(' ', '_'))
             setLastSelectedUnit(unit.title) // Actualizar la última unidad seleccionada
         }
         setCurrentUnit(unit) // Actualiza el estado de la unidad actual
@@ -70,7 +70,7 @@ const LevelUnits: React.FC = ({ }) => {
 
     return (
         <ProtectedRoute>
-            <HomeLayout activePage={`/learning`}>
+            <HomeLayout activePage={'/learning'}>
                 <Section>
                     <Title>Unidades del Nivel</Title>
                     <div>

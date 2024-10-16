@@ -1,37 +1,38 @@
-import { useEffect, useState } from "react";
-import { IProduct } from "../Plan/Plan";
-import { Loader } from "../Loader";
-import axios from "axios";
+/* eslint-disable no-console */
+import axios from 'axios'
+import { useEffect, useState } from 'react'
 
-import styles from "./styles.module.scss";
+import { Loader } from '../Loader'
+import { IProduct } from '../Plan/Plan'
+import styles from './styles.module.scss'
 
 interface MercadoPagoButtonProps {
     product: IProduct;
 }
 
 export const MercadoPagoButton = ({ product }: MercadoPagoButtonProps) => {
-    const [url, setUrl] = useState<null | string>(null);
-    const [loading, setLoading] = useState<boolean>(true);
+    const [url, setUrl] = useState<null | string>(null)
+    const [loading, setLoading] = useState<boolean>(true)
 
     useEffect(() => {
         const generateLink = async () => {
-            setLoading(true);
+            setLoading(true)
 
             try {
-                const { data: preference } = await axios.post("/api/checkout", {
-                    product,
-                });
+                const { data: preference } = await axios.post('/api/checkout', {
+                    product
+                })
 
-                setUrl(preference.url);
+                setUrl(preference.url)
             } catch (error) {
-                console.error(error);
+                console.error(error)
             }
 
-            setLoading(false);
-        };
+            setLoading(false)
+        }
 
-        generateLink();
-    }, [product]);
+        generateLink()
+    }, [product])
 
     return (
         <div>
@@ -45,5 +46,5 @@ export const MercadoPagoButton = ({ product }: MercadoPagoButtonProps) => {
                 </a>
             )}
         </div>
-    );
-};
+    )
+}

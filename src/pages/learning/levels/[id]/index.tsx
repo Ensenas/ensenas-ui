@@ -64,7 +64,6 @@ const LevelUnits: React.FC = ({ }) => {
             sendUnitSelected(unit.description.split(':').pop()?.trim().toLowerCase().replace(" ", "_"))
             setLastSelectedUnit(unit.title) // Actualizar la última unidad seleccionada
         }
-
         setCurrentUnit(unit) // Actualiza el estado de la unidad actual
         router.push(`/learning/levels/${currentLevel?.description}/units/${unit.description}`)
     }

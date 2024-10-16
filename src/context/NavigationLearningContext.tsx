@@ -53,7 +53,6 @@ interface NavigationLearningContextType {
 const NavigationLearningContext = createContext<NavigationLearningContextType | undefined>(undefined)
 
 export const NavigationProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-
   const isBrowser = typeof window !== 'undefined' && typeof window.localStorage !== 'undefined'
 
   const [currentLevel, setCurrentLevel] = useState<Level | null>(() => {

@@ -5,7 +5,6 @@ import axios from 'axios'
 import { signOut } from 'next-auth/react'
 import React, { useEffect, useState } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
-
 import { useNavigation } from '../../context/NavigationLearningContext'
 import { HeaderContainer, Logo, LogoutButton, SearchButton, SearchInput } from './HomeHeader.styles'
 import SearchResults from './SearchResult'
@@ -31,7 +30,6 @@ const HomeHeader: React.FC = () => {
     setCurrentPage(pathname || '')
   }, [pathname])
 
-
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value)
   }
@@ -54,7 +52,6 @@ const HomeHeader: React.FC = () => {
 
     setSearchTerm('')
     router.push(`/learning/levels/${level}/units/${unit}/lessons/${lesson}`)
-
   }
 
   // const determineLevel :  (number | null) = (lesson : any) => {

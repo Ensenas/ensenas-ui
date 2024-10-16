@@ -156,7 +156,6 @@ const FreeMode: React.FC = () => {
                 )}
             </HomeLayout>
         </ProtectedRoute>
-
     )
 }
 

@@ -71,7 +71,6 @@ const Lesson: React.FC = ({ }) => {
                     </TooltipContainer>
                 </Section>
             </HomeLayout>
-
         </ProtectedRoute>
     )
 }

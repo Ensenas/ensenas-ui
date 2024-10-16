@@ -79,7 +79,7 @@
     justify-content: center;
 
     animation-name: fade-in;
-    animation-duration: 1s;
+    animation-duration: 5s;
     opacity: 0;
 
     padding-left: 0;
@@ -94,10 +94,11 @@
     }
 
     p {
-        background-color: #2f3032;
+        background-color: #000000;
         padding: 1rem;
         border-radius: 0 4px 4px 0;
         font-weight: 500;
+        color: white;
     }
 
     &:hover {

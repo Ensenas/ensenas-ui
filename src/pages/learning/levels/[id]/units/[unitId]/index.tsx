@@ -2,7 +2,6 @@
 /* eslint-disable no-unused-vars */
 import axios from 'axios'
 import router from 'next/router'
-// import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 
 import HomeLayout from '../../../../../../components/HomeLayout/HomeLayout'
@@ -12,37 +11,85 @@ import { Lesson, useNavigation } from '../../../../../../context/NavigationLearn
 import {
     LessonCard,
     LessonItem,
-    // LessonTitle,
     Section,
     Title
 } from '../../../../../../styles/Learning.styles'
+import { getFirstPartString, getSecondPartString } from '../../../../../../utils'
 
 
-const UnitLessons: React.FC = ({}) => {
+interface Challenge {
+    id: number;
+    description: string;
+    video: string;
+    title: string;
+}
+interface UserChallengeProgress {
+    id: string;
+    challenge: Challenge;
+    started: boolean;
+    completed: boolean;
+}
+
+const UnitLessons: React.FC = () => {
     const [filteredLessons, setFilteredLessons] = useState<Lesson[]>()
+    const [userProgress, setUserProgress] = useState<UserChallengeProgress[]>([])
     const { currentLevel, setCurrentLevel, currentUnit, setCurrentUnit, currentLesson, setCurrentLesson,
         lessons, isLoading
-     } = useNavigation()
-  
+    } = useNavigation()
 
     useEffect(() => {
+        // Obtener el progreso de los desafíos del usuario
+        const fetchUserProgress = async () => {
+            const token = localStorage.getItem('authToken');
+            if (!token) {
+                console.error('No se encontró el token JWT, el usuario no está autenticado.');
+                return;
+            }
 
+            try {
+                const response = await axios.get('/ens-api/users/challenge-progress', {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+                setUserProgress(response.data);
+            } catch (error) {
+                console.error('Error al obtener el progreso del desafío:', error);
+            }
+        };
+
+        fetchUserProgress();
+    }, []);
+
+    useEffect(() => {
         if (currentUnit && currentLevel) {
             setFilteredLessons(lessons?.filter(lesson => lesson.title.startsWith(currentUnit.title)).
-            sort((a, b) => a.order - b.order))
+                sort((a, b) => a.order - b.order))
         }
     }, [currentUnit, lessons, currentLevel])
 
     const handleLessonClick = (lesson: Lesson) => {
-        lesson.videoSrc = 'https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4'
         setCurrentLesson(lesson) // Actualiza el estado de la unidad actual
-        router.push(`/learning/levels/${currentLevel?.description}/units/${currentUnit?.description}
-            /lessons/${lesson.description}`)
+        router.push(`/learning/levels/${currentLevel?.description}/units/${currentUnit?.description}/lessons/${lesson.description}`)
     }
+
+    // Función para determinar el color del LessonCard
+    const getLessonCardColor = (lessonId: number) => {
+        const progress = userProgress.find((progress) => progress.challenge.id === lessonId);
+        if (progress) {
+            if (progress.started && !progress.completed) {
+                return '#b3b300';
+            }
+            if (progress.completed) {
+                return '#9fe2bf';
+            }
+        }
+        return '#f0f0f0'; // Color por defecto si no hay progreso
+    };
 
     return (
         <ProtectedRoute>
-            <HomeLayout activePage={`/learning/levels/${currentLevel?.description}/units/${currentUnit?.description}`}>
+            <HomeLayout activePage={`/learning`}>
                 <Section>
                     <Title>Lecciones de la Unidad</Title>
                     <div>
@@ -51,12 +98,14 @@ const UnitLessons: React.FC = ({}) => {
                         ) : (
                             filteredLessons?.map(lesson => (
                                 <LessonItem key={lesson.id} onClick={() => handleLessonClick(lesson)}>
-                                    <LessonCard>
-                                        <h1>{lesson.title}</h1>
-                                        <h3>{lesson.description}</h3>
+                                    <LessonCard backgroundColor={getLessonCardColor(lesson.id)}>
+                                        <h4>{getFirstPartString(lesson.description)}</h4>
+                                        <h1>{getSecondPartString(lesson.description)}</h1>
+                                        <h5>{lesson.title}</h5>
                                     </LessonCard>
                                 </LessonItem>
-                            )))}
+                            ))
+                        )}
                     </div>
                 </Section>
             </HomeLayout>

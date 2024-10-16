@@ -17,13 +17,14 @@ export const LessonTitle = styled.h3`
   margin: 0;
   font-size: 1.2em;
   margin-bottom: 20px;
+
 `
 
 export const VideoContainer = styled.div`
   text-align: center;
   max-width: 50%; /* Establece un ancho máximo para el video */
   margin: 0 auto; /* Centra el contenedor del video */
-margin-bottom: 20px;
+  margin-bottom: 20px;
 `
 
 export const TestButton = styled.button`

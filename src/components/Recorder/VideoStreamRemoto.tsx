@@ -3,158 +3,225 @@
 /* eslint-disable no-console */
 'use client'
 
-import React, { useEffect, useRef, useState } from 'react'
-import Webcam from 'react-webcam'
-import { io, Socket } from 'socket.io-client'
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import Webcam from 'react-webcam';
+import { io, Socket } from 'socket.io-client';
+import styled from 'styled-components';
 
-import { Lesson, Unit, useNavigation } from '../../context/NavigationLearningContext'
-import { Container, Overlay,WebcamContainer } from './RecorderElements'
+import { useNavigation } from '../../context/NavigationLearningContext';
+import ResultScreen from '../ResultScreen/ResultScreen';
+import Spinner from '../Spinner/Spinner';
+import { Container, Overlay, WebcamContainer } from './RecorderElements';
+import { useRouter } from 'next/router';
 
-const unitWords = {
-    familiares: ['papa', 'mama', 'hijo', 'hermana'],
-    colores: ['amarillo', 'negro', 'rojo', 'verde']
-}
+const PreviewContainer = styled.div`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 200px;
+  height: 150px;
+  border: 2px solid #000;
+  overflow: hidden;
+  z-index: 10;
+`;
 
-export default function VideoStreamRemoto() {
-    const [socket, setSocket] = useState<Socket | null>(null)
-    const [fps, setFps] = useState(0)
-    const webcamRef = useRef<Webcam>(null)
-    const canvasRef = useRef<HTMLCanvasElement>(null)
-    const outputRef = useRef<HTMLImageElement>(null)
-    const { currentLevel, setCurrentLevel, currentUnit, setCurrentUnit, 
-        currentLesson, setCurrentLesson, setTest } = useNavigation()
-  
+const MainImageContainer = styled.div`
+  position: relative;
+  width: 70%;
+  height: 620px;
+`;
+
+export default function VideoStreamRemoto({ level, unit, lesson, onComplete }) {
+    const [socket, setSocket] = useState<Socket | null>(null);
+    const [attempts, setAttempts] = useState(0);
+    const [reset, setReset] = useState(false);
+    const [isSuccess, setIsSuccess] = useState(false);
+    const [border, setBorder] = useState('unset');
+    const [isConnected, setIsConnected] = useState(false);
+    const [showResultScreen, setShowResultScreen] = useState(false);
+    const [frase, setFrase] = useState<string[]>([]);
+    const [fraseIndex, setFraseIndex] = useState(0);
+    const [expectedFrase, setExpectedFrase] = useState(['']);
+    const webcamRef = useRef<Webcam>(null);
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+    const outputRef = useRef<HTMLImageElement>(null);
+    const router = useRouter()
+    const { currentUnit } = useNavigation();
 
     useEffect(() => {
-        const newSocket = io('wss://alarma.mywire.org:3051')
-        
+        if (lesson && lesson.description) {
+            const fraseInicial = findWord(lesson.description).split(' ');
+            setExpectedFrase(fraseInicial);
+        }
+    }, [lesson.description]);
+
+    useEffect(() => {
+        const newSocket = io('wss://alarma.mywire.org:3050');
+        setSocket(newSocket);
+
         newSocket.on('connect', () => {
-            console.log('Socket connected:', newSocket.id)
-        })
+            console.log('Socket connected:', newSocket.id);
+            setIsConnected(true);
+            setBorder('2px solid #000');
+        });
 
         newSocket.on('disconnect', (reason) => {
-            console.log('Socket disconnected:', reason)
-        })
+            console.log('Socket disconnected:', reason);
+            setIsConnected(false);
+        });
 
-        newSocket.on('processed_frame', (data) => {
-            console.log('Received processed frame:', data)
-            setFps((1 / data.total_time_time))
-            if (outputRef.current) {
-                outputRef.current.src = data.image
-            }
-        })
-
-        setSocket(newSocket)
-        console.log('New Socket', newSocket)
-        console.log('New Socket active', newSocket.active)
-        console.log('Socket', socket)
+        //newSocket.emit('unit_selected', { unidad: findUnit() })
 
         return () => {
-            newSocket.disconnect()
-            console.log('Socket disconnected:', newSocket.id)
-        }
-    }, [socket])
+            newSocket.disconnect();
+            console.log('Socket disconnected:', newSocket.id);
+        };
+    }, []); // Solo se ejecuta una vez al montar
 
-    const sendFrame = () => {
+    useEffect(() => {
+        if (!socket) return;
+
+        const handleProcessedFrame = (data) => {
+            if (outputRef.current) {
+                outputRef.current.src = data.image;
+            }
+
+            // Check if the word is correct and show result screen
+            if (data.palabra_detectada != null) {
+                if (data.palabra_detectada === expectedFrase[fraseIndex]) {
+                    checkWords(data.palabra_detectada);
+                } else {
+                    setIsSuccess(false);
+                    setShowResultScreen(true);
+                }
+            }
+        };
+
+        socket.on('processed_frame', handleProcessedFrame);
+
+        return () => {
+            socket.off('processed_frame', handleProcessedFrame);
+        };
+    }, [socket, expectedFrase, fraseIndex, frase]);
+
+    const sendFrame = useCallback(() => {
         if (webcamRef.current && canvasRef.current) {
-            const video = webcamRef.current.video
-            const canvas = canvasRef.current
-            const context = canvas.getContext('2d')
+            const video = webcamRef.current.video;
+            const canvas = canvasRef.current;
+            const context = canvas.getContext('2d');
 
             if (video && context) {
-                canvas.width = video.videoWidth
-                canvas.height = video.videoHeight
-                context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight)
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
 
-                const dataURL = canvas.toDataURL('image/jpeg', 0.5)
+                const dataURL = canvas.toDataURL('image/jpeg', 0.5);
                 if (socket) {
-                    console.log('Sending frame:')
-                    const unit: string | undefined = findUnit()
-                    const word: string | undefined = findWord()
-                    console.log('UNIT', unit)
-                    console.log('WORD', word)
-                    socket.emit('unit_selected', { unidad: unit })
-                    socket.emit('corregir_video_stream', { palabra: word, image: dataURL })
+                    const unit: string | undefined = findUnit();
+                    const word: string | undefined = findWord(lesson.description);
+
+                    socket.emit('corregir_video_stream', { frase: word, image: dataURL, reset: reset });
+                    setReset(false);
                 }
             }
         }
-    }
+    }, [socket, reset]);
 
     useEffect(() => {
-        const interval = setInterval(sendFrame, 250)
-        return () => clearInterval(interval)
-    }, [socket, sendFrame])
+        const interval = setInterval(sendFrame, 250);
+        return () => clearInterval(interval);
+    }, [sendFrame]);
 
-    const findUnit = () : string | undefined => {
-        if(currentUnit){
-            return currentUnit.description.split(':').pop()?.trim().toLowerCase()
-        }
-        
-    }
-    const findWord = () : string | undefined => {
-        console.log(currentLesson)
-        if(currentLesson && currentLesson.title){
-            return currentLesson.description.split(':').pop()?.trim().toLowerCase()
+    const findUnit = (): string | undefined => {
+        if (currentUnit) {
+            return (currentUnit.description.split(':').pop()?.trim().toLowerCase())?.replace(' ', '_')
         }
     }
-    // const handleUnitChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    //     const newUnit = e.target.value as keyof typeof unitWords;
-    //     setUnit(newUnit);
-    //     setSelectedWord(unitWords[newUnit][0]);
-    //     socket?.emit('unit_selected', { unidad: newUnit });
-    // }
 
-    // const handleModeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    //     const newMode = e.target.value;
-    //     setMode(newMode);
-    //     socket?.emit('reset_text');
-    // }
+    const findWord = (lesson_description): string => {
+        return lesson_description.split(':').pop()?.trim().toLowerCase()
+    }
 
-    // const handleWordChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    //     setSelectedWord(e.target.value);
-    //     socket?.emit('reset_text');
-    // }
+    const checkWords = (word) => {
+        setFrase([...frase, expectedFrase[fraseIndex]]);
+        setFraseIndex(fraseIndex + 1);
+
+        if (expectedFrase.length - 1 === fraseIndex) {
+            setIsSuccess(true);
+            setShowResultScreen(true);
+
+            // Llamar a onComplete cuando se complete la lección
+            if (onComplete) {
+                onComplete();
+            }
+        }
+    };
+
+    const handleNextWord = () => {
+        setShowResultScreen(false);
+        setAttempts(0);
+        router.push(`/learning/levels/${level?.description}/units/${unit.description}`)
+
+    };
+
+    const handleRestart = () => {
+        setShowResultScreen(false);
+        setAttempts(0);
+        setReset(true);
+    };
 
     return (
-        <Container>
-            <div id="fpsDisplay">FPS Max: {fps}</div>
+        <div>
+            {isConnected ? (
+                <div>
+                    <Container>
+                        <MainImageContainer>
+                            <img
+                                ref={outputRef}
+                                style={{ width: '100%', height: '100%', border: border, objectFit: 'cover' }}
+                                alt="Processed output"
+                            />
+                            <PreviewContainer>
+                                <Webcam
+                                    ref={webcamRef}
+                                    audio={false}
+                                    videoConstraints={{
+                                        facingMode: 'user',
+                                        width: 1280,
+                                        height: 720
+                                    }}
+                                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                />
+                            </PreviewContainer>
+                        </MainImageContainer>
 
-            {/* <div id="selectors-container">
-                <select value={unit} onChange={handleUnitChange}>
-                    <option value="familiares">Familiares</option>
-                    <option value="colores">Colores</option>
-                </select>
-                <select value={mode} onChange={handleModeChange}>
-                    <option value="Detectar">Detectar</option>
-                    <option value="Corregir">Corregir</option>
-                </select>
-                {mode === 'Corregir' && (
-                    <select value={selectedWord} onChange={handleWordChange}>
-                        {unitWords[unit as keyof typeof unitWords].map((word) => (
-                            <option key={word} value={word}>{word}</option>
-                        ))}
-                    </select>
-                )}
-            </div> */}
+                        <WebcamContainer>
+                            <Webcam
+                                audio={false}
+                                videoConstraints={{
+                                    facingMode: 'user',
+                                    width: 1920,
+                                    height: 1080
+                                }}
+                                style={{ opacity: '0' }}
+                            />
+                        </WebcamContainer>
 
-            <img ref={outputRef} alt="Processed Video Stream" style={{ width: '80%', border: '2px solid #000' }} />
+                        <canvas ref={canvasRef} style={{ display: 'none' }} />
 
-            <WebcamContainer>
-                <Webcam 
-                    ref={webcamRef}
-                    audio={false}
-                    videoConstraints={{
-                        facingMode: 'user',
-                        width: 1920,
-                        height: 1080
-                    }}
-                    style={{ opacity: '0' }}
-                />
-            </WebcamContainer>
-
-            <canvas ref={canvasRef} style={{ display: 'none' }} />
-            
-            <Overlay />
-        </Container>
-    )
+                        <Overlay />
+                    </Container>
+                    {showResultScreen && (
+                        <ResultScreen
+                            isSuccess={isSuccess}
+                            onNextWord={handleNextWord}
+                            onRestart={handleRestart}
+                        />
+                    )}
+                </div>
+            ) : (
+                <Spinner />
+            )}
+        </div>
+    );
 }

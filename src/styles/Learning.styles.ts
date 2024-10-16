@@ -69,9 +69,9 @@ export const UnitTitle = styled.h2`
   cursor: pointer;
 `
 
-export const LessonCard = styled.a`
+export const LessonCard = styled.a<{ backgroundColor: string }>`
   display: block;
-  background: #f0f0f0;
+  background: ${(props) => props.backgroundColor || '#f0f0f0'};
   padding: 15px;
   margin: 10px;
   border-radius: 8px;
@@ -86,12 +86,14 @@ export const LessonCard = styled.a`
   h1 {
     color: #0567b1; /* Color del h1 por defecto */
     transition: color 0.3s; /* Opcional: añade transición al color del h1 */
+    margin: 0;
+    padding: 0;
   }
 
   &:hover h1, &:hover h3 {
     color: #ffffff; /* Color del h1 cuando se hace hover */
   }
-`
+`;
 export const LessonItem = styled.div`
   margin: 10px 0;
 `

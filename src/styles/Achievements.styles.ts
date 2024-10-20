@@ -54,7 +54,7 @@ export const CardContent = styled.p`
   margin-bottom: 10px;
 `
 
-export const Medal = styled.div<{ completed: boolean }>`
+export const Medal = styled.div<{ completed: boolean | undefined}>`
   width: 80px;
   height: 80px;
   background-image: url('/medal.png');  /* Ruta desde la raíz de la carpeta public */

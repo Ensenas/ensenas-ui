@@ -84,8 +84,9 @@ const Profile: React.FC = () => {
     }))
   }
 
-  // if (loading) return <p>Cargando...</p>
-  // if (error) return <p>{error}</p>
+  const handleEditButton = () => {
+    setIsEditing(!isEditing)
+  }
 
   return (
     <ProtectedRoute>
@@ -100,7 +101,7 @@ const Profile: React.FC = () => {
               <Header>
                 <Title>Mi Perfil</Title>
                 {/* <EditButton onClick={isEditing ? handleSave : toggleEdit}> */}
-                <EditButton>
+                <EditButton onClick={handleEditButton}>
                   {isEditing ? <FaSave style={{ marginRight: '5px' }} /> : <FaEdit style={{ marginRight: '5px' }} />}
                   {isEditing ? 'Guardar' : 'Editar'}
                 </EditButton>
@@ -176,7 +177,7 @@ const Profile: React.FC = () => {
                         <Input 
                           type="password" 
                           name="password"
-                          value={profileData.password}
+                          value={isEditing ? profileData.password : '******'}
                           onChange={handleChange} 
                           disabled={!isEditing} 
                         />

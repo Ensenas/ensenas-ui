@@ -7,8 +7,9 @@ import React, { useEffect, useState } from 'react'
 import HomeLayout from '../../../../../../components/HomeLayout/HomeLayout'
 import ProtectedRoute from '../../../../../../components/ProtectedRoute'
 import LoadingSpinner from '../../../../../../components/Spinner/Spinner'
-import { Lesson, useNavigation } from '../../../../../../context/NavigationLearningContext'
+import { Lesson, Level, useNavigation } from '../../../../../../context/NavigationLearningContext'
 import {
+    BackButton,
     LessonCard,
     LessonItem,
     Section,
@@ -88,11 +89,25 @@ const UnitLessons: React.FC = () => {
         return '#f0f0f0' // Color por defecto si no hay progreso
     }
 
+    const handleGoBack = () => {
+        if (currentLevel) {
+            setCurrentUnit(null)
+            router.push(`/learning/levels/${currentLevel.description}`)
+        } else {
+            console.error('currentLevel es null.')
+        }
+    }
+
     return (
         <ProtectedRoute>
             <HomeLayout activePage={'/learning'}>
                 <Section>
-                    <Title>Lecciones de la Unidad</Title>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <Title>Lecciones de la Unidad</Title>
+                        <BackButton onClick={handleGoBack}>
+                        Volver atrás
+                        </BackButton>
+                    </div>
                     <div>
                         {isLoading ? (
                             <LoadingSpinner /> // Muestra el spinner mientras se está cargando

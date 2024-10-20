@@ -9,6 +9,7 @@ import ProtectedRoute from '../../../../components/ProtectedRoute'
 import LoadingSpinner from '../../../../components/Spinner/Spinner'
 import { Unit, useNavigation } from '../../../../context/NavigationLearningContext'
 import {
+    BackButton,
     Section,
     Title,
     UnitCard
@@ -68,11 +69,21 @@ const LevelUnits: React.FC = ({ }) => {
         router.push(`/learning/levels/${currentLevel?.description}/units/${unit.description}`)
     }
 
+    const handleGoBack = () => {
+        setCurrentLevel(null)
+        router.push('/learning')
+    }
+
     return (
         <ProtectedRoute>
             <HomeLayout activePage={'/learning'}>
                 <Section>
-                    <Title>Unidades del Nivel</Title>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <Title>Unidades del Nivel</Title>
+                        <BackButton onClick={handleGoBack}>
+                        Volver atrás
+                        </BackButton>
+                    </div>
                     <div>
                         {isLoading ? (
                             <LoadingSpinner /> // Muestra el spinner mientras se está cargando

@@ -9,6 +9,7 @@ import ProtectedRoute from '../../../../../../../../components/ProtectedRoute'
 import LoadingSpinner from '../../../../../../../../components/Spinner/Spinner'
 import VideoPlayer from '../../../../../../../../components/VideoPlayer/VideoPlayer'
 import { useNavigation } from '../../../../../../../../context/NavigationLearningContext'
+import { BackButton } from '../../../../../../../../styles/Learning.styles'
 import {
     LessonTitle,
     Section,
@@ -40,11 +41,25 @@ const Lesson: React.FC = ({ }) => {
             /lessons/${currentLesson?.id}/test`)
     }
 
+    const handleGoBack = () => {
+        if (currentUnit && currentLevel) {
+            setCurrentLesson(null)
+            router.push(`/learning/levels/${currentLevel.description}/units/${currentUnit.description}`)
+        } else {
+            console.error('currentLevel es null.')
+        }
+    }
+
     return (
         <ProtectedRoute>
             <HomeLayout activePage={'/learning'}>
                 <Section>
-                    <Title>{currentLesson?.title}</Title>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <Title>{currentLesson?.title}</Title>
+                        <BackButton onClick={handleGoBack}>
+                        Volver atrás
+                        </BackButton>
+                    </div>
                     <LessonTitle>{currentLesson?.description}</LessonTitle>
                     <InstructionText>
                         {currentLesson?.detailedDescription}

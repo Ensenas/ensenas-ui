@@ -9,6 +9,7 @@ import ProtectedRoute from '../../components/ProtectedRoute'
 import LoadingSpinner from '../../components/Spinner/Spinner'
 import { Level, useNavigation } from '../../context/NavigationLearningContext'
 import {
+  BackButton,
   LevelCard,
   Section,
   Title
@@ -27,6 +28,7 @@ const MyLearning: React.FC = ({ }) => {
     router.push(`/learning/levels/${level.description}`)
     // Aquí no cambiamos la URL, solo actualizamos el estado de la página
   }
+
   
   return (
     <ProtectedRoute>

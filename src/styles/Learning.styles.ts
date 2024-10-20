@@ -179,3 +179,17 @@ export const CompletedLessonDescription = styled.p`
   font-size: 0.8em;
   color: #666;
 `
+
+export const BackButton = styled.button`
+  background-color: #0567b1; /* Color de fondo */
+  color: white; /* Color del texto */
+  border: none; /* Sin borde */
+  border-radius: 5px; /* Bordes redondeados */
+  padding: 10px 15px; /* Espaciado interno */
+  cursor: pointer; /* Cambia el cursor al pasar por encima */
+  transition: background 0.3s; /* Transición para el efecto hover */
+
+  &:hover {
+    background-color: #045a9a; /* Color de fondo al pasar el mouse */
+  }
+`

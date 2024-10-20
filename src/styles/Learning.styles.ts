@@ -68,6 +68,20 @@ export const UnitTitle = styled.h2`
   font-size: 1.5rem;
   cursor: pointer;
 `
+export const Label = styled.div<{ status: string }>`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: ${({ status }) => {
+    if (status === 'Completado') return '#41991b'
+    if (status === 'En Progreso') return '#d9c103'
+    return '#d72828' // Para pendiente
+  }};
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 0.8rem;
+`
 
 export const LessonCard = styled.a<{ backgroundColor: string }>`
   display: block;

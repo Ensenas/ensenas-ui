@@ -37,7 +37,7 @@ const FraseContainer = styled.div`
   font-size: 24px;
   font-weight: bold;
   letter-spacing: 2px;
-`;
+`
 
 export default function VideoStreamRemoto({ level, unit, lesson, onComplete }) {
     const [socket, setSocket] = useState<Socket | null>(null)
@@ -184,8 +184,8 @@ export default function VideoStreamRemoto({ level, unit, lesson, onComplete }) {
             <span key={index} style={{ margin: '0 10px', textDecoration: 'underline' }}>
                 {fraseIndex > index ? word : '_'.repeat(word.length)}
             </span>
-        ));
-    };
+        ))
+    }
 
     return (
         <div>

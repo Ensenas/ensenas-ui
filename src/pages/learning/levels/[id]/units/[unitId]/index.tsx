@@ -10,6 +10,7 @@ import LoadingSpinner from '../../../../../../components/Spinner/Spinner'
 import { Lesson, Level, useNavigation } from '../../../../../../context/NavigationLearningContext'
 import {
     BackButton,
+    Label,
     LessonCard,
     LessonItem,
     Section,
@@ -89,6 +90,15 @@ const UnitLessons: React.FC = () => {
         return '#f0f0f0' // Color por defecto si no hay progreso
     }
 
+    const getLessonStatus = (lessonId: number) => {
+        const progress = userProgress.find((progress) => progress.challenge.id === lessonId)
+        if (progress) {
+            if (progress.completed) return 'Completado'
+            if (progress.started) return 'En Progreso'
+        }
+        return 'Pendiente'
+    }
+
     const handleGoBack = () => {
         if (currentLevel) {
             setCurrentUnit(null)
@@ -114,7 +124,8 @@ const UnitLessons: React.FC = () => {
                         ) : (
                             filteredLessons?.map(lesson => (
                                 <LessonItem key={lesson.id} onClick={() => handleLessonClick(lesson)}>
-                                    <LessonCard backgroundColor={getLessonCardColor(lesson.id)}>
+                                    <LessonCard backgroundColor={getLessonCardColor(lesson.id)} style={{ position: 'relative' }}>
+                                        <Label status={getLessonStatus(lesson.id)}>{getLessonStatus(lesson.id)}</Label>
                                         <h4>{getFirstPartString(lesson.description)}</h4>
                                         <h1>{getSecondPartString(lesson.description)}</h1>
                                         <h5>{lesson.title}</h5>

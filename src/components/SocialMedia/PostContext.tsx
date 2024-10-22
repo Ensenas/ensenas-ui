@@ -1,22 +1,23 @@
-/* eslint-disable no-unused-vars */
-import React, { createContext, ReactNode,useContext, useState } from 'react'
+// PostContext.tsx
+import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react'
+import axios from 'axios'
 
 export interface Post {
     id: number
-    text: string
+    title: string
+    content: string
     videoUrl: string
-    date: string
+    created_at: string
     user: {
-        name: string
+        name: string,
+        surname: string
         avatar: string
     }
-    likes: number
-    comments: number
 }
 
 interface PostContextType {
     posts: Post[]
-    addPost: (post: Omit<Post, 'id' | 'date' | 'likes' | 'comments'>) => void
+    addPost: (post: Omit<Post, 'id' | 'created_at'>) => Promise<void>
 }
 
 const PostContext = createContext<PostContextType | undefined>(undefined)
@@ -30,42 +31,47 @@ export const usePostContext = () => {
 }
 
 export const PostProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-    const [posts, setPosts] = useState<Post[]>([
-        {
-            id: 1,
-            text: 'Just finished my first React project! It\'s been a great learning experience.',
-            videoUrl: 'https://example.com/video1.mp4',
-            date: '2023-05-15T10:30:00Z',
-            user: {
-                name: 'Jane Doe',
-                avatar: 'https://i.pravatar.cc/150?img=1'
-            },
-            likes: 15,
-            comments: 3
-        },
-        {
-            id: 2,
-            text: 'Beautiful sunset at the beach today. Nature never fails to amaze me!',
-            videoUrl: 'https://example.com/video2.mp4',
-            date: '2023-05-14T19:45:00Z',
-            user: {
-                name: 'John Smith',
-                avatar: 'https://i.pravatar.cc/150?img=2'
-            },
-            likes: 32,
-            comments: 7
-        }
-    ])
+    const [posts, setPosts] = useState<Post[]>([])
 
-    const addPost = (newPost: Omit<Post, 'id' | 'date' | 'likes' | 'comments'>) => {
-        const post: Post = {
-            ...newPost,
-            id: posts.length + 1,
-            date: new Date().toISOString(),
-            likes: 0,
-            comments: 0
+    // Fetch posts from the API
+    useEffect(() => {
+        const fetchPosts = async () => {
+            try {
+                const response = await axios.get('/ens-api/posts/posts')
+                const data: Post[] = response.data
+                setPosts(data)
+            } catch (error) {
+                console.error('Error fetching posts:', error)
+            }
         }
-        setPosts(prevPosts => [post, ...prevPosts])
+
+        fetchPosts()
+    }, [])
+
+    // Add a new post to the API
+    const addPost = async (newPost: Omit<Post, 'id' | 'created_at'>) => {
+        const token = localStorage.getItem('authToken')
+        if (!token) {
+            console.error('No se encontró el token JWT, el usuario no está autenticado.')
+            return
+        }
+        try {
+            const response = await axios.post(
+                '/ens-api/posts/create-post',
+                newPost,
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            )
+
+            const createdPost: Post = response.data
+            setPosts(prevPosts => [createdPost, ...prevPosts])
+        } catch (error) {
+            console.error('Error adding post:', error)
+        }
     }
 
     return (

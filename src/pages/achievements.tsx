@@ -7,6 +7,7 @@ import React, { useEffect, useState } from 'react'
 import HomeLayout from '../components/HomeLayout/HomeLayout'
 import ProtectedRoute from '../components/ProtectedRoute'
 import LoadingSpinner from '../components/Spinner/Spinner'
+import { Lesson, useNavigation } from '../context/NavigationLearningContext'
 import {
   AchievementCard,
   AchievementsGrid,
@@ -21,31 +22,35 @@ import {
 // Componente principal
 const MisLogros: React.FC = () => {
   const router = useRouter()
-  const [achievements, setAchievements] = useState<any[]>([])
-  const [loading, setLoading] = useState<boolean>(true)
+  const [achievements, setAchievements] = useState<Lesson[]>([])
+  const [loading, setLoading] = useState<boolean>(false)
+  const { lessons, userProgress } = useNavigation()
 
 
   useEffect(() => {
-    const fetchAchievements = async () => {
-      try {
-        const response = await axios.get('/ens-api/lessons')
-        const achievementsList = response.data.map((lesson: any) => ({
-          id: lesson.id,
-          title: lesson.title,
-          description: lesson.description,
-          order: lesson.order
-        }))
-        achievementsList.sort((a, b) => a.order < b.order)
-        achievementsList[0].completed = true
-        setAchievements(achievementsList)
-      } catch (error) {
-        console.error('Error fetching units:', error)
-      } finally {
-        setLoading(false) // Termina la carga, incluso si hay error
+    const lessonList = lessons?.sort((a, b) => {
+      const firstLetterA = a.title.charAt(0).toUpperCase()
+      const firstLetterB = b.title.charAt(0).toUpperCase()
+      
+      const order = ['B', 'I', 'A']
+      const indexA = order.indexOf(firstLetterA)
+      const indexB = order.indexOf(firstLetterB)
+
+      return indexA - indexB // Ordena según el índice
+    }) || []
+
+    // Filtrar lecciones y asociar progreso
+    const achievementsWithProgress = lessonList.map((lesson) => {
+      const progress = userProgress?.find((progress) => progress.challenge.id === lesson.id)
+      return {
+        ...lesson,
+        completed: progress?.completed || false // Asigna el estado de completado
       }
-    }
-    fetchAchievements()
-  }, [])
+    })
+
+    setAchievements(achievementsWithProgress)
+    setLoading(false) // Termina la carga después de obtener los logros
+  }, [lessons, userProgress])
 
   const getFirstPartString = (string: string): string | undefined => {
     return string.split(':')[0]?.trim()

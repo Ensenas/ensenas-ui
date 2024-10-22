@@ -28,7 +28,7 @@ export const VideoContainer = styled.div`
 `
 
 export const TestButton = styled.button`
-  background-color: #007bff;
+  background-color: #0567b1;
   color: white;
   border: none;
   border-radius: 5px;

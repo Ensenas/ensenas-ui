@@ -1,12 +1,14 @@
 /* eslint-disable no-console */
 /* eslint-disable no-unused-vars */
 import axios from 'axios'
+import router from 'next/router'
 import React, { useEffect } from 'react'
 
 import HomeLayout from '../../../../../../../../../components/HomeLayout/HomeLayout'
 import ProtectedRoute from '../../../../../../../../../components/ProtectedRoute'
 import VideoStreamRemoto from '../../../../../../../../../components/Recorder/VideoStreamRemoto'
 import { useNavigation } from '../../../../../../../../../context/NavigationLearningContext'
+import { BackButton } from '../../../../../../../../../styles/Learning.styles'
 import {
     InstructionText,
     LessonTitle, Section, Title
@@ -65,11 +67,25 @@ const LessonTest: React.FC<LessonProps> = () => {
         updateChallengeProgress('complete')
     }
 
+    const handleGoBack = () => {
+        if (currentUnit && currentLevel && currentLesson) {
+            router.push(`/learning/levels/${currentLevel?.description}/units/${currentUnit?.description}
+            /lessons/${currentLesson.description}`)
+        } else {
+            console.error('currentLevel es null.')
+        }
+    }
+
     return (
         <ProtectedRoute>
             <HomeLayout activePage={'/learning'}>
                 <Section>
-                    <Title>{currentLesson?.title}</Title>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <Title>{currentLesson?.title}</Title>
+                        <BackButton onClick={handleGoBack}>
+                        Volver atrás
+                        </BackButton>
+                    </div>
                     <LessonTitle>
                         Deberás realizar con sus manos la siguiente seña:
                         <div style={{ color: '#0567b1', marginLeft: 10 }}>{currentLesson?.description}</div>

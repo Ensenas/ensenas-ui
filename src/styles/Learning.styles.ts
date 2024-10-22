@@ -68,6 +68,20 @@ export const UnitTitle = styled.h2`
   font-size: 1.5rem;
   cursor: pointer;
 `
+export const Label = styled.div<{ status: string }>`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: ${({ status }) => {
+    if (status === 'Completado') return '#41991b'
+    if (status === 'En Progreso') return '#d9c103'
+    return '#d72828' // Para pendiente
+  }};
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 0.8rem;
+`
 
 export const LessonCard = styled.a<{ backgroundColor: string }>`
   display: block;
@@ -178,4 +192,18 @@ export const CompletedLessonDescription = styled.p`
   margin: 0;
   font-size: 0.8em;
   color: #666;
+`
+
+export const BackButton = styled.button`
+  background-color: #0567b1; /* Color de fondo */
+  color: white; /* Color del texto */
+  border: none; /* Sin borde */
+  border-radius: 5px; /* Bordes redondeados */
+  padding: 10px 15px; /* Espaciado interno */
+  cursor: pointer; /* Cambia el cursor al pasar por encima */
+  transition: background 0.3s; /* Transición para el efecto hover */
+
+  &:hover {
+    background-color: #045a9a; /* Color de fondo al pasar el mouse */
+  }
 `

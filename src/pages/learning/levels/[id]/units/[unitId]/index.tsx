@@ -7,8 +7,10 @@ import React, { useEffect, useState } from 'react'
 import HomeLayout from '../../../../../../components/HomeLayout/HomeLayout'
 import ProtectedRoute from '../../../../../../components/ProtectedRoute'
 import LoadingSpinner from '../../../../../../components/Spinner/Spinner'
-import { Lesson, useNavigation } from '../../../../../../context/NavigationLearningContext'
+import { Lesson, Level, useNavigation } from '../../../../../../context/NavigationLearningContext'
 import {
+    BackButton,
+    Label,
     LessonCard,
     LessonItem,
     Section,
@@ -49,7 +51,7 @@ const UnitLessons: React.FC = () => {
             try {
                 const response = await axios.get('/ens-api/users/challenge-progress', {
                     headers: {
-                        Authorization: `Bearer ${token}`
+                        Authorization: `bearer ${token}`
                     }
                 })
                 setUserProgress(response.data)
@@ -88,18 +90,42 @@ const UnitLessons: React.FC = () => {
         return '#f0f0f0' // Color por defecto si no hay progreso
     }
 
+    const getLessonStatus = (lessonId: number) => {
+        const progress = userProgress.find((progress) => progress.challenge.id === lessonId)
+        if (progress) {
+            if (progress.completed) return 'Completado'
+            if (progress.started) return 'En Progreso'
+        }
+        return 'Pendiente'
+    }
+
+    const handleGoBack = () => {
+        if (currentLevel) {
+            setCurrentUnit(null)
+            router.push(`/learning/levels/${currentLevel.description}`)
+        } else {
+            console.error('currentLevel es null.')
+        }
+    }
+
     return (
         <ProtectedRoute>
             <HomeLayout activePage={'/learning'}>
                 <Section>
-                    <Title>Lecciones de la Unidad</Title>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <Title>Lecciones de la Unidad</Title>
+                        <BackButton onClick={handleGoBack}>
+                        Volver atrás
+                        </BackButton>
+                    </div>
                     <div>
                         {isLoading ? (
                             <LoadingSpinner /> // Muestra el spinner mientras se está cargando
                         ) : (
                             filteredLessons?.map(lesson => (
                                 <LessonItem key={lesson.id} onClick={() => handleLessonClick(lesson)}>
-                                    <LessonCard backgroundColor={getLessonCardColor(lesson.id)}>
+                                    <LessonCard backgroundColor={getLessonCardColor(lesson.id)} style={{ position: 'relative' }}>
+                                        <Label status={getLessonStatus(lesson.id)}>{getLessonStatus(lesson.id)}</Label>
                                         <h4>{getFirstPartString(lesson.description)}</h4>
                                         <h1>{getSecondPartString(lesson.description)}</h1>
                                         <h5>{lesson.title}</h5>

@@ -26,7 +26,22 @@ export interface Lesson {
   description: string,
   detailedDescription: string,
   order: number,
+  completed?: boolean,
   videoSrc: string
+}
+
+interface Challenge {
+  id: number;
+  description: string;
+  video: string;
+  title: string;
+}
+
+interface UserChallengeProgress {
+  id: string;
+  challenge: Challenge;
+  started: boolean;
+  completed: boolean;
 }
 
 
@@ -49,6 +64,8 @@ interface NavigationLearningContextType {
   setHasShownModal: (hsm: boolean | null) => void;
   test: boolean | null;
   setTest: (test: boolean | null) => void;
+  userProgress: [UserChallengeProgress] | null;
+  setUserProgress: (userProgress: [UserChallengeProgress] | null) => void
 }
 
 const NavigationLearningContext = createContext<NavigationLearningContextType | undefined>(undefined)
@@ -93,6 +110,10 @@ export const NavigationProvider: React.FC<{ children: ReactNode }> = ({ children
     return isBrowser ? JSON.parse(localStorage.getItem('test') || 'null') : null
   })
 
+  const [userProgress, setUserProgress] = useState<[UserChallengeProgress] | null>(() => {
+    return isBrowser ? JSON.parse(localStorage.getItem('userProgress') || 'null') : null
+  })
+
   useEffect(() => {
     // Guarda el estado en localStorage cada vez que cambie
     localStorage.setItem('currentLevel', JSON.stringify(currentLevel))
@@ -104,7 +125,8 @@ export const NavigationProvider: React.FC<{ children: ReactNode }> = ({ children
     localStorage.setItem('loading', JSON.stringify(isLoading))
     localStorage.setItem('hasShownModal', JSON.stringify(hasShownModal))
     localStorage.setItem('test', JSON.stringify(test))
-  }, [currentLevel, currentUnit, currentLesson, hasShownModal, levels, units, lessons, isLoading, test])
+    localStorage.setItem('userProgress', JSON.stringify(userProgress))
+  }, [currentLevel, currentUnit, currentLesson, hasShownModal, levels, units, lessons, isLoading, test, userProgress])
 
 
   useEffect(() => {
@@ -184,12 +206,36 @@ export const NavigationProvider: React.FC<{ children: ReactNode }> = ({ children
     return string.split(':')[1]?.trim().toLowerCase()
   }
 
+  useEffect(() => {
+    // Obtener el progreso de los desafíos del usuario
+    const fetchUserProgress = async () => {
+        const token = localStorage.getItem('authToken')
+        if (!token) {
+            console.error('No se encontró el token JWT, el usuario no está autenticado.')
+            return
+        }
+
+        try {
+            const response = await axios.get('/ens-api/users/challenge-progress', {
+                headers: {
+                    Authorization: `bearer ${token}`
+                }
+            })
+            setUserProgress(response.data)
+        } catch (error) {
+            console.error('Error al obtener el progreso del desafío:', error)
+        }
+    }
+
+    fetchUserProgress()
+}, [])
+
   return (
     <NavigationLearningContext.Provider
       value={{
         currentLevel, setCurrentLevel, currentUnit, setCurrentUnit, currentLesson, setCurrentLesson,
         levels, setLevels, units, setUnits, lessons, setLessons,
-        isLoading, setIsLoading, hasShownModal, setHasShownModal, test, setTest
+        isLoading, setIsLoading, hasShownModal, setHasShownModal, test, setTest, userProgress, setUserProgress
       }}
     >
       {children}

@@ -1,34 +1,27 @@
-import { Heart, MessageCircle, Share2 } from 'lucide-react'
+// FeedContainer.tsx
 import React from 'react'
 import styled from 'styled-components'
-
 import { usePostContext } from './PostContext'
 
-const FeedContainer = styled.div`
+const FeedContainerStyled = styled.div`
   max-width: 600px;
   margin: 0 auto;
   padding: 20px;
 `
 
-const Post = styled.div`
-  background-color: white;
+const PostItem = styled.div`
+  background-color: #ffffff;
+  padding: 20px;
+  margin-bottom: 20px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin-bottom: 20px;
-  padding: 20px;
 `
 
 const PostHeader = styled.div`
   display: flex;
+  justify-content: space-between;
   align-items: center;
   margin-bottom: 10px;
-`
-
-const Avatar = styled.img`
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  margin-right: 10px;
 `
 
 const UserInfo = styled.div`
@@ -38,86 +31,53 @@ const UserInfo = styled.div`
 
 const Username = styled.span`
   font-weight: bold;
+  font-size: 16px;
 `
 
 const PostDate = styled.span`
-  font-size: 12px;
-  color: #65676b;
+  font-size: 14px;
+  color: #999;
 `
 
-const PostText = styled.p`
-  font-size: 16px;
-  line-height: 1.5;
+const PostTitle = styled.h3`
+  font-size: 20px;
+  color: #333;
   margin-bottom: 10px;
+`
+
+const PostContent = styled.p`
+  font-size: 16px;
+  color: #666;
 `
 
 const PostVideo = styled.video`
   max-width: 100%;
-  border-radius: 4px;
-  margin-bottom: 10px;
+  margin-top: 10px;
 `
 
-const PostActions = styled.div`
-  display: flex;
-  justify-content: space-between;
-  border-top: 1px solid #e4e6eb;
-  padding-top: 10px;
-`
-
-const ActionButton = styled.button`
-  display: flex;
-  align-items: center;
-  background: none;
-  border: none;
-  color: #65676b;
-  font-size: 14px;
-  cursor: pointer;
-  padding: 5px 10px;
-  border-radius: 4px;
-
-  &:hover {
-    background-color: #f2f3f5;
-  }
-
-  svg {
-    margin-right: 5px;
-  }
-`
-
-export default function PostFeed() {
+export default function FeedContainer() {
   const { posts } = usePostContext()
-
+  console.log(posts)
   return (
-    <FeedContainer>
+    <FeedContainerStyled>
       {posts.map((post) => (
-        <Post key={post.id}>
+        <PostItem key={post.id}>
           <PostHeader>
-            <Avatar src={post.user.avatar} alt={post.user.name} />
             <UserInfo>
-              <Username>{post.user.name}</Username>
-              <PostDate>{new Date(post.date).toLocaleString()}</PostDate>
+              <Username>{post.user.name} {post.user.surname}</Username>
+              <PostDate>{new Date(Date.parse(post.created_at)).toLocaleString()}</PostDate>
             </UserInfo>
           </PostHeader>
-          <PostText>{post.text}</PostText>
+          <PostTitle>{post.title}</PostTitle>
+          <PostContent>{post.content}</PostContent>
           {post.videoUrl && (
             <PostVideo controls>
               <source src={post.videoUrl} type="video/mp4" />
               Your browser does not support the video tag.
             </PostVideo>
           )}
-          <PostActions>
-            <ActionButton>
-              <Heart size={18} /> {post.likes} Likes
-            </ActionButton>
-            <ActionButton>
-              <MessageCircle size={18} /> {post.comments} Comments
-            </ActionButton>
-            <ActionButton>
-              <Share2 size={18} /> Share
-            </ActionButton>
-          </PostActions>
-        </Post>
+        </PostItem>
       ))}
-    </FeedContainer>
+    </FeedContainerStyled>
   )
 }

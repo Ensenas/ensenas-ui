@@ -24,7 +24,7 @@ const ContentContainer = styled.div`
 
 const Title = styled.h2<{ isSuccess: boolean }>`
   font-size: 1.5rem;
-  color: ${props => props.isSuccess ? '#38a169' : '#e53e3e'};
+  color: ${props => props.isSuccess ? '#38a169' : '#d72828'};
   margin-bottom: 1rem;
 `
 
@@ -48,18 +48,18 @@ const Button = styled.button`
 `
 
 const PrimaryButton = styled(Button)`
-  background-color: #3490dc;
+  background-color: #0567b1;
   color: white;
 
   &:hover {
-    background-color: #2779bd;
+    background-color: #024f8a;
   }
 `
 
 const SecondaryButton = styled(Button)`
   background-color: #f1f5f8;
-  color: #3490dc;
-  border: 1px solid #3490dc;
+  color: #0567b1;
+  border: 1px solid #0567b1;
 
   &:hover {
     background-color: #e2e8f0;

@@ -228,7 +228,7 @@ export const NavigationProvider: React.FC<{ children: ReactNode }> = ({ children
     }
 
     fetchUserProgress()
-}, [])
+}, [userProgress])
 
   return (
     <NavigationLearningContext.Provider

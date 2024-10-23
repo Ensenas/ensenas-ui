@@ -23,7 +23,7 @@ interface LessonProps {
 }
 
 const LessonTest: React.FC<LessonProps> = () => {
-    const { currentLevel, currentUnit, currentLesson } = useNavigation()
+    const { currentLevel, currentUnit, currentLesson, userProgress, setUserProgress } = useNavigation()
 
     useEffect(() => {
         // Iniciar el challenge cuando se cargue la lección
@@ -35,6 +35,8 @@ const LessonTest: React.FC<LessonProps> = () => {
     // Función para enviar solicitud al backend y actualizar el progreso del challenge
     const updateChallengeProgress = async (action: 'start' | 'complete') => {
         if (!currentLesson) return
+        
+        setUserProgress(userProgress)
 
         // Obtener el token JWT del localStorage
         const token = localStorage.getItem('authToken')

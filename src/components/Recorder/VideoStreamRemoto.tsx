@@ -55,10 +55,16 @@ export default function VideoStreamRemoto({ level, unit, lesson, onComplete }) {
     const outputRef = useRef<HTMLImageElement>(null)
     const router = useRouter()
     const { currentUnit } = useNavigation()
+    const lessonsMapping = {
+        "yo trabajo de medico": "yo trabajar medico",
+        "mi hermana estudia en la universidad": "mi hermana estudiar universidad",
+        "mi color favorito es el rojo": "mi color favorito rojo",
+        "el-ella tiene hambre": "el-ella hambre"
+    }
 
     useEffect(() => {
         if (lesson && lesson.description) {
-            const fraseInicial = findWord(lesson.description).split(' ')
+            const fraseInicial = lessonsMapping[findWord(lesson.description)].split(' ')
             setExpectedFrase(fraseInicial)
         }
     }, [lesson.description])
@@ -124,7 +130,7 @@ export default function VideoStreamRemoto({ level, unit, lesson, onComplete }) {
                 const dataURL = canvas.toDataURL('image/jpeg', 0.5)
                 if (socket) {
                     const unit: string | undefined = findUnit()
-                    const word: string | undefined = findWord(lesson.description)
+                    const word: string | undefined = lessonsMapping[findWord(lesson.description)]
 
                     socket.emit('corregir_video_stream', { frase: word, image: dataURL, reset: reset })
                     setReset(false)

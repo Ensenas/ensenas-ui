@@ -1,6 +1,7 @@
+/* eslint-disable no-unused-vars */
+import fs from 'fs'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import nodemailer from 'nodemailer'
-import fs from 'fs'
 import path from 'path'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -17,8 +18,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             secure: process.env.SMTP_SECURE === 'true',
             auth: {
                 user: process.env.SMTP_USER,
-                pass: process.env.SMTP_PASS,
-            },
+                pass: process.env.SMTP_PASS
+            }
         })
 
         const resetToken = generateResetToken()
@@ -38,7 +39,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             to: email,
             subject: 'Reestablecer Contraseña - Enseñas',
             text: `Haz clic en el siguiente enlace para reestablecer tu contraseña: ${resetLink}`,
-            html: htmlContent,
+            html: htmlContent
         })
 
         res.status(200).json({ message: 'Email sent successfully' })

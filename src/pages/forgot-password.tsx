@@ -1,8 +1,8 @@
 'use client'
 
-import { useState } from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('')
@@ -20,7 +20,7 @@ export default function ForgotPasswordPage() {
       const response = await fetch('/api/send-email', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email })
       })
 
       const data = await response.json()

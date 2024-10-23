@@ -72,7 +72,7 @@ const Contact: React.FC = () => {
           </FormGroup>
           <FormGroup>
             <Label>Apellido</Label>
-            <Input type="text" name="lastName" value={formData.surname} onChange={handleChange} required />
+            <Input type="text" name="surname" value={formData.surname} onChange={handleChange} required />
           </FormGroup>
           <FormGroup>
             <Label>Email</Label>

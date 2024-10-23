@@ -1,6 +1,7 @@
+/* eslint-disable no-unused-vars */
 // PostContext.tsx
-import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react'
 import axios from 'axios'
+import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react'
 
 export interface Post {
     id: number

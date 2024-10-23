@@ -3,12 +3,12 @@
     text-decoration: none;
     background-color: #fff;
     padding: 10px 15px;
-    border-radius: 0.5rem;
+    border-radius: 6px;
+    border: 1px solid #9610ba;
     border: none;
     cursor: pointer;
     color: #9610ba;
-    font-weight: 600;
-    font-size: 16px;
+    font-size: 0.9em;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -16,34 +16,7 @@
     transition: background-color 0.3s ease;
 
     &:hover {
-        transform: scale(1.1);
         background-color: #9610ba;
         color: #fff;
     }
 }
-
-// padding: 10px 15px;
-// border: none;
-// border-radius: 6px;
-// color: #fff;
-// font-size: 0.9em;
-// cursor: pointer;
-// transition: background-color 0.3s ease;
-// color: #9610ba;
-// /* Color del texto azul */
-// background-color: #fff;
-// /* Fondo blanco */
-// border: 1px solid #9610ba;
-// /* Borde azul */
-
-// &:hover {
-//     background-color: #9610ba;
-//     /* Fondo azul al hacer hover */
-//     color: #fff;
-//     /* Color del texto blanco */
-// }
-
-// &:disabled {
-//     background-color: #cccccc;
-//     cursor: not-allowed;
-// }

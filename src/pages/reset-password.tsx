@@ -1,8 +1,9 @@
+/* eslint-disable no-unused-vars */
 'use client'
 
-import { useState } from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
+import { useState } from 'react'
 
 export default function ResetPasswordPage() {
     const [password, setPassword] = useState('')
@@ -17,7 +18,7 @@ export default function ResetPasswordPage() {
         const response = await fetch('/api/reset-password', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ password: password, token: token }),
+            body: JSON.stringify({ password: password, token: token })
         })
 
         const data = await response.json()

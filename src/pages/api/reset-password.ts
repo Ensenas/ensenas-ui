@@ -26,6 +26,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(200).json({ success: 'Tu contraseña ha sido restablecida exitosamente.' })
     } catch (error) {
         console.error('Error al restablecer la contraseña:', error)
-        return res.status(500).json({ error: 'Ocurrió un error al restablecer tu contraseña. Por favor, intenta de nuevo más tarde.' })
+        return res.status(500).json({ error: `Ocurrió un error al restablecer tu contraseña. 
+            Por favor, intenta de nuevo más tarde.` })
     }
 }

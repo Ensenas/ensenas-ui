@@ -1,6 +1,7 @@
 // CreatePostContainer.tsx
 import React, { useRef, useState } from 'react'
 import styled from 'styled-components'
+
 import { usePostContext } from './PostContext'
 
 const CreatePostContainer = styled.div`
@@ -13,11 +14,12 @@ const CreatePostContainer = styled.div`
 `
 
 const TitleInput = styled.input`
-  font-size: 24px;
+  font-size: 20px;
   margin-bottom: 20px;
   padding: 8px;
   border: 1px solid #ddd;
   border-radius: 4px;
+  width: 60%
 `
 
 const Form = styled.form`
@@ -59,7 +61,7 @@ const VideoPreview = styled.video`
 `
 
 export default function CreatePost() {
-  const [title, setTitle] = useState('Create a New Post')
+  const [title, setTitle] = useState('Crea una nueva publicación')
   const [content, setContent] = useState('')
   const [video, setVideo] = useState<File | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -98,7 +100,7 @@ export default function CreatePost() {
     await addPost(newPost)
 
     // Reset form after submission
-    setTitle('Create a New Post')
+    setTitle('Crea una nueva publicación')
     setContent('')
     setVideo(null)
     if (fileInputRef.current) {
@@ -118,7 +120,7 @@ export default function CreatePost() {
         <TextArea
           value={content}
           onChange={handleContentChange}
-          placeholder="What's on your mind?"
+          placeholder="¿Qué estás pensando?"
           required
         />
         <FileInput
@@ -133,7 +135,7 @@ export default function CreatePost() {
             Your browser does not support the video tag.
           </VideoPreview>
         )}
-        <Button type="submit">Post</Button>
+        <Button type="submit">Publicar</Button>
       </Form>
     </CreatePostContainer>
   )

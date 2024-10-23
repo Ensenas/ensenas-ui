@@ -100,7 +100,6 @@ const Contact: React.FC = () => {
         </Section>
       </HomeLayout>
     </ProtectedRoute>
-    
   )
 }
 

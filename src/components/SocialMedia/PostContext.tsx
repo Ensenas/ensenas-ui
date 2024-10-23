@@ -18,7 +18,7 @@ export interface Post {
 
 interface PostContextType {
     posts: Post[]
-    addPost: (post: Omit<Post, 'id' | 'created_at'>) => Promise<void>
+    addPost: (post: Omit<Post, 'id' | 'created_at' | 'videoUrl'>, videoFile: File | null) => Promise<void>
 }
 
 const PostContext = createContext<PostContextType | undefined>(undefined)
@@ -50,24 +50,40 @@ export const PostProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }, [])
 
     // Add a new post to the API
-    const addPost = async (newPost: Omit<Post, 'id' | 'created_at'>) => {
+    const addPost = async (newPost: Omit<Post, 'id' | 'created_at' | 'videoUrl'>, videoFile: File | null) => {
         const token = localStorage.getItem('authToken')
         if (!token) {
             console.error('No se encontró el token JWT, el usuario no está autenticado.')
             return
         }
+
         try {
+            const formData = new FormData()
+
+            // Añadir los campos de texto al FormData
+            formData.append('title', newPost.title)
+            formData.append('content', newPost.content)
+            formData.append('userName', newPost.user.name)
+            formData.append('userSurname', newPost.user.surname)
+
+            // Añadir el archivo de video si existe
+            if (videoFile) {
+                formData.append('video', videoFile)
+            }
+
+            // Enviar la solicitud al backend para crear el post
             const response = await axios.post(
                 '/ens-api/posts/create-post',
-                newPost,
+                formData,
                 {
                     headers: {
-                        'Content-Type': 'application/json',
+                        'Content-Type': 'multipart/form-data',
                         Authorization: `Bearer ${token}`
                     }
                 }
             )
 
+            // El backend debería devolver el post creado con el videoUrl de S3
             const createdPost: Post = response.data
             setPosts(prevPosts => [createdPost, ...prevPosts])
         } catch (error) {

@@ -97,7 +97,7 @@ export default function CreatePost() {
       }
     }
 
-    await addPost(newPost)
+    await addPost(newPost, video)
 
     // Reset form after submission
     setTitle('Crea una nueva publicación')

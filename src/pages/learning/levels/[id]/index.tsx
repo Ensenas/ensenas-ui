@@ -10,6 +10,7 @@ import LoadingSpinner from '../../../../components/Spinner/Spinner'
 import { Unit, useNavigation } from '../../../../context/NavigationLearningContext'
 import {
     BackButton,
+    Label,
     Section,
     Title,
     UnitCard
@@ -19,7 +20,7 @@ const LevelUnits: React.FC = ({ }) => {
     const [filteredUnits, setFilteredUnits] = useState<Unit[]>()
     const [lastSelectedUnit, setLastSelectedUnit] = useState<string | null>(null) // Estado para la última unidad seleccionada
     const { currentLevel, setCurrentLevel, currentUnit, setCurrentUnit, currentLesson, setCurrentLesson,
-        units, isLoading
+        units, lessons, userProgress, isLoading
     } = useNavigation()
 
     useEffect(() => {
@@ -74,6 +75,27 @@ const LevelUnits: React.FC = ({ }) => {
         router.push('/learning')
     }
 
+    const getUnitStatus = (unit: Unit) => {
+
+        var unitLessons = lessons?.filter(lesson => lesson.title.startsWith(unit.title))
+
+        // Verificar el progreso de cada lección en userProgress
+        const allLessonsCompleted = unitLessons?.every(lesson => {
+            const progress = userProgress?.find(progress => progress.challenge.id === lesson.id)
+            return progress && progress.completed // Verifica si la lección está completada
+        })
+
+        const anyLessonStarted = unitLessons?.some(lesson => {
+            const progress = userProgress?.find(progress => progress.challenge.id === lesson.id)
+            return progress && progress.started // Verifica si hay alguna lección en progreso
+        })
+
+        // Devuelve el estado basado en el progreso de las lecciones
+        if (allLessonsCompleted) return 'Completado'
+        if (anyLessonStarted) return 'En Progreso'
+        return 'Pendiente'
+    }
+
     return (
         <ProtectedRoute>
             <HomeLayout activePage={'/learning'}>
@@ -90,7 +112,8 @@ const LevelUnits: React.FC = ({ }) => {
                         ) : (
                             filteredUnits?.map(unit => (
                                 <div key={unit.id} onClick={() => handleUnitClick(unit)}>
-                                    <UnitCard>
+                                    <UnitCard style={{ position: 'relative' }}>
+                                        <Label status={getUnitStatus(unit)}>{getUnitStatus(unit)}</Label>
                                         <h1>{unit.description}</h1>
                                         <h3>{unit.title}</h3>
                                     </UnitCard>

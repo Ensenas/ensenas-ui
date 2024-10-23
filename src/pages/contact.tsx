@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react'
 
 import HomeLayout from '../components/HomeLayout/HomeLayout'
+import ProtectedRoute from '../components/ProtectedRoute'
 import { Button, FormGroup, Input, Label, Section, TextArea, Title } from '../styles/Contact.styles'
 
 const Contact: React.FC = () => {
@@ -62,41 +63,43 @@ const Contact: React.FC = () => {
   }
 
   return (
-    <HomeLayout activePage="/contact">
-      <Section>
-        <Title>Contactanos</Title>
-        <form onSubmit={handleSubmit}>
-          <FormGroup>
-            <Label>Nombre</Label>
-            <Input type="text" name="name" value={formData.name} onChange={handleChange} required />
-          </FormGroup>
-          <FormGroup>
-            <Label>Apellido</Label>
-            <Input type="text" name="lastName" value={formData.surname} onChange={handleChange} required />
-          </FormGroup>
-          <FormGroup>
-            <Label>Email</Label>
-            <Input type="email" name="email" value={formData.email} onChange={handleChange} required />
-          </FormGroup>
-          <FormGroup>
-            <Label>Mensaje</Label>
-            <TextArea 
-              name="message" 
-              value={formData.message} 
-              onChange={handleChange} 
-              required 
-            />
-          </FormGroup>
-          <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
-            <Button type="submit" disabled={loading}>
-              {loading ? 'Enviando...' : 'Enviar'}
-            </Button>
-          </div>
-          {success && <p>Mensaje enviado con éxito.</p>}
-          {error && <p>Error: {error}</p>}
-        </form>
-      </Section>
-    </HomeLayout>
+    <ProtectedRoute>
+      <HomeLayout activePage="/contact">
+        <Section>
+          <Title>Contactanos</Title>
+          <form onSubmit={handleSubmit}>
+            <FormGroup>
+              <Label>Nombre</Label>
+              <Input type="text" name="name" value={formData.name} onChange={handleChange} required />
+            </FormGroup>
+            <FormGroup>
+              <Label>Apellido</Label>
+              <Input type="text" name="surname" value={formData.surname} onChange={handleChange} required />
+            </FormGroup>
+            <FormGroup>
+              <Label>Email</Label>
+              <Input type="email" name="email" value={formData.email} onChange={handleChange} required />
+            </FormGroup>
+            <FormGroup>
+              <Label>Mensaje</Label>
+              <TextArea 
+                name="message" 
+                value={formData.message} 
+                onChange={handleChange} 
+                required 
+              />
+            </FormGroup>
+            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+              <Button type="submit" disabled={loading}>
+                {loading ? 'Enviando...' : 'Enviar'}
+              </Button>
+            </div>
+            {success && <p>Mensaje enviado con éxito.</p>}
+            {error && <p>Error: {error}</p>}
+          </form>
+        </Section>
+      </HomeLayout>
+    </ProtectedRoute>
   )
 }
 

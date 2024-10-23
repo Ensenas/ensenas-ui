@@ -80,11 +80,9 @@ const UnitLessons: React.FC = () => {
     const getLessonCardColor = (lessonId: number) => {
         const progress = userProgress.find((progress) => progress.challenge.id === lessonId)
         if (progress) {
-            if (progress.started && !progress.completed) {
-                return '#b3b300'
-            }
+
             if (progress.completed) {
-                return '#9fe2bf'
+                return '#41991b4f'
             }
         }
         return '#f0f0f0' // Color por defecto si no hay progreso

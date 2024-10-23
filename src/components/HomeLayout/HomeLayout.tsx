@@ -22,7 +22,7 @@ export default function HomeLayout({ children, activePage }: { children: React.R
     { label: 'Mis Logros', icon: '/icons/achievement-icon.png', href: '/achievements' },
     { label: 'Estadísticas', icon: '/icons/statistics-icon.png', href: '/statistics' },
     { label: 'Suscripciones', icon: '/icons/suscription-icon.png', href: '/suscriptions' },
-    { label: 'Social Media', icon: '/icons/forum-icon.png', href: '/social' },
+    { label: 'Foro', icon: '/icons/forum-icon.png', href: '/social' },
     { label: 'Contactanos', icon: '/icons/contact-icon.png', href: '/contact' }
   ])
 

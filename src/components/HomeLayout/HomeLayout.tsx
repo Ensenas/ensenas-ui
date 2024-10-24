@@ -1,8 +1,8 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import React, { useEffect,useState } from 'react'
-
+import React, { useEffect, useState } from 'react'
+import { useSession } from 'next-auth/react'
 import HomeHeader from '../HomeHeader/HomeHeader'
 import { ContentContainer, HomePageWrapper, NavIcon, NavItem, SidebarContainer, SidebarNav } from './HomeLayout.styles'
 
@@ -14,7 +14,7 @@ interface NavItem {
 
 export default function HomeLayout({ children, activePage }: { children: React.ReactNode, activePage: string }) {
   const router = useRouter()
-
+  const { data: session } = useSession()
   const [navItems, setNavItems] = useState<NavItem[]>([
     { label: 'Inicio', icon: '/icons/home-icon.png', href: '/home' },
     { label: 'Mi Aprendizaje', icon: '/icons/learning-icon.png', href: '/learning' },
@@ -27,7 +27,7 @@ export default function HomeLayout({ children, activePage }: { children: React.R
   ])
 
   useEffect(() => {
-    const isPremium = JSON.parse(localStorage.getItem('premium') || 'false')
+    const isPremium = session?.user?.premium;
 
     if (isPremium) {
       setNavItems(prevItems => [

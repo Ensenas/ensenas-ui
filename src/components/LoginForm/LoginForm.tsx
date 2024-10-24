@@ -32,10 +32,17 @@ const LoginForm = () => {
     const { data: session, status } = useSession()
 
     useEffect(() => {
-        console.log('Session data:', session)
-        const token = localStorage.getItem('authToken')
-        if (status === 'authenticated' || token) {
-            router.push('/home')
+        console.log("Current status:", status)
+        console.log("Current session:", session)
+
+        if (status === 'authenticated' && session?.user?.email) {
+            console.log("Authentication successful")
+            if (session.user.accessToken) {
+                localStorage.setItem('authToken', session.user.accessToken)
+                router.push('/home')
+            } else {
+                console.error("Access token is missing from the session")
+            }
         }
     }, [session, status, router])
 
@@ -50,14 +57,7 @@ const LoginForm = () => {
     const handleGoogleClick = async () => {
         setIsLoading(true) // Inicia el estado de carga
         try {
-            const signInResponse = await signIn('google', {
-                redirect: false
-            })
-            if (signInResponse && !signInResponse.error) {
-                router.push('/home')
-            } else if (signInResponse?.error) {
-                setError('Error en la autenticación con Google')
-            }
+            await signIn('google', { callbackUrl: '/home' })
         } catch (error) {
             console.error('Error en la autenticación con Google:', error)
             setError('Error en la autenticación con Google')

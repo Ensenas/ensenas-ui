@@ -34,34 +34,10 @@ interface UserChallengeProgress {
 
 const UnitLessons: React.FC = () => {
     const [filteredLessons, setFilteredLessons] = useState<Lesson[]>()
-    const [userProgress, setUserProgress] = useState<UserChallengeProgress[]>([])
     const { currentLevel, setCurrentLevel, currentUnit, setCurrentUnit, currentLesson, setCurrentLesson,
-        lessons, isLoading
+        lessons, isLoading, userProgress
     } = useNavigation()
 
-    useEffect(() => {
-        // Obtener el progreso de los desafíos del usuario
-        const fetchUserProgress = async () => {
-            const token = localStorage.getItem('authToken')
-            if (!token) {
-                console.error('No se encontró el token JWT, el usuario no está autenticado.')
-                return
-            }
-
-            try {
-                const response = await axios.get('/ens-api/users/challenge-progress', {
-                    headers: {
-                        Authorization: `bearer ${token}`
-                    }
-                })
-                setUserProgress(response.data)
-            } catch (error) {
-                console.error('Error al obtener el progreso del desafío:', error)
-            }
-        }
-
-        fetchUserProgress()
-    }, [])
 
     useEffect(() => {
         if (currentUnit && currentLevel) {
@@ -78,7 +54,7 @@ const UnitLessons: React.FC = () => {
 
     // Función para determinar el color del LessonCard
     const getLessonCardColor = (lessonId: number) => {
-        const progress = userProgress.find((progress) => progress.challenge.id === lessonId)
+        const progress = userProgress?.find((progress) => progress.challenge.id === lessonId)
         if (progress) {
 
             if (progress.completed) {
@@ -89,7 +65,7 @@ const UnitLessons: React.FC = () => {
     }
 
     const getLessonStatus = (lessonId: number) => {
-        const progress = userProgress.find((progress) => progress.challenge.id === lessonId)
+        const progress = userProgress?.find((progress) => progress.challenge.id === lessonId)
         if (progress) {
             if (progress.completed) return 'Completado'
             if (progress.started) return 'En Progreso'

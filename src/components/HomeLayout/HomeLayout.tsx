@@ -18,6 +18,7 @@ export default function HomeLayout({ children, activePage }: { children: React.R
   const [navItems, setNavItems] = useState<NavItem[]>([
     { label: 'Inicio', icon: '/icons/home-icon.png', href: '/home' },
     { label: 'Mi Aprendizaje', icon: '/icons/learning-icon.png', href: '/learning' },
+    { label: 'Modo Libre', icon: '/icons/freeMode-icon.png', href: '/freeMode' },
     { label: 'Perfil', icon: '/icons/profile-icon.png', href: '/profile' },
     { label: 'Mis Logros', icon: '/icons/achievement-icon.png', href: '/achievements' },
     { label: 'Estadísticas', icon: '/icons/statistics-icon.png', href: '/statistics' },
@@ -26,17 +27,17 @@ export default function HomeLayout({ children, activePage }: { children: React.R
     { label: 'Contactanos', icon: '/icons/contact-icon.png', href: '/contact' }
   ])
 
-  useEffect(() => {
-    const isPremium = session?.user?.premium;
+  // useEffect(() => {
+  //   const isPremium = session?.user?.premium;
 
-    if (isPremium) {
-      setNavItems(prevItems => [
-        ...prevItems.slice(0, 2),
-        { label: 'Modo Libre', icon: '/icons/freeMode-icon.png', href: '/freeMode' },
-        ...prevItems.slice(2)
-      ])
-    }
-  }, [])
+  //   if (isPremium) {
+  //     setNavItems(prevItems => [
+  //       ...prevItems.slice(0, 2),
+  //       { label: 'Modo Libre', icon: '/icons/freeMode-icon.png', href: '/freeMode' },
+  //       ...prevItems.slice(2)
+  //     ])
+  //   }
+  // }, [])
 
   const handleNavigation = (href: string) => {
     router.push(href)

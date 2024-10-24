@@ -56,10 +56,10 @@ export default function VideoStreamRemoto({ level, unit, lesson, onComplete }) {
     const router = useRouter()
     const { currentUnit } = useNavigation()
     const lessonsMapping = {
-        "yo trabajo de medico": "yo trabajar medico",
-        "mi hermana estudia en la universidad": "mi hermana estudiar universidad",
-        "mi color favorito es el rojo": "mi color favorito rojo",
-        "el-ella tiene hambre": "el-ella hambre"
+        'yo trabajo de medico': 'yo trabajar medico',
+        'mi hermana estudia en la universidad': 'mi hermana estudiar universidad',
+        'mi color favorito es el rojo': 'mi color favorito rojo',
+        'el-ella tiene hambre': 'el-ella hambre'
     }
 
     useEffect(() => {

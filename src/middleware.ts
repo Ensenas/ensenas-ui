@@ -7,7 +7,7 @@ export default withAuth(
     const isAuthorized = req.nextauth?.token?.premium;
     if (
       (pathname.startsWith('/learning/levels/') && (pathname.includes('intermedio') || pathname.includes('avanzado'))) ||
-      pathname.includes('/freeMode') || pathname.includes('/contact')
+      pathname.includes('/freeMode') || pathname.includes('/social')
     ) {
       if (!isAuthorized) {
         return NextResponse.redirect(new URL('/access-denied', req.url));
@@ -24,5 +24,5 @@ export default withAuth(
 );
 
 export const config = {
-  matcher: ['/learning/levels/:path*', '/freeMode', '/contact']
+  matcher: ['/learning/levels/:path*', '/freeMode', '/social']
 };

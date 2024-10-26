@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useSession } from "next-auth/react"
 import Image from "next/image"
@@ -49,7 +49,7 @@ interface Subscription {
   price: string;
 }
 
-const Subscriptions: React.FC = () => {
+export default function Subscriptions() {
   const [subscriptions, setSubscriptions] = useState<Subscription[]>([])
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
@@ -61,20 +61,47 @@ const Subscriptions: React.FC = () => {
     type: null,
     content: "",
   })
+  const [isProcessingPayment, setIsProcessingPayment] = useState<boolean>(false)
   const router = useRouter()
 
   const { data: session, update } = useSession()
 
-
   const updatePlan = async (value: boolean) => {
     if (session) {
-      await update({
-        ...session,
-        user: {
-          ...session.user,
-          premium: value,
-        },
-      })
+      setIsProcessingPayment(true)
+      try {
+        await update({
+          ...session,
+          user: {
+            ...session.user,
+            premium: value,
+          },
+        })
+        await fetch(`/ens-api/users/register-payment`, {
+          method: 'POST',
+          body: JSON.stringify({
+            "suscriptionType": value ? 'PREMIUM' : 'BASIC'
+          }),
+          headers: {
+            'Content-Type': 'application/json',
+            "Authorization": `bearer ${session?.user.accessToken}`
+          }
+        })
+        setNotification({
+          content: value ? "Plan actualizado a Premium!" : "Plan cambiado a Básico",
+          isOpen: true,
+          type: "approved",
+        })
+      } catch (error) {
+        console.error("Error updating plan:", error)
+        setNotification({
+          content: "Error al actualizar el plan",
+          isOpen: true,
+          type: "failure",
+        })
+      } finally {
+        setIsProcessingPayment(false)
+      }
     }
   }
 
@@ -85,37 +112,33 @@ const Subscriptions: React.FC = () => {
         const status = urlParams.get("status");
 
         if (status === "approved") {
-          if (!session?.user?.premium) { // Verifica si no es premium
-            setNotification({
-              content: "Pago aprobado!",
-              isOpen: true,
-              type: "approved",
-            });
-            await updatePlan(true);
-
+          if (!session?.user?.premium) {
+            setIsProcessingPayment(true)
+            await updatePlan(true)
           }
         } else if (status === "failure") {
           setNotification({
             content: "Pago fallido!",
             isOpen: true,
             type: "failure",
-          });
+          })
         }
 
-        window.history.pushState({}, document.title, window.location.pathname);
+        window.history.pushState({}, document.title, window.location.pathname)
 
         setTimeout(() => {
-          setNotification({ isOpen: false, type: null, content: "" });
-        }, 5000);
+          setNotification({ isOpen: false, type: null, content: "" })
+        }, 5000)
       }
-    };
+    }
 
-    handlePaymentStatus();
-  }, [router, session]);
+    handlePaymentStatus()
+  }, [router, session])
 
   useEffect(() => {
     const fetchSubscriptions = () => {
       try {
+        console.log("session", session)
         const isPremium = session?.user?.premium
 
         const subs: Subscription[] = [
@@ -174,7 +197,6 @@ const Subscriptions: React.FC = () => {
 
   const handleConfirmCancel = async () => {
     if (selectedSubscription) {
-      console.log(`Cancelando suscripción: ${selectedSubscription.name}`)
       await updatePlan(false)
       setConfirmationVisible(false)
       setSelectedSubscription(null)
@@ -186,7 +208,7 @@ const Subscriptions: React.FC = () => {
     setSelectedSubscription(null)
   }
 
-  if (loading) return <LoadingSpinner />
+  if (loading || isProcessingPayment) return <LoadingSpinner />
   if (error) return <Section>{error}</Section>
 
   return (
@@ -246,5 +268,3 @@ const Subscriptions: React.FC = () => {
     </ProtectedRoute>
   )
 }
-
-export default Subscriptions

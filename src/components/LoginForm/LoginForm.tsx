@@ -86,7 +86,7 @@ const LoginForm = () => {
                 })
 
                 if (signInResponse?.error) {
-                    setError(signInResponse.error)
+                    setError('El usuario y/o la contraseña son incorrectos. ¡Probá de nuevo!')
                 } else if (signInResponse?.ok) {
                     router.push('/home')
                 } else {
@@ -97,7 +97,7 @@ const LoginForm = () => {
             }
         } catch (error) {
             console.error('Error de inicio de sesión:', error)
-            setError(`Error en el inicio de sesión: ${error} `)
+            setError(`El usuario y/o la contraseña son incorrectos. ¡Probá de nuevo!`)
         } finally {
             setIsLoading(false) // Detén el estado de carga
         }
@@ -151,7 +151,7 @@ const LoginForm = () => {
                                 ¿No tienes tu cuenta?
                             </InfoText>
 
-                            <Link href='/signup'>
+                            <Link href='/register'>
                                 ¡Regístrate!
                             </Link>
                         </InfoTextContainer>

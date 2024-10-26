@@ -30,8 +30,11 @@ export const authOptions: NextAuthOptions = {
             }
 
           })
+
+
           if (response) {
             let json = await response.json()
+
 
             if (json.status == 400 && json.message.includes('USER ALREADY REGISTERED')) {
               return {
@@ -110,12 +113,25 @@ export const authOptions: NextAuthOptions = {
           const data = await res.json()
 
           if (res.ok && data.access_token) {
+
+            let payments = await fetch(`${process.env.BACKEND_URL}/users/get-payment`, {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `bearer ${data.access_token}`
+              },
+            })
+
+            payments = await payments.json()
+            const lastPayment = payments.reduce((masNuevo, actual) => {
+              return new Date(actual.date) > new Date(masNuevo.date) ? actual : masNuevo;
+            });
             return {
               id: 'default-id',
               email: credentials?.email || '',
               name: data.name + ' ' + data.surname,
               accessToken: data.access_token,
-              premium: false // Set initial premium status
+              premium: lastPayment['suscription'] == "PREMIUM"
             } as User
           } else {
             return null

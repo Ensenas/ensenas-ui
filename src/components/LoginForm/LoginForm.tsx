@@ -135,7 +135,7 @@ const LoginForm = () => {
                             required
                         />
 
-                        <Link href="/forgot-password">
+                        <Link style={{ marginBottom: '16px' }} href="/forgot-password">
                             ¿Olvidaste tu contraseña?
                         </Link>
 
@@ -148,7 +148,7 @@ const LoginForm = () => {
 
                         <InfoTextContainer>
                             <InfoText>
-                                ¿No tienes tu cuenta?
+                                ¿No tenés tu cuenta?
                             </InfoText>
 
                             <Link href='/register'>

@@ -9,14 +9,18 @@ export const MainContainer = styled.div`
 `
 
 export const SignImage = styled.div`
-  background-image: url('/señasLogin.gif'); /* Ruta de la imagen */
-  background-position: center; /* Centra la imagen en el contenedor */
+  background-image: url('/señasLogin.gif');
+  background-position: center;
+  background-size: cover;
+  width: 40%;
+  height: 100%;
 
-  width: 40%; /* 50% del ancho total del contenedor */
-  height: 100%; /* 100% de la altura del contenedor */
+  @media (max-width: 1024px) {
+    width: 30%;
+  }
 
   @media (max-width: 768px) {
-    display: none; /* Oculta la imagen en pantallas más pequeñas */
+    display: none;
   }
 `
 
@@ -27,50 +31,72 @@ export const FormContainer = styled.div`
   align-items: center;
   height: 100vh;
   background-color: #f9f9f9;
-  width: 70%; /* 50% del ancho total del contenedor */
+  width: 60%;
+
+  @media (max-width: 1024px) {
+    width: 70%;
+  }
 
   @media (max-width: 768px) {
+    width: 100%;
     background-color: #fff;
   }
 `
+
 export const Form = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-evenly;
-  padding: 1rem 1.5rem;
+  padding: 2rem;
   transition: all 0.5s;
   background-color: #f7f9fa;
-  width: 60%;
-  height: 90%;
+  width: 80%;
+  max-width: 500px;
+  height: auto;
+  min-height: 500px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
   border-radius: 5px;
 
   @media (max-width: 1024px) {
-    width: 50%;
+    width: 90%;
   }
 
   @media (max-width: 768px) {
     width: 100%;
+    height: 100%;
     box-shadow: none;
+    justify-content: center;
+  }
+
+  @media (max-width: 480px) {
+    padding: 1rem;
   }
 `
 
 export const FormTitle = styled.h2`
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   color: #2d3c49;
   text-align: center;
   padding: 1rem;
+
+  @media (max-width: 768px) {
+    font-size: 1.5rem;
+  }
 `
 
 export const Link = styled(NextLink)`
   color: #2b3a47;
   align-self: flex-end;
   transition: all 0.5s;
-  font-size: 0.8rem;
-
+  font-size: 0.9rem;  
+  
   &:hover {
     color: #010606;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 0.8rem;
   }
 `
 
@@ -79,10 +105,21 @@ export const InfoTextContainer = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
-  margin-top: 1rem;
+  margin-top: 1.5rem;
+
+  @media (max-width: 480px) {
+    flex-direction: column;
+    margin-top: 1rem;
+  }
 `
 
 export const InfoText = styled.span`
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   margin-right: 0.5rem;
+
+  @media (max-width: 480px) {
+    font-size: 0.8rem;
+    margin-right: 0;
+    margin-bottom: 0.5rem;
+  }
 `

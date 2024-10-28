@@ -26,7 +26,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 
         //const resetLink = `${process.env.NEXTAUTH_URL}/reset-password?token=${resetToken}`
-        const resetLink = `http://localhost:3001/reset-password?token=${resetToken}`
+        const resetLink = `${process.env.NEXTAUTH_URL}/reset-password?token=${resetToken}`
 
 
         const htmlTemplatePath = path.join(process.cwd(), 'src', 'styles', 'mail.html')

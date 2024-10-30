@@ -1,5 +1,7 @@
-import React, { useState, useRef } from 'react'
+// CreatePostContainer.tsx
+import React, { useRef, useState } from 'react'
 import styled from 'styled-components'
+
 import { usePostContext } from './PostContext'
 
 const CreatePostContainer = styled.div`
@@ -11,10 +13,13 @@ const CreatePostContainer = styled.div`
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 `
 
-const Title = styled.h2`
-  font-size: 24px;
-  color: #1877f2;
+const TitleInput = styled.input`
+  font-size: 20px;
   margin-bottom: 20px;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  width: 60%
 `
 
 const Form = styled.form`
@@ -56,13 +61,18 @@ const VideoPreview = styled.video`
 `
 
 export default function CreatePost() {
-  const [text, setText] = useState('')
+  const [title, setTitle] = useState('')
+  const [content, setContent] = useState('')
   const [video, setVideo] = useState<File | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const { addPost } = usePostContext()
 
-  const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setText(e.target.value)
+  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTitle(e.target.value)
+  }
+
+  const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setContent(e.target.value)
   }
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -71,22 +81,27 @@ export default function CreatePost() {
     }
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (text.trim() === '') return
+    if (content.trim() === '') return
 
     const videoUrl = video ? URL.createObjectURL(video) : ''
-    addPost({
-      text,
+    const newPost = {
+      title,
+      content,
       videoUrl,
       user: {
         name: 'Current User', // This would typically come from authentication
-        // avatar: 'https://i.pravatar.cc/150?img=3' // This would typically come from authentication
+        surname: 'Surname',
+        avatar: 'https://i.pravatar.cc/150?img=3' // This would typically come from authentication
       }
-    })
+    }
+
+    await addPost(newPost, video)
 
     // Reset form after submission
-    setText('')
+    setTitle('')
+    setContent('')
     setVideo(null)
     if (fileInputRef.current) {
       fileInputRef.current.value = ''
@@ -95,12 +110,18 @@ export default function CreatePost() {
 
   return (
     <CreatePostContainer>
-      <Title>Crea una Nueva Publicacion</Title>
+      <TitleInput
+        type="text"
+        value={title}
+        onChange={handleTitleChange}
+        placeholder="Crea una nueva publicación"
+        required
+      />
       <Form onSubmit={handleSubmit}>
         <TextArea
-          value={text}
-          onChange={handleTextChange}
-          placeholder="¿Que estas pensando?"
+          value={content}
+          onChange={handleContentChange}
+          placeholder="¿Qué estás pensando?"
           required
         />
         <FileInput

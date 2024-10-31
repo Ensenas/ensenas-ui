@@ -120,7 +120,7 @@ export const NavigationProvider: React.FC<{ children: ReactNode }> = ({ children
     localStorage.setItem('currentUnit', JSON.stringify(currentUnit))
     localStorage.setItem('currentLesson', JSON.stringify(currentLesson))
     localStorage.setItem('levels', JSON.stringify(levels))
-    localStorage.setItem('levels', JSON.stringify(units))
+    localStorage.setItem('units', JSON.stringify(units))
     localStorage.setItem('lessons', JSON.stringify(lessons))
     localStorage.setItem('loading', JSON.stringify(isLoading))
     localStorage.setItem('hasShownModal', JSON.stringify(hasShownModal))
@@ -209,27 +209,27 @@ export const NavigationProvider: React.FC<{ children: ReactNode }> = ({ children
   useEffect(() => {
     // Obtener el progreso de los desafíos del usuario
     const fetchUserProgress = async () => {
-        const token = localStorage.getItem('authToken')
-        if (!token) {
-            console.error('No se encontró el token JWT, el usuario no está autenticado.')
-            return
-        }
+      const token = localStorage.getItem('authToken')
+      if (!token) {
+        console.error('No se encontró el token JWT, el usuario no está autenticado.')
+        return
+      }
 
-        try {
-            const response = await axios.get('/ens-api/users/challenge-progress', {
-                headers: {
-                    Authorization: `bearer ${token}`
-                }
-            })
-            setUserProgress(response.data)
-        } catch (error) {
-            console.error('Error al obtener el progreso del desafío:', error)
-        }
+      try {
+        const response = await axios.get('/ens-api/users/challenge-progress', {
+          headers: {
+            Authorization: `bearer ${token}`
+          }
+        })
+        setUserProgress(response.data)
+      } catch (error) {
+        console.error('Error al obtener el progreso del desafío:', error)
+      }
     }
 
     fetchUserProgress()
 
-}, [userProgress])
+  }, [userProgress])
 
 
   return (

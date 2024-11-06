@@ -62,7 +62,7 @@ export default function VideoStreamRemoto() {
     const animationFrameId = useRef<number | null>(null)
 
     const socketInitializer = useCallback(() => {
-        const newSocket = io('wss://alarma.mywire.org:3050', {
+        const newSocket = io('wss://ensenasaws.mywire.org:3050', {
             transports: ['websocket'],
             reconnectionAttempts: 5,
             reconnectionDelay: 1000,

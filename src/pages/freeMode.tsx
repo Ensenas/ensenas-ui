@@ -4,6 +4,7 @@ import React, { useCallback, useEffect, useRef, useState, useMemo } from 'react'
 import Webcam from 'react-webcam'
 import { io, Socket } from 'socket.io-client'
 import styled from 'styled-components'
+import axios from 'axios'
 import { Loader2 } from 'lucide-react'
 
 import Spinner from '../components/Spinner/Spinner'
@@ -40,6 +41,35 @@ const ProcessingIndicator = styled.div`
   font-size: 14px;
 `
 
+const Select = styled.select`
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  margin-bottom: 20px;
+  color: #555;
+`
+
+const Title = styled.h2`
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 10px;
+`
+
+const Description = styled.p`
+  font-size: 16px;
+  color: #555;
+  margin-bottom: 20px;
+`
+
+const DetectedWord = styled.div`
+  font-size: 18px;
+  color: #333;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  font-weight: bold;
+`
+
 const unitWords = {
     familiares: ['papa', 'mama', 'hijo', 'hermana'],
     colores: ['amarillo', 'negro', 'rojo', 'verde'],
@@ -52,8 +82,10 @@ const unitWords = {
 export default function VideoStreamRemoto() {
     const [socket, setSocket] = useState<Socket | null>(null)
     const [isConnected, setIsConnected] = useState(false)
-    const [selectedUnit, setSelectedUnit] = useState('familiares')
+    const [selectedUnit, setSelectedUnit] = useState('') // Empezar con una unidad vacía
     const [isProcessing, setIsProcessing] = useState(false)
+    const [isLoadingUnit, setIsLoadingUnit] = useState(false) // Estado para el spinner de cambio de unidad
+    const [lastDetectedWord, setLastDetectedWord] = useState('') // Estado para la última palabra detectada
     const webcamRef = useRef<Webcam>(null)
     const canvasRef = useRef<HTMLCanvasElement>(null)
     const outputRef = useRef<HTMLImageElement>(null)
@@ -62,7 +94,8 @@ export default function VideoStreamRemoto() {
     const animationFrameId = useRef<number | null>(null)
 
     const socketInitializer = useCallback(() => {
-        const newSocket = io('wss://ensenasaws.mywire.org:3050', {
+
+        const newSocket = io(`wss://${process.env.NEXT_PUBLIC_AI_SERVICE_URL}`, {
             transports: ['websocket'],
             reconnectionAttempts: 5,
             reconnectionDelay: 1000,
@@ -83,6 +116,9 @@ export default function VideoStreamRemoto() {
             if (outputRef.current && data.image) {
                 outputRef.current.src = data.image
             }
+            if (data.word_detected) {
+                setLastDetectedWord(data.word_detected) // Actualizar la última palabra detectada
+            }
             processingRef.current = false
             setIsProcessing(false)
         })
@@ -98,11 +134,28 @@ export default function VideoStreamRemoto() {
         return cleanup
     }, [socketInitializer])
 
-    useEffect(() => {
-        if (socket) {
-            socket.emit('unit_selected', { unidad: selectedUnit })
+    // Función para enviar la unidad seleccionada al servidor vía HTTP
+    const sendUnitSelected = async (unidad: string | undefined) => {
+        try {
+            setIsLoadingUnit(true) // Activar el spinner de carga
+            const response = await axios.post(
+                `https://${process.env.NEXT_PUBLIC_AI_SERVICE_URL}/unit_selected`,
+                { unidad },
+                {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }
+            )
+            console.log('Respuesta del servidor:', response.data)
+            if (response.data.status === "success") {
+                setIsLoadingUnit(false) // Desactivar el spinner al recibir éxito
+            }
+        } catch (error) {
+            console.error('Error al seleccionar la unidad:', error)
+            setIsLoadingUnit(false) // Desactivar el spinner en caso de error
         }
-    }, [selectedUnit, socket])
+    }
 
     const captureAndSendFrame = useCallback(() => {
         const now = performance.now()
@@ -141,13 +194,16 @@ export default function VideoStreamRemoto() {
         }
     }, [captureAndSendFrame])
 
-    const handleUnitChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
+    const handleUnitChange = useCallback(async (e: React.ChangeEvent<HTMLSelectElement>) => {
         const newUnit = e.target.value as keyof typeof unitWords
         setSelectedUnit(newUnit)
-        socket?.emit('unit_selected', { unidad: newUnit })
-    }, [socket])
+        if (newUnit) {
+            await sendUnitSelected(newUnit) // Llamada HTTP para cambiar de unidad
+        }
+    }, [])
 
     const unitOptions = useMemo(() => [
+        { value: '', label: 'Seleccione una unidad para comenzar' }, // Opción inicial
         { value: 'familiares', label: 'Familiares' },
         { value: 'colores', label: 'Colores' },
         { value: 'pronombres', label: 'Pronombres' },
@@ -161,36 +217,37 @@ export default function VideoStreamRemoto() {
             {isConnected ? (
                 <HomeLayout activePage={'/freeMode'}>
                     <Container>
-                        <select value={selectedUnit} onChange={handleUnitChange}>
+                        <Title>Modo Libre</Title>
+                        <Description>En el modo libre puedes seleccionar una unidad y practicar las señales correspondientes. Selecciona una unidad para comenzar.</Description>
+                        <Select value={selectedUnit} onChange={handleUnitChange} disabled={isLoadingUnit}>
                             {unitOptions.map(option => (
                                 <option key={option.value} value={option.value}>{option.label}</option>
                             ))}
-                        </select>
-                        <MainImageContainer>
-                            <img
-                                ref={outputRef}
-                                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                                alt="Processed output"
-                            />
-                            {/* {isProcessing && (
-                                <ProcessingIndicator>
-                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                    Processing...
-                                </ProcessingIndicator>
-                            )} */}
-                            <PreviewContainer>
-                                <Webcam
-                                    ref={webcamRef}
-                                    audio={false}
-                                    videoConstraints={{
-                                        facingMode: 'user',
-                                        width: 1280,
-                                        height: 720
-                                    }}
+                        </Select>
+                        <DetectedWord>Última seña detectada: {lastDetectedWord || 'Ninguna'}</DetectedWord>
+
+                        {isLoadingUnit && <Spinner />} {/* Spinner de carga al cambiar de unidad */}
+                        {selectedUnit && !isLoadingUnit && ( // Mostrar la cámara solo cuando se seleccione una unidad y no esté cargando
+                            <MainImageContainer>
+                                <img
+                                    ref={outputRef}
                                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                    alt="Processed output"
                                 />
-                            </PreviewContainer>
-                        </MainImageContainer>
+                                <PreviewContainer>
+                                    <Webcam
+                                        ref={webcamRef}
+                                        audio={false}
+                                        videoConstraints={{
+                                            facingMode: 'user',
+                                            width: 1280,
+                                            height: 720
+                                        }}
+                                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                    />
+                                </PreviewContainer>
+                            </MainImageContainer>
+                        )}
                         <canvas ref={canvasRef} style={{ display: 'none' }} />
                         <Overlay />
                     </Container>

@@ -2,14 +2,16 @@
 /* eslint-disable no-unused-vars */
 import { useRouter } from 'next/router'
 import { useSession } from 'next-auth/react'
-import React, { useEffect,useState } from 'react'
-import { FaEdit, FaSave } from 'react-icons/fa' // Para el icono del lápiz
+import React, { useEffect, useState } from 'react'
+import { FaEdit, FaSave } from 'react-icons/fa'
 
 import HomeLayout from '../components/HomeLayout/HomeLayout'
 import ProtectedRoute from '../components/ProtectedRoute'
 import LoadingSpinner from '../components/Spinner/Spinner'
-import { EditButton, Form, FormColumn, FormGroup, FormRow, FormSection, FormSectionTitle, 
-  Header, Input, Label, Section, Title } from '../styles/Profile.Styles'
+import {
+  EditButton, Form, FormColumn, FormGroup, FormRow, FormSection, FormSectionTitle,
+  Header, Input, Label, Section, Title
+} from '../styles/Profile.Styles'
 
 const Profile: React.FC = () => {
   const router = useRouter()
@@ -35,11 +37,11 @@ const Profile: React.FC = () => {
             'Authorization': `Bearer ${localStorage.getItem('authToken')}`
           }
         })
-        console.log(`Bearer ${localStorage.getItem('authToken')}`)
         if (!response.ok) {
           throw new Error('Error al obtener los datos del perfil')
         }
         const data = await response.json()
+
         setProfileData(data)
         setLoading(false)
       } catch (error) {
@@ -54,27 +56,39 @@ const Profile: React.FC = () => {
     setIsEditing(!isEditing)
   }
 
-  // const handleSave = async (e) => {
-  //   e.preventDefault()
-  //   try {
-  //     const response = await fetch('http://54.241.26.30:3001/profile', {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //         'Authorization': `Bearer ${localStorage.getItem('token')}`
-  //       },
-  //       body: JSON.stringify(profileData)
-  //     })
-  //     if (!response.ok) {
-  //       throw new Error('Error al guardar los datos del perfil')
-  //     }
-  //     const data = await response.json()
-  //     setProfileData(data)
-  //     setIsEditing(false)
-  //   } catch (error) {
-  //     setError(error.message)
-  //   }
-  // }
+  const handleSave = async (e) => {
+    e.preventDefault()
+    console.log("Datos enviados:", profileData) // Verifica los datos aquí
+    try {
+      const response = await fetch('/ens-api/users/profile', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+        },
+        body: JSON.stringify({
+          name: profileData.name,
+          surname: profileData.surname,
+          birthDate: profileData.birthDate,
+          country: profileData.country
+        })
+      })
+      if (!response.ok) {
+        throw new Error('Error al guardar los datos del perfil')
+      }
+      var data = await response.json()
+      data = {
+        ...data,
+        country: data.country?.name || data.country, // Usa solo el nombre del país
+        birthDate: data.birth_date
+      }
+      setProfileData(data) // Actualiza el estado con los datos recibidos del backend
+      console.log(data)
+      setIsEditing(false)
+    } catch (error) {
+      setError(error.message)
+    }
+  }
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -84,8 +98,12 @@ const Profile: React.FC = () => {
     }))
   }
 
-  const handleEditButton = () => {
-    setIsEditing(!isEditing)
+  const handleEditButton = (e) => {
+    if (isEditing) {
+      handleSave(e)
+    } else {
+      setIsEditing(true)
+    }
   }
 
   return (
@@ -93,14 +111,13 @@ const Profile: React.FC = () => {
       <HomeLayout activePage='/profile'>
         <div>
           {loading ? (
-              <LoadingSpinner /> // Muestra el spinner mientras se está cargando
-            ) : error ? (
-              <p style={{ margin: '40px' }}>{error}</p> // Muestra el mensaje de error si ocurrió un problema
-            ) : (
+            <LoadingSpinner />
+          ) : error ? (
+            <p style={{ margin: '40px' }}>{error}</p>
+          ) : (
             <Section>
               <Header>
                 <Title>Mi Perfil</Title>
-                {/* <EditButton onClick={isEditing ? handleSave : toggleEdit}> */}
                 <EditButton onClick={handleEditButton}>
                   {isEditing ? <FaSave style={{ marginRight: '5px' }} /> : <FaEdit style={{ marginRight: '5px' }} />}
                   {isEditing ? 'Guardar' : 'Editar'}
@@ -113,44 +130,44 @@ const Profile: React.FC = () => {
                     <FormColumn>
                       <FormGroup>
                         <Label>Nombre</Label>
-                        <Input 
-                          type="text" 
+                        <Input
+                          type="text"
                           name="name"
                           value={profileData.name}
-                          onChange={handleChange} 
-                          disabled={!isEditing} 
+                          onChange={handleChange}
+                          disabled={!isEditing}
                         />
                       </FormGroup>
                       <FormGroup>
                         <Label>Fecha de Nacimiento</Label>
-                        <Input 
-                          type="date" 
+                        <Input
+                          type="date"
                           name="birthDate"
-                          value={profileData.birthDate}
-                          onChange={handleChange} 
-                          disabled={!isEditing} 
+                          value={new Date(Date.parse(profileData.birthDate)).toISOString().split('T')[0]}
+                          onChange={handleChange}
+                          disabled={!isEditing}
                         />
                       </FormGroup>
                       <FormGroup>
                         <Label>País</Label>
-                        <Input 
-                          type="text" 
+                        <Input
+                          type="text"
                           name="country"
                           value={profileData.country}
-                          onChange={handleChange} 
-                          disabled={!isEditing} 
+                          onChange={handleChange}
+                          disabled={!isEditing}
                         />
                       </FormGroup>
                     </FormColumn>
                     <FormColumn>
                       <FormGroup>
                         <Label>Apellido</Label>
-                        <Input 
-                          type="text" 
+                        <Input
+                          type="text"
                           name="surname"
                           value={profileData.surname}
-                          onChange={handleChange} 
-                          disabled={!isEditing} 
+                          onChange={handleChange}
+                          disabled={!isEditing}
                         />
                       </FormGroup>
                     </FormColumn>
@@ -162,24 +179,24 @@ const Profile: React.FC = () => {
                     <FormColumn>
                       <FormGroup>
                         <Label>Email</Label>
-                        <Input 
-                          type="email" 
+                        <Input
+                          type="email"
                           name="email"
                           value={profileData.mail}
-                          onChange={handleChange} 
-                          disabled={!isEditing} 
+                          onChange={handleChange}
+                          disabled={!isEditing}
                         />
                       </FormGroup>
                     </FormColumn>
                     <FormColumn>
                       <FormGroup>
                         <Label>Contraseña</Label>
-                        <Input 
-                          type="password" 
+                        <Input
+                          type="password"
                           name="password"
                           value={isEditing ? profileData.password : '******'}
-                          onChange={handleChange} 
-                          disabled={!isEditing} 
+                          onChange={handleChange}
+                          disabled={!isEditing}
                         />
                       </FormGroup>
                     </FormColumn>

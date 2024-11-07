@@ -45,7 +45,7 @@ const LevelUnits: React.FC = ({ }) => {
     const sendUnitSelected = async (unidad: string | undefined) => {
         try {
             const response = await axios.post(
-                'https://ensenasaws.mywire.org:3050/unit_selected',
+                `https://${process.env.NEXT_PUBLIC_AI_SERVICE_URL}/unit_selected`,
                 { unidad },
                 {
                     headers: {

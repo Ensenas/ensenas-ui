@@ -72,7 +72,7 @@ export default function VideoStreamRemoto({ level, unit, lesson, onComplete }) {
     }, [lesson.description])
 
     useEffect(() => {
-        const newSocket = io('wss://alarma.mywire.org:3050')
+        const newSocket = io(`wss://${process.env.NEXT_PUBLIC_AI_SERVICE_URL}`)
         setSocket(newSocket)
 
         newSocket.on('connect', () => {

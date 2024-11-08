@@ -35,10 +35,12 @@ const TextArea = styled.textarea`
   border: 1px solid #ddd;
   border-radius: 4px;
   resize: vertical;
+  font-family:inherit;  
 `
 
 const FileInput = styled.input`
   margin-bottom: 10px;
+  font-family:inherit;
 `
 
 const Button = styled.button`

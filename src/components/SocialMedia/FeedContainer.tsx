@@ -1,11 +1,19 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { usePostContext } from './PostContext';
+import LoadingSpinner from '../../components/Spinner/Spinner'
 
 const FeedContainerStyled = styled.div`
   max-width: 600px;
   margin: 0 auto;
   padding: 20px;
+`;
+
+const SpinnerContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
 `;
 
 const PostItem = styled.div`
@@ -87,11 +95,13 @@ const SearchIcon = styled.span`
 export default function FeedContainer() {
   const [searchQuery, setSearchQuery] = useState('');
   const { posts, searchPosts } = usePostContext();
+  const { loading } = usePostContext()
 
   const handleSearch = (e) => {
     e.preventDefault();
     searchPosts(searchQuery);
   };
+
 
   return (
     <FeedContainerStyled>
@@ -104,25 +114,33 @@ export default function FeedContainer() {
           onChange={(e) => setSearchQuery(e.target.value)}
         />
       </SearchContainer>
+      {loading ? (
+        <SpinnerContainer>
+          <LoadingSpinner />
+        </SpinnerContainer>
+      ) : (
+        posts.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+          .slice(0, 10)
+          .map((post) => (
+            <PostItem key={post.id}>
+              <PostHeader>
+                <UserInfo>
+                  <Username>{post.user.name} {post.user.surname}</Username>
+                  <PostDate>{`${String(new Date(Date.parse(post.created_at)).getDate()).padStart(2, '0')}/${String(new Date(Date.parse(post.created_at)).getMonth() + 1).padStart(2, '0')}/${new Date(Date.parse(post.created_at)).getFullYear()} ${String(new Date(Date.parse(post.created_at)).getHours()).padStart(2, '0')}:${String(new Date(Date.parse(post.created_at)).getMinutes()).padStart(2, '0')}`}</PostDate>
+                </UserInfo>
+              </PostHeader>
+              <PostTitle>{post.title}</PostTitle>
+              <PostContent>{post.content}</PostContent>
+              {post.videoUrl && (
+                <PostVideo controls>
+                  <source src={post.videoUrl} type="video/mp4" />
+                  Your browser does not support the video tag.
+                </PostVideo>
+              )}
+            </PostItem>
+          ))
+      )}
 
-      {posts.slice(0, 10).map((post) => (
-        <PostItem key={post.id}>
-          <PostHeader>
-            <UserInfo>
-              <Username>{post.user.name} {post.user.surname}</Username>
-              <PostDate>{new Date(Date.parse(post.created_at)).toLocaleString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false })}</PostDate>
-            </UserInfo>
-          </PostHeader>
-          <PostTitle>{post.title}</PostTitle>
-          <PostContent>{post.content}</PostContent>
-          {post.videoUrl && (
-            <PostVideo controls>
-              <source src={post.videoUrl} type="video/mp4" />
-              Your browser does not support the video tag.
-            </PostVideo>
-          )}
-        </PostItem>
-      ))}
     </FeedContainerStyled>
   );
 }

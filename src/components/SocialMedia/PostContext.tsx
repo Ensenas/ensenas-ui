@@ -20,6 +20,7 @@ interface PostContextType {
     posts: Post[];
     addPost: (post: Omit<Post, 'id' | 'created_at' | 'videoUrl'>, videoFile: File | null) => Promise<void>;
     searchPosts: (query: string) => Promise<void>;
+    loading: boolean;
 }
 
 const PostContext = createContext<PostContextType | undefined>(undefined);
@@ -34,14 +35,16 @@ export const usePostContext = () => {
 
 export const PostProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const [posts, setPosts] = useState<Post[]>([]);
-
+    const [loading, setisLoading] = useState<boolean>(true);
     // Fetch posts from the API
     useEffect(() => {
         const fetchPosts = async () => {
             try {
+                setisLoading(true)
                 const response = await axios.get('/ens-api/posts/posts');
-                const data: Post[] = response.data;
+                const data: Post[] = response.data.sort((a, b) => a.created_at > b.created_at)
                 setPosts(data);
+                setisLoading(false)
             } catch (error) {
                 console.error('Error fetching posts:', error);
             }
@@ -53,8 +56,11 @@ export const PostProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     // Search posts by query
     const searchPosts = async (query: string) => {
         try {
+            setisLoading(true)
             const response = await axios.get(`/ens-api/posts/search?query=${query}`);
             const data: Post[] = response.data;
+
+            setisLoading(false)
             setPosts(data);
         } catch (error) {
             console.error('Error searching posts:', error);
@@ -64,8 +70,10 @@ export const PostProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     // Add a new post to the API
     const addPost = async (newPost: Omit<Post, 'id' | 'created_at' | 'videoUrl'>, videoFile: File | null) => {
         const token = localStorage.getItem('authToken');
+        setisLoading(true);
         if (!token) {
             console.error('No se encontró el token JWT, el usuario no está autenticado.');
+            setisLoading(false);
             return;
         }
 
@@ -95,16 +103,19 @@ export const PostProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                 }
             );
 
-            // El backend debería devolver el post creado con el videoUrl de S3
             const createdPost: Post = response.data;
-            setPosts(prevPosts => [createdPost, ...prevPosts]);
+            setPosts(prevPosts => [createdPost, ...prevPosts]);  // Añadir el post a la lista de posts
+
+            setisLoading(false);
         } catch (error) {
             console.error('Error adding post:', error);
+            setisLoading(false);
         }
     };
 
+
     return (
-        <PostContext.Provider value={{ posts, addPost, searchPosts }}>
+        <PostContext.Provider value={{ posts, addPost, searchPosts, loading }}>
             {children}
         </PostContext.Provider>
     );

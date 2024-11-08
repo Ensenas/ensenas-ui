@@ -83,7 +83,7 @@ export const TextArea = styled.textarea`
   border: 2px solid #ccc;
   border-radius: 5px;
   width: 97%; /* Ancho completo */
-  height: 150px; /* Ajusta la altura según sea necesario */
+  height: 120px; /* Ajusta la altura según sea necesario */
   resize: vertical; /* Permite redimensionar verticalmente */
   &:focus {
     outline: none;

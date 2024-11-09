@@ -92,6 +92,23 @@ const SearchIcon = styled.span`
   margin-right: 8px;
 `;
 
+const IframeContainer = styled.div`
+  position: relative;
+  width: 100%; 
+  max-width: 960px; 
+  margin: 0 auto; 
+  padding-top: 56.25%; 
+  background-color: #000;
+
+  iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+`;
+
 export default function FeedContainer() {
   const [searchQuery, setSearchQuery] = useState('');
   const { posts, searchPosts } = usePostContext();
@@ -101,6 +118,12 @@ export default function FeedContainer() {
     e.preventDefault();
     searchPosts(searchQuery);
   };
+
+  const getYouTubeId = (url: string) => {
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/
+    const match = url.match(regExp)
+    return (match && match[2].length === 11) ? match[2] : null
+  }
 
 
   return (
@@ -132,10 +155,21 @@ export default function FeedContainer() {
               <PostTitle>{post.title}</PostTitle>
               <PostContent>{post.content}</PostContent>
               {post.videoUrl && (
-                <PostVideo controls>
-                  <source src={post.videoUrl} type="video/mp4" />
-                  Your browser does not support the video tag.
-                </PostVideo>
+                getYouTubeId(post.videoUrl) ? (
+                  <IframeContainer>
+                    <iframe
+                      src={`https://www.youtube.com/embed/${getYouTubeId(post.videoUrl)}`}
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                      className="w-full h-full"
+                    />
+                  </IframeContainer>
+                ) : (
+                  <video controls className="w-full">
+                    <source src={post.videoUrl} type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
+                )
               )}
             </PostItem>
           ))

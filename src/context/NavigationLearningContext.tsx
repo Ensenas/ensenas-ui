@@ -207,29 +207,29 @@ export const NavigationProvider: React.FC<{ children: ReactNode }> = ({ children
   }
 
   useEffect(() => {
-    // Obtener el progreso de los desafíos del usuario
     const fetchUserProgress = async () => {
       const token = localStorage.getItem('authToken')
       if (!token) {
-        console.error('No se encontró el token JWT, el usuario no está autenticado.')
-        return
+        console.error('No se encontró el token JWT, el usuario no está autenticado.');
+        return;
       }
 
       try {
         const response = await axios.get('/ens-api/users/challenge-progress', {
           headers: {
-            Authorization: `bearer ${token}`
-          }
-        })
-        setUserProgress(response.data)
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setUserProgress(response.data); // Asumiendo que `response.data.data` contiene el progreso
       } catch (error) {
-        console.error('Error al obtener el progreso del desafío:', error)
+        console.error('Error al obtener el progreso del desafío:', error);
       }
+    };
+
+    if (!userProgress) {
+      fetchUserProgress();
     }
-
-    fetchUserProgress()
-
-  }, [userProgress])
+  }, [userProgress]);
 
 
   return (

@@ -35,8 +35,7 @@ const LessonTest: React.FC<LessonProps> = () => {
     // Función para enviar solicitud al backend y actualizar el progreso del challenge
     const updateChallengeProgress = async (action: 'start' | 'complete') => {
         if (!currentLesson) return
-        
-        setUserProgress(userProgress)
+
 
         // Obtener el token JWT del localStorage
         const token = localStorage.getItem('authToken')
@@ -58,6 +57,8 @@ const LessonTest: React.FC<LessonProps> = () => {
                     }
                 }
             )
+            setUserProgress(response.data)
+
             console.log(`${action} challenge progress response:`, response.data)
         } catch (error) {
             console.error(`Error while trying to ${action} challenge:`, error)
@@ -85,7 +86,7 @@ const LessonTest: React.FC<LessonProps> = () => {
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <Title>{currentLesson?.title}</Title>
                         <BackButton onClick={handleGoBack}>
-                        Volver atrás
+                            Volver atrás
                         </BackButton>
                     </div>
                     <LessonTitle>
@@ -99,7 +100,7 @@ const LessonTest: React.FC<LessonProps> = () => {
                     </InstructionText>
 
                     {/* Agregar callback para cuando el desafío sea completado */}
-                    <VideoStreamRemoto level={currentLevel} unit={currentUnit} lesson={currentLesson} 
+                    <VideoStreamRemoto level={currentLevel} unit={currentUnit} lesson={currentLesson}
                         onComplete={handleChallengeComplete} />
                 </Section>
             </HomeLayout>

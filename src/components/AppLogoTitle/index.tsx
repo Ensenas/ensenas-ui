@@ -1,6 +1,5 @@
 import React from 'react'
 
-import LogoImgSrc from '../../../public/logo.png'
 import { AppTitle, Container, LogoImage } from './AppLogoTitleElements'
 
 // type Props = {}
@@ -9,7 +8,7 @@ const AppLogoTitle = () => {
   return (
     <Container href="/">
       <AppTitle> Enseñas </AppTitle>
-      <LogoImage src={LogoImgSrc} alt="logo" />
+      <LogoImage src="/logo.png" alt="logo" width={120} height={120} />
     </Container>
   )
 }

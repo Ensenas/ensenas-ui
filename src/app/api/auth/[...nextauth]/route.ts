@@ -122,16 +122,26 @@ export const authOptions: NextAuthOptions = {
               },
             })
 
-            payments = await payments.json()
-            const lastPayment = payments.reduce((masNuevo, actual) => {
-              return new Date(actual.date) > new Date(masNuevo.date) ? actual : masNuevo;
-            });
-            return {
-              id: 'default-id',
+            let allPayments = await payments.json()
+            if (allPayments.length) {
+              const lastPayment = allPayments.reduce((masNuevo, actual) => {
+                return new Date(actual.date) > new Date(masNuevo.date) ? actual : masNuevo;
+              });
+
+              return {
+                id: data.id,
+                email: credentials?.email || '',
+                name: data.name + ' ' + data.surname,
+                accessToken: data.access_token,
+                premium: lastPayment['suscription'] == "PREMIUM"
+              } as User
+            }
+            else return {
+              id: data.id,
               email: credentials?.email || '',
               name: data.name + ' ' + data.surname,
               accessToken: data.access_token,
-              premium: lastPayment['suscription'] == "PREMIUM"
+              premium: false
             } as User
           } else {
             return null

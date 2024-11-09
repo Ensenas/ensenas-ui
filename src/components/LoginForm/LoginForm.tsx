@@ -6,6 +6,7 @@ import { signIn, useSession } from 'next-auth/react'
 import React, { useEffect, useState } from 'react'
 import { AiOutlineUnlock, AiOutlineUser } from 'react-icons/ai'
 
+import { useNavigation } from '../../context/NavigationLearningContext'
 import AppLogoTitle from '../AppLogoTitle'
 import Button from '../Button'
 import GoogleSignInButton from '../Button/GoogleButton'
@@ -30,6 +31,7 @@ const LoginForm = () => {
     const [error, setError] = useState<string | null>(null)
     const router = useRouter()
     const { data: session, status } = useSession()
+    const { authToken, setAuthToken } = useNavigation()
 
     useEffect(() => {
         console.log("Current status:", status)
@@ -39,6 +41,7 @@ const LoginForm = () => {
             console.log("Authentication successful")
             if (session.user.accessToken) {
                 localStorage.setItem('authToken', session.user.accessToken)
+                setAuthToken(session.user.accessToken)
                 router.push('/home')
             } else {
                 console.error("Access token is missing from the session")

@@ -74,8 +74,9 @@ const FormTitleContainer = styled.div`
 
 const ErrorMessage = styled.span`
   color: #ef4444;
+  text-align: center;
   font-size: 0.75rem;
-  margin-top: 0.25rem;
+  margin-bottom: 1rem;
 `
 
 const Button = styled.button`
@@ -87,6 +88,9 @@ const Button = styled.button`
   font-size: 1rem;
   cursor: pointer;
   transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   &:hover {
     background-color: #2563eb;
@@ -102,6 +106,21 @@ const SuccessMessage = styled.div`
   color: #10b981;
   text-align: center;
   margin-bottom: 1rem;
+  font-weight:600;
+`
+const Spinner = styled.div`
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid #3498db;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  animation: spin 1s linear infinite;
+  margin-right: 8px;
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
 `
 
 interface SelectOption {
@@ -123,7 +142,8 @@ const RegisterPage: React.FC = () => {
   const [birthDateError, setBirthDateError] = useState('')
   const [countries, setCountries] = useState<SelectOption[]>([])
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
-
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
 
   useEffect(() => {
@@ -177,6 +197,9 @@ const RegisterPage: React.FC = () => {
 
     validatePassword(password, confirmPassword)
     validateBirthDate(birthDate)
+    setSuccessMessage(null)
+    setErrorMessage(null)
+    setIsLoading(true)
 
     if (passwordError || confirmPasswordError || countryError || birthDateError) {
       return
@@ -201,11 +224,24 @@ const RegisterPage: React.FC = () => {
           router.push('/login')
         }, 2000)
       } else {
-        throw new Error(data.message)
+
+        throw new Error(status.toString())
+
       }
     } catch (error) {
+      setSuccessMessage(null)
       console.error('Error de autenticación:', error)
-      // Here you could show an error message to the user
+      if (axios.isAxiosError(error) && error.response) {
+        if (error.response.status === 400) {
+          setErrorMessage('El mail ya se encuentra registrado. Probá con otro nuevo.')
+        } else {
+          setErrorMessage('Ocurrió un error en el servidor. Intentá más tarde.')
+        }
+      } else {
+        setErrorMessage('Ocurrió un error inesperado. Intentá más tarde.')
+      }
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -216,7 +252,7 @@ const RegisterPage: React.FC = () => {
       </Head>
       <FormContainer>
         <Form onSubmit={handleRegister}>
-          {successMessage && <SuccessMessage>{successMessage}</SuccessMessage>}
+
           <FormTitleContainer>
             {/* Ruta de la imagen */}
             <FormTitle>Crea tu cuenta en Enseñas</FormTitle>
@@ -319,7 +355,13 @@ const RegisterPage: React.FC = () => {
             {confirmPasswordError && <ErrorMessage>{confirmPasswordError}</ErrorMessage>}
           </InputGroup>
 
-          <Button type="submit">Registrate</Button>
+          <Button type="submit" disabled={isLoading}>
+            {isLoading && <Spinner />}
+            {isLoading ? '' : 'Registrate'}
+          </Button>
+
+          {successMessage && <SuccessMessage>{successMessage}</SuccessMessage>}
+          {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
         </Form>
       </FormContainer>
     </PageContainer>

@@ -1,20 +1,21 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import { usePostContext } from './PostContext';
+import React, { useState } from 'react'
+import styled from 'styled-components'
+
 import LoadingSpinner from '../../components/Spinner/Spinner'
+import { usePostContext } from './PostContext'
 
 const FeedContainerStyled = styled.div`
   max-width: 600px;
   margin: 0 auto;
   padding: 20px;
-`;
+`
 
 const SpinnerContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   height: 200px;
-`;
+`
 
 const PostItem = styled.div`
   background-color: #ffffff;
@@ -22,45 +23,40 @@ const PostItem = styled.div`
   margin-bottom: 20px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-`;
+`
 
 const PostHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 10px;
-`;
+`
 
 const UserInfo = styled.div`
   display: flex;
   flex-direction: column;
-`;
+`
 
 const Username = styled.span`
   font-weight: bold;
   font-size: 16px;
-`;
+`
 
 const PostDate = styled.span`
   font-size: 14px;
   color: #999;
-`;
+`
 
 const PostTitle = styled.h3`
   font-size: 20px;
   color: #333;
   margin-bottom: 10px;
-`;
+`
 
 const PostContent = styled.p`
   font-size: 16px;
   color: #666;
-`;
-
-const PostVideo = styled.video`
-  max-width: 100%;
-  margin-top: 10px;
-`;
+`
 
 // Estilos del contenedor de búsqueda
 const SearchContainer = styled.form`
@@ -71,7 +67,7 @@ const SearchContainer = styled.form`
   border-radius: 20px;
   padding: 8px 16px;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-`;
+`
 
 const SearchInput = styled.input`
   border: none;
@@ -84,13 +80,13 @@ const SearchInput = styled.input`
   &::placeholder {
     color: #aaa;
   }
-`;
+`
 
 const SearchIcon = styled.span`
   font-size: 18px;
   color: #aaa;
   margin-right: 8px;
-`;
+`
 
 const IframeContainer = styled.div`
   position: relative;
@@ -107,17 +103,17 @@ const IframeContainer = styled.div`
     width: 100%;
     height: 100%;
   }
-`;
+`
 
 export default function FeedContainer() {
-  const [searchQuery, setSearchQuery] = useState('');
-  const { posts, searchPosts } = usePostContext();
+  const [searchQuery, setSearchQuery] = useState('')
+  const { posts, searchPosts } = usePostContext()
   const { loading } = usePostContext()
 
   const handleSearch = (e) => {
-    e.preventDefault();
-    searchPosts(searchQuery);
-  };
+    e.preventDefault()
+    searchPosts(searchQuery)
+  }
 
   const getYouTubeId = (url: string) => {
     const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/
@@ -149,7 +145,11 @@ export default function FeedContainer() {
               <PostHeader>
                 <UserInfo>
                   <Username>{post.user.name} {post.user.surname}</Username>
-                  <PostDate>{`${String(new Date(Date.parse(post.created_at)).getDate()).padStart(2, '0')}/${String(new Date(Date.parse(post.created_at)).getMonth() + 1).padStart(2, '0')}/${new Date(Date.parse(post.created_at)).getFullYear()} ${String(new Date(Date.parse(post.created_at)).getHours()).padStart(2, '0')}:${String(new Date(Date.parse(post.created_at)).getMinutes()).padStart(2, '0')}`}</PostDate>
+                  <PostDate>{`${String(new Date(Date.parse(post.created_at)).getDate()).padStart(2, '0')}/
+                  ${String(new Date(Date.parse(post.created_at)).getMonth() + 1).padStart(2, '0')}/
+                  ${new Date(Date.parse(post.created_at)).getFullYear()} 
+                  ${String(new Date(Date.parse(post.created_at)).getHours()).padStart(2, '0')}:
+                  ${String(new Date(Date.parse(post.created_at)).getMinutes()).padStart(2, '0')}`}</PostDate>
                 </UserInfo>
               </PostHeader>
               <PostTitle>{post.title}</PostTitle>
@@ -176,5 +176,5 @@ export default function FeedContainer() {
       )}
 
     </FeedContainerStyled>
-  );
+  )
 }

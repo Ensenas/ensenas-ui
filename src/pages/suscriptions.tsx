@@ -1,19 +1,18 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import { useSession } from "next-auth/react"
-import Image from "next/image"
-import PaymentStyles from "../styles/Payment.module.scss"
+import { useSession } from 'next-auth/react'
+import { useEffect, useState } from 'react'
 
 import ConfirmationModal from '../components/ConfirmationModal/ConfirmationModal'
 import HomeLayout from '../components/HomeLayout/HomeLayout'
+import { MercadoPagoButton } from '../components/MercadoPagoButton'
+import { PlanBasico, PlanPremium } from '../components/Plan/Plan'
 import ProtectedRoute from '../components/ProtectedRoute'
 import LoadingSpinner from '../components/Spinner/Spinner'
 import SubscriptionDetailModal from '../components/SuscriptionDetailModal/SuscriptionDetailModal'
-import { MercadoPagoButton } from "../components/MercadoPagoButton"
-import { PlanBasico, PlanPremium } from "../components/Plan/Plan"
-
+import PaymentStyles from '../styles/Payment.module.scss'
 import {
   ActionButton,
   CardActions,
@@ -27,12 +26,12 @@ import {
   Status,
   SubscriptionCard,
   SubscriptionsGrid,
-  Title,
+  Title
 } from '../styles/Suscriptions.styles'
 
 interface NotificationType {
   isOpen: boolean;
-  type: "approved" | "failure" | null;
+  type: 'approved' | 'failure' | null;
   content: string;
 }
 
@@ -59,7 +58,7 @@ export default function Subscriptions() {
   const [notification, setNotification] = useState<NotificationType>({
     isOpen: false,
     type: null,
-    content: "",
+    content: ''
   })
   const [isProcessingPayment, setIsProcessingPayment] = useState<boolean>(false)
   const router = useRouter()
@@ -74,30 +73,30 @@ export default function Subscriptions() {
           ...session,
           user: {
             ...session.user,
-            premium: value,
-          },
+            premium: value
+          }
         })
-        await fetch(`/ens-api/users/register-payment`, {
+        await fetch('/ens-api/users/register-payment', {
           method: 'POST',
           body: JSON.stringify({
-            "suscriptionType": value ? 'PREMIUM' : 'BASIC'
+            'suscriptionType': value ? 'PREMIUM' : 'BASIC'
           }),
           headers: {
             'Content-Type': 'application/json',
-            "Authorization": `bearer ${session?.user.accessToken}`
+            'Authorization': `bearer ${session?.user.accessToken}`
           }
         })
         setNotification({
-          content: value ? "Plan actualizado a Premium!" : "Plan cambiado a Básico",
+          content: value ? 'Plan actualizado a Premium!' : 'Plan cambiado a Básico',
           isOpen: true,
-          type: "approved",
+          type: 'approved'
         })
       } catch (error) {
-        console.error("Error updating plan:", error)
+        console.error('Error updating plan:', error)
         setNotification({
-          content: "Error al actualizar el plan",
+          content: 'Error al actualizar el plan',
           isOpen: true,
-          type: "failure",
+          type: 'failure'
         })
       } finally {
         setIsProcessingPayment(false)
@@ -108,26 +107,26 @@ export default function Subscriptions() {
   useEffect(() => {
     const handlePaymentStatus = async () => {
       if (typeof window !== 'undefined') {
-        const urlParams = new URLSearchParams(window.location.search);
-        const status = urlParams.get("status");
+        const urlParams = new URLSearchParams(window.location.search)
+        const status = urlParams.get('status')
 
-        if (status === "approved") {
+        if (status === 'approved') {
           if (!session?.user?.premium) {
             setIsProcessingPayment(true)
             await updatePlan(true)
           }
-        } else if (status === "failure") {
+        } else if (status === 'failure') {
           setNotification({
-            content: "Pago fallido!",
+            content: 'Pago fallido!',
             isOpen: true,
-            type: "failure",
+            type: 'failure'
           })
         }
 
         window.history.pushState({}, document.title, window.location.pathname)
 
         setTimeout(() => {
-          setNotification({ isOpen: false, type: null, content: "" })
+          setNotification({ isOpen: false, type: null, content: '' })
         }, 5000)
       }
     }
@@ -138,7 +137,7 @@ export default function Subscriptions() {
   useEffect(() => {
     const fetchSubscriptions = () => {
       try {
-        console.log("session", session)
+        console.log('session', session)
         const isPremium = session?.user?.premium
 
         const subs: Subscription[] = [
@@ -146,26 +145,26 @@ export default function Subscriptions() {
             id: 1,
             name: 'Plan Básico',
             isPremium: false,
-            background: "/BasicPlan.jpg",
-            logo: "/hot-air-balloon.png",
+            background: '/BasicPlan.jpg',
+            logo: '/hot-air-balloon.png',
             status: isPremium ? 'Inactivo' : 'Activo',
             expirationDate: '31/12/2024',
-            detalle: "Detalle Plan Basico",
+            detalle: 'Detalle Plan Basico',
             plan: PlanBasico,
-            price: "$15000"
+            price: '$15000'
           },
           {
             id: 2,
             name: 'Plan Premium',
             isPremium: true,
-            background: "/PremiumPlan.jpg",
-            logo: "/air-plane.png",
+            background: '/PremiumPlan.jpg',
+            logo: '/air-plane.png',
             status: isPremium ? 'Activo' : 'Inactivo',
             expirationDate: '30/06/2024',
-            detalle: "Detalle Plan Premium",
+            detalle: 'Detalle Plan Premium',
             plan: PlanPremium,
-            price: "$22000"
-          },
+            price: '$22000'
+          }
         ]
 
         setSubscriptions(subs)
@@ -226,7 +225,7 @@ export default function Subscriptions() {
                 </PriceContent>
                 <CardContent><Status status={sub.status}>{sub.status}</Status></CardContent>
                 <CardLogo>
-                  <LogoImage src={sub.logo} alt="Logo" />
+                  <LogoImage src={sub.logo} alt='Logo' />
                 </CardLogo>
                 <CardActions>
                   <ActionButton onClick={() => handleViewDetails(sub)}>Ver Detalles</ActionButton>
@@ -254,7 +253,8 @@ export default function Subscriptions() {
       />
       {notification.isOpen && (
         <div className={PaymentStyles.notification}>
-          <div className={PaymentStyles.iconContainer} style={{ backgroundColor: notification.type === "approved" ? "#00cc99" : "#ee4646", }}>
+          <div className={PaymentStyles.iconContainer}
+            style={{ backgroundColor: notification.type === 'approved' ? '#00cc99' : '#ee4646' }}>
             <Image
               src={`/${notification.type}.svg`}
               alt={notification.type!}

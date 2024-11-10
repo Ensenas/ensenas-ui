@@ -1,15 +1,15 @@
 'use client'
 
-import React, { useCallback, useEffect, useRef, useState, useMemo } from 'react'
+import axios from 'axios'
+import React, { useCallback, useEffect, useMemo,useRef, useState } from 'react'
 import Webcam from 'react-webcam'
 import { io, Socket } from 'socket.io-client'
-import styled from 'styled-components'
-import axios from 'axios'
-import { Loader2 } from 'lucide-react'
+import styled, { keyframes } from 'styled-components'
 
-import Spinner from '../components/Spinner/Spinner'
-import { Container, Overlay, WebcamContainer } from '../components/Recorder/RecorderElements'
+// Componentes internos de la aplicación
 import HomeLayout from '../components/HomeLayout/HomeLayout'
+import { Container, Overlay } from '../components/Recorder/RecorderElements'
+import Spinner from '../components/Spinner/Spinner'
 
 const PreviewContainer = styled.div`
   position: absolute;
@@ -26,19 +26,6 @@ const MainImageContainer = styled.div`
   position: relative;
   width: 70%;
   height: 620px;
-`
-
-const ProcessingIndicator = styled.div`
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  background-color: rgba(0, 0, 0, 0.5);
-  color: white;
-  padding: 5px 10px;
-  border-radius: 5px;
-  display: flex;
-  align-items: center;
-  font-size: 14px;
 `
 
 const Select = styled.select`
@@ -62,12 +49,20 @@ const Description = styled.p`
   margin-bottom: 20px;
 `
 
-const DetectedWord = styled.div`
-  font-size: 18px;
+const popAnimation = keyframes`
+  0% { transform: scale(1); }
+  50% { transform: scale(1.3); }
+  100% { transform: scale(1); }
+`
+
+const DetectedWord = styled.div<{ animate: boolean }>`
+  font-size: 32px;
   color: #333;
   margin-top: 20px;
-  margin-bottom: 20px;
   font-weight: bold;
+  text-align: center;
+  transition: color 0.3s ease;
+  animation: ${({ animate }) => (animate ? popAnimation : 'none')} 0.5s ease;
 `
 
 const unitWords = {
@@ -82,23 +77,23 @@ const unitWords = {
 export default function VideoStreamRemoto() {
     const [socket, setSocket] = useState<Socket | null>(null)
     const [isConnected, setIsConnected] = useState(false)
-    const [selectedUnit, setSelectedUnit] = useState('') // Empezar con una unidad vacía
-    const [isProcessing, setIsProcessing] = useState(false)
-    const [isLoadingUnit, setIsLoadingUnit] = useState(false) // Estado para el spinner de cambio de unidad
-    const [lastDetectedWord, setLastDetectedWord] = useState('') // Estado para la última palabra detectada
+    const [selectedUnit, setSelectedUnit] = useState('')
+    const [isLoadingUnit, setIsLoadingUnit] = useState(false)
+    const [lastDetectedWord, setLastDetectedWord] = useState('')
+    const [animateWord, setAnimateWord] = useState(false)
     const webcamRef = useRef<Webcam>(null)
     const canvasRef = useRef<HTMLCanvasElement>(null)
     const outputRef = useRef<HTMLImageElement>(null)
     const processingRef = useRef(false)
     const lastCaptureTime = useRef(0)
     const animationFrameId = useRef<number | null>(null)
+    const previousWordRef = useRef('') // Para almacenar la última palabra detectada
 
     const socketInitializer = useCallback(() => {
-
         const newSocket = io(`wss://${process.env.NEXT_PUBLIC_AI_SERVICE_URL}`, {
             transports: ['websocket'],
             reconnectionAttempts: 5,
-            reconnectionDelay: 1000,
+            reconnectionDelay: 1000
         })
         setSocket(newSocket)
 
@@ -116,11 +111,12 @@ export default function VideoStreamRemoto() {
             if (outputRef.current && data.image) {
                 outputRef.current.src = data.image
             }
-            if (data.word_detected) {
-                setLastDetectedWord(data.word_detected) // Actualizar la última palabra detectada
+            if (data.word_detected && data.word_detected !== previousWordRef.current) {
+                setLastDetectedWord(data.word_detected)
+                previousWordRef.current = data.word_detected
+                setAnimateWord(true)
             }
             processingRef.current = false
-            setIsProcessing(false)
         })
 
         return () => {
@@ -134,10 +130,16 @@ export default function VideoStreamRemoto() {
         return cleanup
     }, [socketInitializer])
 
-    // Función para enviar la unidad seleccionada al servidor vía HTTP
+    useEffect(() => {
+        if (animateWord) {
+            const timer = setTimeout(() => setAnimateWord(false), 500)
+            return () => clearTimeout(timer)
+        }
+    }, [animateWord])
+
     const sendUnitSelected = async (unidad: string | undefined) => {
         try {
-            setIsLoadingUnit(true) // Activar el spinner de carga
+            setIsLoadingUnit(true)
             const response = await axios.post(
                 `https://${process.env.NEXT_PUBLIC_AI_SERVICE_URL}/unit_selected`,
                 { unidad },
@@ -148,18 +150,18 @@ export default function VideoStreamRemoto() {
                 }
             )
             console.log('Respuesta del servidor:', response.data)
-            if (response.data.status === "success") {
-                setIsLoadingUnit(false) // Desactivar el spinner al recibir éxito
+            if (response.data.status === 'success') {
+                setIsLoadingUnit(false)
             }
         } catch (error) {
             console.error('Error al seleccionar la unidad:', error)
-            setIsLoadingUnit(false) // Desactivar el spinner en caso de error
+            setIsLoadingUnit(false)
         }
     }
 
     const captureAndSendFrame = useCallback(() => {
         const now = performance.now()
-        if (now - lastCaptureTime.current < 250) {
+        if (now - lastCaptureTime.current < 150) {
             animationFrameId.current = requestAnimationFrame(captureAndSendFrame)
             return
         }
@@ -174,10 +176,9 @@ export default function VideoStreamRemoto() {
                 canvas.height = video.videoHeight
                 context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight)
 
-                const dataURL = canvas.toDataURL('image/jpeg', 0.7)
+                const dataURL = canvas.toDataURL('image/jpeg', 0.5)
                 socket.emit('video_frame', { image: dataURL })
                 processingRef.current = true
-                setIsProcessing(true)
                 lastCaptureTime.current = now
             }
         }
@@ -198,12 +199,12 @@ export default function VideoStreamRemoto() {
         const newUnit = e.target.value as keyof typeof unitWords
         setSelectedUnit(newUnit)
         if (newUnit) {
-            await sendUnitSelected(newUnit) // Llamada HTTP para cambiar de unidad
+            await sendUnitSelected(newUnit)
         }
     }, [])
 
     const unitOptions = useMemo(() => [
-        { value: '', label: 'Seleccione una unidad para comenzar' }, // Opción inicial
+        { value: '', label: 'Seleccione una unidad para comenzar' },
         { value: 'familiares', label: 'Familiares' },
         { value: 'colores', label: 'Colores' },
         { value: 'pronombres', label: 'Pronombres' },
@@ -218,21 +219,25 @@ export default function VideoStreamRemoto() {
                 <HomeLayout activePage={'/freeMode'}>
                     <Container>
                         <Title>Modo Libre</Title>
-                        <Description>En el modo libre puedes seleccionar una unidad y practicar las señales correspondientes. Selecciona una unidad para comenzar.</Description>
+                        <Description>En el modo libre puedes seleccionar una unidad y practicar las señales correspondientes.
+                            Selecciona una unidad para comenzar.</Description>
                         <Select value={selectedUnit} onChange={handleUnitChange} disabled={isLoadingUnit}>
                             {unitOptions.map(option => (
                                 <option key={option.value} value={option.value}>{option.label}</option>
                             ))}
                         </Select>
-                        <DetectedWord>Última seña detectada: {lastDetectedWord || 'Ninguna'}</DetectedWord>
+                        <DetectedWord animate={animateWord}>
+                            Última seña detectada: {lastDetectedWord ||
+                                'Ninguna'}
+                        </DetectedWord>
 
-                        {isLoadingUnit && <Spinner />} {/* Spinner de carga al cambiar de unidad */}
-                        {selectedUnit && !isLoadingUnit && ( // Mostrar la cámara solo cuando se seleccione una unidad y no esté cargando
+                        {isLoadingUnit && <Spinner />}
+                        {selectedUnit && !isLoadingUnit && (
                             <MainImageContainer>
                                 <img
                                     ref={outputRef}
                                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                                    alt="Processed output"
+                                    alt='Processed output'
                                 />
                                 <PreviewContainer>
                                     <Webcam

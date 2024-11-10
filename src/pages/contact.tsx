@@ -54,7 +54,6 @@ const Contact: React.FC = () => {
       body: JSON.stringify({ name: formData.name, mail: formData.email, message: formData.message })
     })
 
-    const data = await response.json()
     if (response.ok) {
       setSuccess(true)
       setShowMessage(true)
@@ -63,7 +62,7 @@ const Contact: React.FC = () => {
 
       setTimeout(() => {
         setOpacity(0)
-      }, 2000);
+      }, 2000)
 
       setTimeout(() => {
         setShowMessage(false)
@@ -116,7 +115,7 @@ const Contact: React.FC = () => {
                   justifyContent: 'center',
                   marginTop: '20px',
                   opacity: opacity, // Control de la opacidad
-                  transition: 'opacity 2s ease-out', // Transición de opacidad
+                  transition: 'opacity 2s ease-out' // Transición de opacidad
                 }}
               >
                 ¡Recibimos tu mensaje! En breve nos pondremos en contacto con vos. <br />Equipo Enseñas.

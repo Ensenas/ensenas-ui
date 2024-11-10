@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import axios from 'axios'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import axios from 'axios'
+import React, { useEffect,useState } from 'react'
 import styled from 'styled-components'
 
 const PageContainer = styled.div`
@@ -138,7 +138,7 @@ const RegisterPage: React.FC = () => {
   const [confirmPassword, setConfirmPassword] = useState('')
   const [passwordError, setPasswordError] = useState('')
   const [confirmPasswordError, setConfirmPasswordError] = useState('')
-  const [countryError, setCountryError] = useState('')
+  const [countryError] = useState('')
   const [birthDateError, setBirthDateError] = useState('')
   const [countries, setCountries] = useState<SelectOption[]>([])
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
@@ -215,7 +215,6 @@ const RegisterPage: React.FC = () => {
         country
       })
 
-      const data = response.data
       const status = response.status
 
       if (status === 200) {

@@ -1,94 +1,94 @@
 /* eslint-disable no-unused-vars */
 // PostContext.tsx
-import axios from 'axios';
-import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
+import axios from 'axios'
+import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react'
 
 export interface Post {
-    id: number;
-    title: string;
-    content: string;
-    videoUrl: string;
-    created_at: string;
+    id: number
+    title: string
+    content: string
+    videoUrl: string
+    created_at: string
     user: {
-        name: string;
-        surname: string;
-        avatar: string;
-    };
+        name: string
+        surname: string
+        avatar: string
+    }
 }
 
 interface PostContextType {
-    posts: Post[];
-    addPost: (post: Omit<Post, 'id' | 'created_at' | 'videoUrl'>, videoFile: File | null) => Promise<void>;
-    searchPosts: (query: string) => Promise<void>;
-    loading: boolean;
+    posts: Post[]
+    addPost: (post: Omit<Post, 'id' | 'created_at' | 'videoUrl'>, videoFile: File | null) => Promise<void>
+    searchPosts: (query: string) => Promise<void>
+    loading: boolean
 }
 
-const PostContext = createContext<PostContextType | undefined>(undefined);
+const PostContext = createContext<PostContextType | undefined>(undefined)
 
 export const usePostContext = () => {
-    const context = useContext(PostContext);
+    const context = useContext(PostContext)
     if (!context) {
-        throw new Error('usePostContext must be used within a PostProvider');
+        throw new Error('usePostContext must be used within a PostProvider')
     }
-    return context;
-};
+    return context
+}
 
 export const PostProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-    const [posts, setPosts] = useState<Post[]>([]);
-    const [loading, setisLoading] = useState<boolean>(true);
+    const [posts, setPosts] = useState<Post[]>([])
+    const [loading, setisLoading] = useState<boolean>(true)
     // Fetch posts from the API
     useEffect(() => {
         const fetchPosts = async () => {
             try {
                 setisLoading(true)
-                const response = await axios.get('/ens-api/posts/posts');
+                const response = await axios.get('/ens-api/posts/posts')
                 const data: Post[] = response.data.sort((a, b) => a.created_at > b.created_at)
-                setPosts(data);
+                setPosts(data)
                 setisLoading(false)
             } catch (error) {
-                console.error('Error fetching posts:', error);
+                console.error('Error fetching posts:', error)
             }
-        };
+        }
 
-        fetchPosts();
-    }, []);
+        fetchPosts()
+    }, [])
 
     // Search posts by query
     const searchPosts = async (query: string) => {
         try {
             setisLoading(true)
-            const response = await axios.get(`/ens-api/posts/search?query=${query}`);
-            const data: Post[] = response.data;
+            const response = await axios.get(`/ens-api/posts/search?query=${query}`)
+            const data: Post[] = response.data
 
             setisLoading(false)
-            setPosts(data);
+            setPosts(data)
         } catch (error) {
-            console.error('Error searching posts:', error);
+            console.error('Error searching posts:', error)
         }
-    };
+    }
 
     // Add a new post to the API
     const addPost = async (newPost: Omit<Post, 'id' | 'created_at' | 'videoUrl'>, videoFile: File | null) => {
-        const token = localStorage.getItem('authToken');
-        setisLoading(true);
+        const token = localStorage.getItem('authToken')
+        setisLoading(true)
         if (!token) {
-            console.error('No se encontró el token JWT, el usuario no está autenticado.');
-            setisLoading(false);
-            return;
+            console.error('No se encontró el token JWT, el usuario no está autenticado.')
+            setisLoading(false)
+            return
         }
 
         try {
-            const formData = new FormData();
+            const formData = new FormData()
 
             // Añadir los campos de texto al FormData
-            formData.append('title', newPost.title);
-            formData.append('content', newPost.content);
-            formData.append('userName', newPost.user.name);
-            formData.append('userSurname', newPost.user.surname);
+            formData.append('title', newPost.title)
+            formData.append('content', newPost.content)
+            formData.append('userName', newPost.user.name)
+            formData.append('userSurname', newPost.user.surname)
 
             // Añadir el archivo de video si existe
             if (videoFile) {
-                formData.append('video', videoFile);
+                formData.append('video', videoFile)
             }
 
             // Enviar la solicitud al backend para crear el post
@@ -101,22 +101,22 @@ export const PostProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                         Authorization: `Bearer ${token}`
                     }
                 }
-            );
+            )
 
-            const createdPost: Post = response.data;
-            setPosts(prevPosts => [createdPost, ...prevPosts]);  // Añadir el post a la lista de posts
+            const createdPost: Post = response.data
+            setPosts(prevPosts => [createdPost, ...prevPosts])  // Añadir el post a la lista de posts
 
-            setisLoading(false);
+            setisLoading(false)
         } catch (error) {
-            console.error('Error adding post:', error);
-            setisLoading(false);
+            console.error('Error adding post:', error)
+            setisLoading(false)
         }
-    };
+    }
 
 
     return (
         <PostContext.Provider value={{ posts, addPost, searchPosts, loading }}>
             {children}
         </PostContext.Provider>
-    );
-};
+    )
+}

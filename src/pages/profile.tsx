@@ -58,7 +58,7 @@ const Profile: React.FC = () => {
 
   const handleSave = async (e) => {
     e.preventDefault()
-    console.log("Datos enviados:", profileData) // Verifica los datos aquí
+    console.log('Datos enviados:', profileData) // Verifica los datos aquí
     try {
       const response = await fetch('/ens-api/users/profile', {
         method: 'PATCH',

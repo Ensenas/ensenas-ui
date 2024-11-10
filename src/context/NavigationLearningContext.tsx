@@ -217,8 +217,8 @@ export const NavigationProvider: React.FC<{ children: ReactNode }> = ({ children
       const token = localStorage.getItem('authToken')
       console.log(token)
       if (!token) {
-        console.error('No se encontró el token JWT, el usuario no está autenticado.');
-        return;
+        console.error('No se encontró el token JWT, el usuario no está autenticado.')
+        return
       }
 
       try {
@@ -227,20 +227,20 @@ export const NavigationProvider: React.FC<{ children: ReactNode }> = ({ children
             Authorization: `Bearer ${token}`,
             'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
             Pragma: 'no-cache',
-            Expires: '0',
-          },
-        });
+            Expires: '0'
+          }
+        })
         console.log(response)
-        setUserProgress(response.data); // Asumiendo que `response.data.data` contiene el progreso
+        setUserProgress(response.data) // Asumiendo que `response.data.data` contiene el progreso
       } catch (error) {
-        console.error('Error al obtener el progreso del desafío:', error);
+        console.error('Error al obtener el progreso del desafío:', error)
       }
-    };
+    }
 
     if (!userProgress) {
-      fetchUserProgress();
+      fetchUserProgress()
     }
-  }, [userProgress, authToken]);
+  }, [userProgress, authToken])
 
 
   return (

@@ -31,20 +31,20 @@ const LoginForm = () => {
     const [error, setError] = useState<string | null>(null)
     const router = useRouter()
     const { data: session, status } = useSession()
-    const { authToken, setAuthToken } = useNavigation()
+    const { setAuthToken } = useNavigation()
 
     useEffect(() => {
-        console.log("Current status:", status)
-        console.log("Current session:", session)
+        console.log('Current status:', status)
+        console.log('Current session:', session)
 
         if (status === 'authenticated' && session?.user?.email) {
-            console.log("Authentication successful")
+            console.log('Authentication successful')
             if (session.user.accessToken) {
                 localStorage.setItem('authToken', session.user.accessToken)
                 setAuthToken(session.user.accessToken)
                 router.push('/home')
             } else {
-                console.error("Access token is missing from the session")
+                console.error('Access token is missing from the session')
             }
         }
     }, [session, status, router])
@@ -100,7 +100,7 @@ const LoginForm = () => {
             }
         } catch (error) {
             console.error('Error de inicio de sesión:', error)
-            setError(`El usuario y/o la contraseña son incorrectos. ¡Probá de nuevo!`)
+            setError('El usuario y/o la contraseña son incorrectos. ¡Probá de nuevo!')
         } finally {
             setIsLoading(false) // Detén el estado de carga
         }
@@ -138,7 +138,7 @@ const LoginForm = () => {
                             required
                         />
 
-                        <Link style={{ marginBottom: '16px' }} href="/forgot-password">
+                        <Link style={{ marginBottom: '16px' }} href='/forgot-password'>
                             ¿Olvidaste tu contraseña?
                         </Link>
 

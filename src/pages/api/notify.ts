@@ -17,7 +17,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             const paymentId = query.id || query['data.id']
             let payment = await mercadopago.payment.findById(Number(paymentId))
             let paymentStatus = payment.body.status
-
+            console.log(paymentStatus)
         }
     } catch (error) {
         res.send(error)

@@ -106,7 +106,7 @@ const HomePage: React.FC = () => {
   const getFirstPartString = (string: string): string | undefined => {
     return string.split(':')[0]?.trim()
   }
-  
+
   const getSecondPartString = (string: string): string | undefined => {
     return string.split(':')[1]?.trim()
   }
@@ -127,16 +127,16 @@ const HomePage: React.FC = () => {
                   ¡Te damos la bienvenida a nuestra plataforma de aprendizaje de lenguaje de señas!
                 </p>
                 <p style={{ fontSize: '1.2em', color: '#fff' }}>
-                  Estamos emocionados de que te hayas unido a nosotros en esta jornada para aprender y
+                  Estamos contentos de que te hayas unido a nosotros en esta jornada para aprender y
                   conectar a través de este hermoso y esencial lenguaje.
                 </p>
                 <p style={{ fontSize: '1.2em', color: '#fff' }}>
-                  ¡Buena suerte y disfruta del proceso de aprendizaje!
+                  ¡Buena suerte y disfrutá del proceso de aprendizaje!
                 </p>
               </div>
             </TextContainer>
             <Recommendations>
-              <RecommendationsTitle>Recomendaciones para ti</RecommendationsTitle>
+              <RecommendationsTitle>Recomendaciones para vos</RecommendationsTitle>
               <VideoList>
                 {isLoading ? (
                   <LoadingSpinner /> // Muestra el spinner mientras se está cargando
@@ -152,7 +152,7 @@ const HomePage: React.FC = () => {
                       </LessonItem>
                     </VideoItem>
                   )))}
-                </ VideoList>
+              </ VideoList>
             </Recommendations>
           </Section>
           {/* Aquí puedes agregar más componentes según sea necesario */}

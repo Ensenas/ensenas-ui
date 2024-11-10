@@ -1,7 +1,7 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import React, { useEffect,useState } from 'react'
+import React, { useState } from 'react'
 
 import HomeHeader from '../HomeHeader/HomeHeader'
 import { ContentContainer, HomePageWrapper, NavIcon, NavItem, SidebarContainer, SidebarNav } from './HomeLayout.styles'
@@ -14,29 +14,29 @@ interface NavItem {
 
 export default function HomeLayout({ children, activePage }: { children: React.ReactNode, activePage: string }) {
   const router = useRouter()
-
-  const [navItems, setNavItems] = useState<NavItem[]>([
+  const [navItems] = useState<NavItem[]>([
     { label: 'Inicio', icon: '/icons/home-icon.png', href: '/home' },
     { label: 'Mi Aprendizaje', icon: '/icons/learning-icon.png', href: '/learning' },
+    { label: 'Modo Libre', icon: '/icons/freeMode-icon.png', href: '/freeMode' },
     { label: 'Perfil', icon: '/icons/profile-icon.png', href: '/profile' },
     { label: 'Mis Logros', icon: '/icons/achievement-icon.png', href: '/achievements' },
-    { label: 'Estadísticas', icon: '/icons/statistics-icon.png', href: '/statistics' },
+    //{ label: 'Estadísticas', icon: '/icons/statistics-icon.png', href: '/statistics' },
     { label: 'Suscripciones', icon: '/icons/suscription-icon.png', href: '/suscriptions' },
     { label: 'Foro', icon: '/icons/forum-icon.png', href: '/social' },
     { label: 'Contactanos', icon: '/icons/contact-icon.png', href: '/contact' }
   ])
 
-  useEffect(() => {
-    const isPremium = JSON.parse(localStorage.getItem('premium') || 'false')
+  // useEffect(() => {
+  //   const isPremium = session?.user?.premium;
 
-    if (isPremium) {
-      setNavItems(prevItems => [
-        ...prevItems.slice(0, 2),
-        { label: 'Modo Libre', icon: '/icons/freeMode-icon.png', href: '/freeMode' },
-        ...prevItems.slice(2)
-      ])
-    }
-  }, [])
+  //   if (isPremium) {
+  //     setNavItems(prevItems => [
+  //       ...prevItems.slice(0, 2),
+  //       { label: 'Modo Libre', icon: '/icons/freeMode-icon.png', href: '/freeMode' },
+  //       ...prevItems.slice(2)
+  //     ])
+  //   }
+  // }, [])
 
   const handleNavigation = (href: string) => {
     router.push(href)

@@ -13,7 +13,7 @@ import SearchResults from './SearchResult'
 const HomeHeader: React.FC = () => {
 
   const [searchTerm, setSearchTerm] = useState('')
-  const { currentLevel, setCurrentLevel, currentUnit, setCurrentUnit, currentLesson, 
+  const { currentLevel, setCurrentLevel, currentUnit, setCurrentUnit, currentLesson,
     setCurrentLesson, levels, units, lessons } = useNavigation()
   const pathname = usePathname()
   const [currentPage, setCurrentPage] = useState<string>('')
@@ -43,7 +43,7 @@ const HomeHeader: React.FC = () => {
   const handleSelectLesson = (selectedLesson: any) => {
     let level, unit, lesson
 
-    level = selectedLesson.title[0] == 'A' ? 'Nivel avanzado' : selectedLesson.title[0] == 'I' ? 
+    level = selectedLesson.title[0] == 'A' ? 'Nivel avanzado' : selectedLesson.title[0] == 'I' ?
       'Nivel intermedio' : 'Nivel básico'
     unit = `Unidad ${selectedLesson.title.split('-')[1]}: ${selectedLesson.description.split(':')[0]}`
     lesson = selectedLesson.description
@@ -66,6 +66,7 @@ const HomeHeader: React.FC = () => {
   // }
 
   const handleSignOut = () => {
+    localStorage.removeItem('userProgress')
     localStorage.removeItem('authToken')
     localStorage.removeItem('currentLevel')
     localStorage.removeItem('currentUnit')

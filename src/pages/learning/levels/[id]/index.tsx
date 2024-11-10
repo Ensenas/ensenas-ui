@@ -45,7 +45,7 @@ const LevelUnits: React.FC = ({ }) => {
     const sendUnitSelected = async (unidad: string | undefined) => {
         try {
             const response = await axios.post(
-                'https://alarma.mywire.org:3050/unit_selected',
+                `https://${process.env.NEXT_PUBLIC_AI_SERVICE_URL}/unit_selected`,
                 { unidad },
                 {
                     headers: {
@@ -103,7 +103,7 @@ const LevelUnits: React.FC = ({ }) => {
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <Title>Unidades del Nivel</Title>
                         <BackButton onClick={handleGoBack}>
-                        Volver atrás
+                            Volver atrás
                         </BackButton>
                     </div>
                     <div>

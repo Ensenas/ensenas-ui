@@ -46,6 +46,8 @@ interface UserChallengeProgress {
 
 
 interface NavigationLearningContextType {
+  authToken: string | null;
+  setAuthToken: (token: string | null) => void;
   currentLevel: Level | null;
   setCurrentLevel: (level: Level | null) => void;
   currentUnit: Unit | null;
@@ -72,6 +74,10 @@ const NavigationLearningContext = createContext<NavigationLearningContextType | 
 
 export const NavigationProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const isBrowser = typeof window !== 'undefined' && typeof window.localStorage !== 'undefined'
+
+  const [authToken, setAuthToken] = useState<string | null>(() => {
+    return isBrowser ? (localStorage.getItem('authToken') || 'null') : null
+  })
 
   const [currentLevel, setCurrentLevel] = useState<Level | null>(() => {
     return isBrowser ? JSON.parse(localStorage.getItem('currentLevel') || 'null') : null
@@ -120,7 +126,7 @@ export const NavigationProvider: React.FC<{ children: ReactNode }> = ({ children
     localStorage.setItem('currentUnit', JSON.stringify(currentUnit))
     localStorage.setItem('currentLesson', JSON.stringify(currentLesson))
     localStorage.setItem('levels', JSON.stringify(levels))
-    localStorage.setItem('levels', JSON.stringify(units))
+    localStorage.setItem('units', JSON.stringify(units))
     localStorage.setItem('lessons', JSON.stringify(lessons))
     localStorage.setItem('loading', JSON.stringify(isLoading))
     localStorage.setItem('hasShownModal', JSON.stringify(hasShownModal))
@@ -207,29 +213,34 @@ export const NavigationProvider: React.FC<{ children: ReactNode }> = ({ children
   }
 
   useEffect(() => {
-    // Obtener el progreso de los desafíos del usuario
     const fetchUserProgress = async () => {
-        const token = localStorage.getItem('authToken')
-        if (!token) {
-            console.error('No se encontró el token JWT, el usuario no está autenticado.')
-            return
-        }
+      const token = localStorage.getItem('authToken')
+      console.log(token)
+      if (!token) {
+        console.error('No se encontró el token JWT, el usuario no está autenticado.')
+        return
+      }
 
-        try {
-            const response = await axios.get('/ens-api/users/challenge-progress', {
-                headers: {
-                    Authorization: `bearer ${token}`
-                }
-            })
-            setUserProgress(response.data)
-        } catch (error) {
-            console.error('Error al obtener el progreso del desafío:', error)
-        }
+      try {
+        const response = await axios.get('/ens-api/users/challenge-progress', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+            Pragma: 'no-cache',
+            Expires: '0'
+          }
+        })
+        console.log(response)
+        setUserProgress(response.data) // Asumiendo que `response.data.data` contiene el progreso
+      } catch (error) {
+        console.error('Error al obtener el progreso del desafío:', error)
+      }
     }
 
-    fetchUserProgress()
-
-}, [userProgress])
+    if (!userProgress) {
+      fetchUserProgress()
+    }
+  }, [userProgress, authToken])
 
 
   return (
@@ -237,7 +248,9 @@ export const NavigationProvider: React.FC<{ children: ReactNode }> = ({ children
       value={{
         currentLevel, setCurrentLevel, currentUnit, setCurrentUnit, currentLesson, setCurrentLesson,
         levels, setLevels, units, setUnits, lessons, setLessons,
-        isLoading, setIsLoading, hasShownModal, setHasShownModal, test, setTest, userProgress, setUserProgress
+        isLoading, setIsLoading, hasShownModal, setHasShownModal, test, setTest, userProgress, setUserProgress,
+        setAuthToken, authToken
+
       }}
     >
       {children}

@@ -9,7 +9,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(405).json({ message: 'Method not allowed' })
     }
 
-    const { email } = req.body
+    const { name, mail, message } = req.body
 
     try {
         const transporter = nodemailer.createTransport({
@@ -22,23 +22,25 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             }
         })
 
-        const resetToken = generateResetToken()
 
 
-        //const resetLink = `${process.env.NEXTAUTH_URL}/reset-password?token=${resetToken}`
-        const resetLink = `http://localhost:3001/reset-password?token=${resetToken}`
 
-
-        const htmlTemplatePath = path.join(process.cwd(), 'src', 'styles', 'mail.html')
+        const htmlTemplatePath = path.join(process.cwd(), 'src', 'styles', 'mail-support.html')
         let htmlContent = fs.readFileSync(htmlTemplatePath, 'utf-8')
 
-        htmlContent = htmlContent.replace(/\${resetLink}/g, resetLink)
-
+        htmlContent = htmlContent.replace(/\${nombre}/g, name)
+        htmlContent = htmlContent.replace(/\${mensaje}/g, message)
+        htmlContent = htmlContent.replace(/\${ensenas_url}/g, process.env.NEXTAUTH_URL)
         const info = await transporter.sendMail({
             from: `"Enseñas" <${process.env.SMTP_USER}>`,
-            to: email,
-            subject: 'Reestablecer Contraseña - Enseñas',
-            text: `Haz clic en el siguiente enlace para reestablecer tu contraseña: ${resetLink}`,
+            to: mail,
+            subject: 'Soporte - Enseñas',
+            html: htmlContent
+        })
+        const info2 = await transporter.sendMail({
+            from: `"Enseñas" <${process.env.SMTP_USER}>`,
+            to: process.env.SMTP_USER,
+            subject: 'Soporte - Enseñas',
             html: htmlContent
         })
 
@@ -47,10 +49,4 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         console.error('Error sending email:', error)
         res.status(500).json({ message: 'Error sending email', error: error.message })
     }
-}
-
-// Implement this function to generate a unique reset token
-function generateResetToken(): string {
-    // This is a simple example. In a real application, you should use a more secure method.
-    return Math.random().toString(36).substr(2, 10)
 }

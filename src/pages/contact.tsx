@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react'
 
 import HomeLayout from '../components/HomeLayout/HomeLayout'
@@ -10,6 +9,8 @@ const Contact: React.FC = () => {
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState('')
+  const [showMessage, setShowMessage] = useState(false)
+  const [opacity, setOpacity] = useState(1) // Controla la opacidad para el desvanecimiento
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -47,19 +48,31 @@ const Contact: React.FC = () => {
     e.preventDefault()
     setLoading(true)
 
-    // Aquí puedes agregar la lógica para enviar el formulario
-    // const response = await fetch('/api/contact', {
-    //   method: 'POST',
-    //   body: JSON.stringify(formData),
-    //   headers: { 'Content-Type': 'application/json' }
-    // });
+    const response = await fetch('/api/send-email-support', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: formData.name, mail: formData.email, message: formData.message })
+    })
 
-    // Simulación de éxito
-    setTimeout(() => {
-      setLoading(false)
+    if (response.ok) {
       setSuccess(true)
+      setShowMessage(true)
+      setOpacity(1)
       setFormData({ name: '', surname: '', email: '', message: '' })
-    }, 1000)
+
+      setTimeout(() => {
+        setOpacity(0)
+      }, 2000)
+
+      setTimeout(() => {
+        setShowMessage(false)
+      }, 7000)
+    } else {
+      setError('Error al enviar el mensaje. Por favor, inténtalo de nuevo.')
+    }
+
+    setLoading(false)
+
   }
 
   return (
@@ -82,11 +95,11 @@ const Contact: React.FC = () => {
             </FormGroup>
             <FormGroup>
               <Label>Mensaje</Label>
-              <TextArea 
-                name="message" 
-                value={formData.message} 
-                onChange={handleChange} 
-                required 
+              <TextArea
+                name="message"
+                value={formData.message}
+                onChange={handleChange}
+                required
               />
             </FormGroup>
             <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
@@ -94,7 +107,21 @@ const Contact: React.FC = () => {
                 {loading ? 'Enviando...' : 'Enviar'}
               </Button>
             </div>
-            {success && <p>Mensaje enviado con éxito.</p>}
+
+            {success && showMessage && (
+              <p
+                style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  marginTop: '20px',
+                  opacity: opacity, // Control de la opacidad
+                  transition: 'opacity 2s ease-out' // Transición de opacidad
+                }}
+              >
+                ¡Recibimos tu mensaje! En breve nos pondremos en contacto con vos. <br />Equipo Enseñas.
+              </p>
+            )}
+
             {error && <p>Error: {error}</p>}
           </form>
         </Section>

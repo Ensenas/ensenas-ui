@@ -1,4 +1,5 @@
 export const BACKEND_URL = process.env.BACKEND_URL
+export const AI_SERVICE_URL = process.env.AI_SERVICE_URL
 
 // Used by next/auth, no need to export
 const NEXTAUTH_SECRET = process.env.NEXTAUTH_SECRET
@@ -20,6 +21,10 @@ if (GOOGLE_CLIENT_ID === undefined) {
 
 if (GOOGLE_CLIENT_SECRET === undefined) {
   throw new Error('GOOGLE_CLIENT_SECRET is undefined, please set it in .env.local')
+}
+
+if (AI_SERVICE_URL === undefined) {
+  throw new Error('AI_SERVICE_URL is undefined, please set it in .env.local')
 }
 
 // Vercel sets NEXTAUTH_URL automatically

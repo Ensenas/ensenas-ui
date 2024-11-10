@@ -1,7 +1,9 @@
 import React from 'react'
 
-import { CrossIcon,   FeatureItem, FeatureList, ModalBody, ModalCloseButton, ModalContent, 
-  ModalOverlay, ModalTitle, Status,StatusContent, TickIcon } from './SuscriptionDetailModal.styles'
+import {
+  CrossIcon, FeatureItem, FeatureList, ModalBody, ModalCloseButton, ModalContent,
+  ModalOverlay, ModalTitle, Status, StatusContent, TickIcon
+} from './SuscriptionDetailModal.styles'
 
 interface SubscriptionDetailModalProps {
   isVisible: boolean;
@@ -23,8 +25,7 @@ const SubscriptionDetailModal: React.FC<SubscriptionDetailModalProps> = ({ isVis
   const features = [
     { label: 'Acceso a lecciones básicas', isPremiumFeature: false },
     { label: 'Acceso a lecciones avanzadas', isPremiumFeature: true },
-    { label: 'Certificación de curso', isPremiumFeature: true },
-    { label: 'Soporte prioritario', isPremiumFeature: true }, 
+    { label: 'Soporte prioritario', isPremiumFeature: true },
     { label: 'Material adicional', isPremiumFeature: true }
   ]
 
@@ -35,13 +36,13 @@ const SubscriptionDetailModal: React.FC<SubscriptionDetailModalProps> = ({ isVis
         <ModalTitle>{subscription.name}</ModalTitle>
         <ModalBody>
           <StatusContent>
-            <p style={{color: '#fff'}}><strong>Estado:</strong></p>
+            <p style={{ color: '#fff' }}><strong>Estado:</strong></p>
             <Status status={subscription.status}>{subscription.status}</Status>
           </StatusContent>
           {subscription.status === 'Activo' ? (
-              <p style={{color: '#fff'}}><strong>Fecha de Expiración:</strong> {subscription.expirationDate}</p>
+            <p style={{ color: '#fff' }}><strong>Fecha de Expiración:</strong> {subscription.expirationDate}</p>
           ) : (
-              <></>
+            <></>
           )}
           <FeatureList>
             {features.map((feature, index) => (

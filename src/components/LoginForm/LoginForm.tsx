@@ -6,6 +6,7 @@ import { signIn, useSession } from 'next-auth/react'
 import React, { useEffect, useState } from 'react'
 import { AiOutlineUnlock, AiOutlineUser } from 'react-icons/ai'
 
+import { useNavigation } from '../../context/NavigationLearningContext'
 import AppLogoTitle from '../AppLogoTitle'
 import Button from '../Button'
 import GoogleSignInButton from '../Button/GoogleButton'
@@ -30,12 +31,21 @@ const LoginForm = () => {
     const [error, setError] = useState<string | null>(null)
     const router = useRouter()
     const { data: session, status } = useSession()
+    const { setAuthToken } = useNavigation()
 
     useEffect(() => {
-        console.log('Session data:', session)
-        const token = localStorage.getItem('authToken')
-        if (status === 'authenticated' || token) {
-            router.push('/home')
+        console.log('Current status:', status)
+        console.log('Current session:', session)
+
+        if (status === 'authenticated' && session?.user?.email) {
+            console.log('Authentication successful')
+            if (session.user.accessToken) {
+                localStorage.setItem('authToken', session.user.accessToken)
+                setAuthToken(session.user.accessToken)
+                router.push('/home')
+            } else {
+                console.error('Access token is missing from the session')
+            }
         }
     }, [session, status, router])
 
@@ -50,14 +60,7 @@ const LoginForm = () => {
     const handleGoogleClick = async () => {
         setIsLoading(true) // Inicia el estado de carga
         try {
-            const signInResponse = await signIn('google', {
-                redirect: false
-            })
-            if (signInResponse && !signInResponse.error) {
-                router.push('/home')
-            } else if (signInResponse?.error) {
-                setError('Error en la autenticación con Google')
-            }
+            await signIn('google', { callbackUrl: '/home' })
         } catch (error) {
             console.error('Error en la autenticación con Google:', error)
             setError('Error en la autenticación con Google')
@@ -86,7 +89,7 @@ const LoginForm = () => {
                 })
 
                 if (signInResponse?.error) {
-                    setError(signInResponse.error)
+                    setError('El usuario y/o la contraseña son incorrectos. ¡Probá de nuevo!')
                 } else if (signInResponse?.ok) {
                     router.push('/home')
                 } else {
@@ -97,7 +100,7 @@ const LoginForm = () => {
             }
         } catch (error) {
             console.error('Error de inicio de sesión:', error)
-            setError(`Error en el inicio de sesión: ${error} `)
+            setError('El usuario y/o la contraseña son incorrectos. ¡Probá de nuevo!')
         } finally {
             setIsLoading(false) // Detén el estado de carga
         }
@@ -135,7 +138,7 @@ const LoginForm = () => {
                             required
                         />
 
-                        <Link href="/forgot-password">
+                        <Link style={{ marginBottom: '16px' }} href='/forgot-password'>
                             ¿Olvidaste tu contraseña?
                         </Link>
 
@@ -148,10 +151,10 @@ const LoginForm = () => {
 
                         <InfoTextContainer>
                             <InfoText>
-                                ¿No tienes tu cuenta?
+                                ¿No tenés tu cuenta?
                             </InfoText>
 
-                            <Link href='/signup'>
+                            <Link href='/register'>
                                 ¡Regístrate!
                             </Link>
                         </InfoTextContainer>

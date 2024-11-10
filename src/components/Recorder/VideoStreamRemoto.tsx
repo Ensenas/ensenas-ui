@@ -64,13 +64,15 @@ export default function VideoStreamRemoto({ level, unit, lesson, onComplete }) {
 
     useEffect(() => {
         if (lesson && lesson.description) {
-            const fraseInicial = lessonsMapping[findWord(lesson.description)].split(' ')
+            const fraseInicial = (lessonsMapping[findWord(lesson.description)]
+                ? lessonsMapping[findWord(lesson.description)].split(' ')
+                : findWord(lesson.description).split(' '))
             setExpectedFrase(fraseInicial)
         }
     }, [lesson.description])
 
     useEffect(() => {
-        const newSocket = io('wss://alarma.mywire.org:3050')
+        const newSocket = io(`wss://${process.env.NEXT_PUBLIC_AI_SERVICE_URL}`)
         setSocket(newSocket)
 
         newSocket.on('connect', () => {
@@ -130,7 +132,8 @@ export default function VideoStreamRemoto({ level, unit, lesson, onComplete }) {
                 const dataURL = canvas.toDataURL('image/jpeg', 0.5)
                 if (socket) {
                     const unit: string | undefined = findUnit()
-                    const word: string | undefined = lessonsMapping[findWord(lesson.description)]
+                    const word: string | undefined = expectedFrase[fraseIndex]
+
 
                     socket.emit('corregir_video_stream', { frase: word, image: dataURL, reset: reset })
                     setReset(false)
@@ -161,7 +164,6 @@ export default function VideoStreamRemoto({ level, unit, lesson, onComplete }) {
         if (expectedFrase.length - 1 === fraseIndex) {
             setIsSuccess(true)
             setShowResultScreen(true)
-
             // Llamar a onComplete cuando se complete la lección
             if (onComplete) {
                 onComplete()

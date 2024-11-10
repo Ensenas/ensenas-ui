@@ -1,8 +1,8 @@
-/* eslint-disable no-console */
 'use client'
 
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
+import { useSession } from 'next-auth/react'
 import { useEffect, useState } from 'react'
 
 import ConfirmationModal from '../components/ConfirmationModal/ConfirmationModal'
@@ -26,9 +26,7 @@ import {
   Status,
   SubscriptionCard,
   SubscriptionsGrid,
-  Title,
-  TrialCard,
-  TrialTitle
+  Title
 } from '../styles/Suscriptions.styles'
 
 interface NotificationType {
@@ -37,11 +35,24 @@ interface NotificationType {
   content: string;
 }
 
-const Subscriptions: React.FC = () => {
-  const [subscriptions, setSubscriptions] = useState<any[]>([])
+interface Subscription {
+  id: number;
+  name: string;
+  isPremium: boolean;
+  background: string;
+  logo: string;
+  status: string;
+  expirationDate: string;
+  detalle: string;
+  plan: any;
+  price: string;
+}
+
+export default function Subscriptions() {
+  const [subscriptions, setSubscriptions] = useState<Subscription[]>([])
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
-  const [selectedSubscription, setSelectedSubscription] = useState<any | null>(null)
+  const [selectedSubscription, setSelectedSubscription] = useState<Subscription | null>(null)
   const [isModalVisible, setModalVisible] = useState<boolean>(false)
   const [isConfirmationVisible, setConfirmationVisible] = useState<boolean>(false)
   const [notification, setNotification] = useState<NotificationType>({
@@ -49,97 +60,126 @@ const Subscriptions: React.FC = () => {
     type: null,
     content: ''
   })
+  const [isProcessingPayment, setIsProcessingPayment] = useState<boolean>(false)
   const router = useRouter()
 
-  function updatePlan(value: boolean) {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('premium', value.toString())
-      updateSubscriptionStatus(value)
-    }
-  }
+  const { data: session, update } = useSession()
 
-  function updateSubscriptionStatus(isPremium: boolean) {
-    setSubscriptions(prevSubs => prevSubs.map(sub => ({
-      ...sub,
-      status: sub.isPremium === isPremium ? 'Activo' : 'Inactivo'
-    })))
-  }
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const urlParams = new URLSearchParams(window.location.search)
-      const status = urlParams.get('status')
-
-      const newUrl = window.location.pathname + window.location.hash
-      router.replace(newUrl, undefined)
-
-      if (status === 'approved') {
+  const updatePlan = async (value: boolean) => {
+    if (session) {
+      setIsProcessingPayment(true)
+      try {
+        await update({
+          ...session,
+          user: {
+            ...session.user,
+            premium: value
+          }
+        })
+        await fetch('/ens-api/users/register-payment', {
+          method: 'POST',
+          body: JSON.stringify({
+            'suscriptionType': value ? 'PREMIUM' : 'BASIC'
+          }),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `bearer ${session?.user.accessToken}`
+          }
+        })
         setNotification({
-          content: 'Pago aprobado!',
+          content: value ? 'Plan actualizado a Premium!' : 'Plan cambiado a Básico',
           isOpen: true,
           type: 'approved'
         })
-        updatePlan(true)
-      } else if (status === 'failure') {
+      } catch (error) {
+        console.error('Error updating plan:', error)
         setNotification({
-          content: 'Pago fallido!',
+          content: 'Error al actualizar el plan',
           isOpen: true,
           type: 'failure'
         })
+      } finally {
+        setIsProcessingPayment(false)
       }
-
-      setTimeout(() => {
-        setNotification({
-          isOpen: false,
-          type: null,
-          content: ''
-        })
-      }, 5000)
     }
-  }, [])
+  }
 
   useEffect(() => {
+    const handlePaymentStatus = async () => {
+      if (typeof window !== 'undefined') {
+        const urlParams = new URLSearchParams(window.location.search)
+        const status = urlParams.get('status')
 
-    try {
-      const isPremium = typeof window !== 'undefined' ? localStorage.getItem('premium') === 'true' : false
-
-      const subs = [
-        {
-          id: 1,
-          name: 'Plan Básico',
-          isPremium: false,
-          background: '/BasicPlan.jpg',
-          logo: '/hot-air-balloon.png',
-          status: isPremium ? 'Inactivo' : 'Activo',
-          expirationDate: '31/12/2024',
-          detalle: 'Detalle Plan Basico',
-          plan: PlanBasico,
-          price: '$15000'
-        },
-        {
-          id: 2,
-          name: 'Plan Premium',
-          isPremium: true,
-          background: '/PremiumPlan.jpg',
-          logo: '/air-plane.png',
-          status: isPremium ? 'Activo' : 'Inactivo',
-          expirationDate: '30/06/2024',
-          detalle: 'Detalle Plan Premium',
-          plan: PlanPremium,
-          price: '$22000'
+        if (status === 'approved') {
+          if (!session?.user?.premium) {
+            setIsProcessingPayment(true)
+            await updatePlan(true)
+          }
+        } else if (status === 'failure') {
+          setNotification({
+            content: 'Pago fallido!',
+            isOpen: true,
+            type: 'failure'
+          })
         }
-      ]
 
-      setSubscriptions(subs)
-      setLoading(false)
-    } catch (error) {
-      setError('Error al obtener las suscripciones.')
-      console.error('Error al obtener las suscripciones:', error)
-      setLoading(false)
+        window.history.pushState({}, document.title, window.location.pathname)
+
+        setTimeout(() => {
+          setNotification({ isOpen: false, type: null, content: '' })
+        }, 5000)
+      }
     }
-  }, [])
 
-  const handleViewDetails = (subscription: any) => {
+    handlePaymentStatus()
+  }, [router, session])
+
+  useEffect(() => {
+    const fetchSubscriptions = () => {
+      try {
+        console.log('session', session)
+        const isPremium = session?.user?.premium
+
+        const subs: Subscription[] = [
+          {
+            id: 1,
+            name: 'Plan Básico',
+            isPremium: false,
+            background: '/BasicPlan.jpg',
+            logo: '/hot-air-balloon.png',
+            status: isPremium ? 'Inactivo' : 'Activo',
+            expirationDate: '31/12/2024',
+            detalle: 'Detalle Plan Basico',
+            plan: PlanBasico,
+            price: '$15000'
+          },
+          {
+            id: 2,
+            name: 'Plan Premium',
+            isPremium: true,
+            background: '/PremiumPlan.jpg',
+            logo: '/air-plane.png',
+            status: isPremium ? 'Activo' : 'Inactivo',
+            expirationDate: '30/06/2024',
+            detalle: 'Detalle Plan Premium',
+            plan: PlanPremium,
+            price: '$22000'
+          }
+        ]
+
+        setSubscriptions(subs)
+        setLoading(false)
+      } catch (error) {
+        setError('Error al obtener las suscripciones.')
+        console.error('Error al obtener las suscripciones:', error)
+        setLoading(false)
+      }
+    }
+
+    fetchSubscriptions()
+  }, [session])
+
+  const handleViewDetails = (subscription: Subscription) => {
     setSelectedSubscription(subscription)
     setModalVisible(true)
   }
@@ -149,18 +189,17 @@ const Subscriptions: React.FC = () => {
     setSelectedSubscription(null)
   }
 
-  const handleCancelSubscription = (subscription: any) => {
+  const handleCancelSubscription = (subscription: Subscription) => {
     setSelectedSubscription(subscription)
     setConfirmationVisible(true)
   }
 
-  const handleConfirmCancel = () => {
-    console.log(`Cancelando suscripción: ${selectedSubscription?.name}`)
-
-    router.refresh()
-    updatePlan(false)
-    setConfirmationVisible(false)
-    setSelectedSubscription(null)
+  const handleConfirmCancel = async () => {
+    if (selectedSubscription) {
+      await updatePlan(false)
+      setConfirmationVisible(false)
+      setSelectedSubscription(null)
+    }
   }
 
   const handleCloseConfirmation = () => {
@@ -168,70 +207,38 @@ const Subscriptions: React.FC = () => {
     setSelectedSubscription(null)
   }
 
+  if (loading || isProcessingPayment) return <LoadingSpinner />
+  if (error) return <Section>{error}</Section>
+
   return (
     <ProtectedRoute>
       <HomeLayout activePage='/suscriptions'>
         <Section>
           <Title>Administrar Suscripciones</Title>
-          {loading ? (
-            <LoadingSpinner />
-          ) : error ? (
-            <Section>{error}</Section>
-          ) : (
-            <SubscriptionsGrid>
-              {subscriptions.length === 0 ? (
-                <CardContent>No hay suscripciones para mostrar.</CardContent>
-              ) : (
-                subscriptions.map(sub => (
-                  <SubscriptionCard key={sub.id} background={sub.background} isPremium={sub.isPremium} status={sub.status}>
-                    {sub.isTrial ? (
-                      <TrialCard background={sub.background}>
-                        <TrialTitle>{sub.name}</TrialTitle>
-                        <CardContent>Estado: {sub.status}</CardContent>
-                        <CardContent>Fecha de Expiración: {sub.expirationDate}</CardContent>
-                        <CardPrice>Precio: {sub.price} <p>/ mes</p></CardPrice>
-                      </TrialCard>
-                    ) : (
-                      <div>
-                        <CardTitle>{sub.name}</CardTitle>
-                        {sub.isPremium ? (
-                          <div>
-                            <PriceContent>
-                              <CardPrice>{sub.price}</CardPrice>
-                              <p style={{ fontSize: '20px', color: '#fff', marginLeft: '10px' }}>/ mes</p>
-                            </PriceContent>
-                            <CardContent><Status status={sub.status}>{sub.status}</Status></CardContent>
-                          </div>
-                        ) : (
-                          <div>
-                            <PriceContent>
-                              <CardPrice>Gratis</CardPrice>
-                            </PriceContent>
-                            <CardContent><Status status={sub.status}>{sub.status}</Status></CardContent>
-                          </div>
-                        )}
-
-                      </div>
-                    )}
-                    <CardLogo>
-                      <LogoImage src={sub.logo} alt="Logo" />
-                    </CardLogo>
-                    <CardActions>
-                      <ActionButton onClick={() => handleViewDetails(sub)}>Ver Detalles</ActionButton>
-                      {sub.status === 'Activo' && (
-                        <div>
-                          <ActionButton onClick={() => handleCancelSubscription(sub)}>Cancelar Suscripción</ActionButton>
-                        </div>
-                      )}
-                      {sub.status === 'Inactivo' && sub.isPremium && (
-                        <MercadoPagoButton product={sub.plan} />
-                      )}
-                    </CardActions>
-                  </SubscriptionCard>
-                ))
-              )}
-            </SubscriptionsGrid>
-          )}
+          <SubscriptionsGrid>
+            {subscriptions.map(sub => (
+              <SubscriptionCard key={sub.id} background={sub.background} isPremium={sub.isPremium} status={sub.status}>
+                <CardTitle>{sub.name}</CardTitle>
+                <PriceContent>
+                  <CardPrice>{sub.isPremium ? sub.price : 'Gratis'}</CardPrice>
+                  {sub.isPremium && <p style={{ fontSize: '20px', color: '#fff', marginLeft: '10px' }}>/ mes</p>}
+                </PriceContent>
+                <CardContent><Status status={sub.status}>{sub.status}</Status></CardContent>
+                <CardLogo>
+                  <LogoImage src={sub.logo} alt='Logo' />
+                </CardLogo>
+                <CardActions>
+                  <ActionButton onClick={() => handleViewDetails(sub)}>Ver Detalles</ActionButton>
+                  {sub.status === 'Activo' && (
+                    <ActionButton onClick={() => handleCancelSubscription(sub)}>Cancelar Suscripción</ActionButton>
+                  )}
+                  {sub.status === 'Inactivo' && sub.isPremium && (
+                    <MercadoPagoButton product={sub.plan} />
+                  )}
+                </CardActions>
+              </SubscriptionCard>
+            ))}
+          </SubscriptionsGrid>
         </Section>
       </HomeLayout>
       <SubscriptionDetailModal
@@ -246,7 +253,7 @@ const Subscriptions: React.FC = () => {
       />
       {notification.isOpen && (
         <div className={PaymentStyles.notification}>
-          <div className={PaymentStyles.iconContainer} 
+          <div className={PaymentStyles.iconContainer}
             style={{ backgroundColor: notification.type === 'approved' ? '#00cc99' : '#ee4646' }}>
             <Image
               src={`/${notification.type}.svg`}
@@ -261,5 +268,3 @@ const Subscriptions: React.FC = () => {
     </ProtectedRoute>
   )
 }
-
-export default Subscriptions

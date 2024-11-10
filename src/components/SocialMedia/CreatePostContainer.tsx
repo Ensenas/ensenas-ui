@@ -35,10 +35,12 @@ const TextArea = styled.textarea`
   border: 1px solid #ddd;
   border-radius: 4px;
   resize: vertical;
+  font-family:inherit;  
 `
 
 const FileInput = styled.input`
   margin-bottom: 10px;
+  font-family:inherit;
 `
 
 const Button = styled.button`
@@ -61,7 +63,7 @@ const VideoPreview = styled.video`
 `
 
 export default function CreatePost() {
-  const [title, setTitle] = useState('Crea una nueva publicación')
+  const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
   const [video, setVideo] = useState<File | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -97,10 +99,10 @@ export default function CreatePost() {
       }
     }
 
-    await addPost(newPost)
+    await addPost(newPost, video)
 
     // Reset form after submission
-    setTitle('Crea una nueva publicación')
+    setTitle('')
     setContent('')
     setVideo(null)
     if (fileInputRef.current) {
@@ -114,7 +116,8 @@ export default function CreatePost() {
         type="text"
         value={title}
         onChange={handleTitleChange}
-        placeholder="Enter post title"
+        placeholder="Crea una nueva publicación"
+        required
       />
       <Form onSubmit={handleSubmit}>
         <TextArea

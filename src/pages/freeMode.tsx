@@ -1,16 +1,69 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable @next/next/no-img-element */
-/* eslint-disable no-console */
 'use client'
 
-import React, { useEffect, useRef, useState } from 'react'
+import axios from 'axios'
+import React, { useCallback, useEffect, useMemo,useRef, useState } from 'react'
 import Webcam from 'react-webcam'
 import { io, Socket } from 'socket.io-client'
+import styled, { keyframes } from 'styled-components'
 
+// Componentes internos de la aplicación
 import HomeLayout from '../components/HomeLayout/HomeLayout'
-import ProtectedRoute from '../components/ProtectedRoute'
+import { Container, Overlay } from '../components/Recorder/RecorderElements'
 import Spinner from '../components/Spinner/Spinner'
-import { Container, Overlay, SelectorsContainer, StyledSelect, WebcamContainer } from '../styles/FreeMode.styles'
+
+const PreviewContainer = styled.div`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 200px;
+  height: 150px;
+  border: 2px solid #000;
+  overflow: hidden;
+  z-index: 10;
+`
+
+const MainImageContainer = styled.div`
+  position: relative;
+  width: 70%;
+  height: 620px;
+`
+
+const Select = styled.select`
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  margin-bottom: 20px;
+  color: #555;
+`
+
+const Title = styled.h2`
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 10px;
+`
+
+const Description = styled.p`
+  font-size: 16px;
+  color: #555;
+  margin-bottom: 20px;
+`
+
+const popAnimation = keyframes`
+  0% { transform: scale(1); }
+  50% { transform: scale(1.3); }
+  100% { transform: scale(1); }
+`
+
+const DetectedWord = styled.div<{ animate: boolean }>`
+  font-size: 32px;
+  color: #333;
+  margin-top: 20px;
+  font-weight: bold;
+  text-align: center;
+  transition: color 0.3s ease;
+  animation: ${({ animate }) => (animate ? popAnimation : 'none')} 0.5s ease;
+`
 
 const unitWords = {
     familiares: ['papa', 'mama', 'hijo', 'hermana'],
@@ -21,59 +74,99 @@ const unitWords = {
     frases_ii: ['color', 'estudiar', 'favorito', 'hermana', 'mi', 'rojo', 'universidad']
 }
 
-const FreeMode: React.FC = () => {
+export default function VideoStreamRemoto() {
     const [socket, setSocket] = useState<Socket | null>(null)
-    const [mode, setMode] = useState('Corregir')
-    const [unit, setUnit] = useState('familiares')
-    const [border, setBorder] = useState('unset')
     const [isConnected, setIsConnected] = useState(false)
-    const [reset, setReset] = useState(false)
-    const [selectedWord, setSelectedWord] = useState(unitWords.familiares[0])
-    const [fps, setFps] = useState(0)
+    const [selectedUnit, setSelectedUnit] = useState('')
+    const [isLoadingUnit, setIsLoadingUnit] = useState(false)
+    const [lastDetectedWord, setLastDetectedWord] = useState('')
+    const [animateWord, setAnimateWord] = useState(false)
     const webcamRef = useRef<Webcam>(null)
     const canvasRef = useRef<HTMLCanvasElement>(null)
     const outputRef = useRef<HTMLImageElement>(null)
+    const processingRef = useRef(false)
+    const lastCaptureTime = useRef(0)
+    const animationFrameId = useRef<number | null>(null)
+    const previousWordRef = useRef('') // Para almacenar la última palabra detectada
 
-    useEffect(() => {
-        const newSocket = io('wss://alarma.mywire.org:3050')
+    const socketInitializer = useCallback(() => {
+        const newSocket = io(`wss://${process.env.NEXT_PUBLIC_AI_SERVICE_URL}`, {
+            transports: ['websocket'],
+            reconnectionAttempts: 5,
+            reconnectionDelay: 1000
+        })
+        setSocket(newSocket)
 
         newSocket.on('connect', () => {
             console.log('Socket connected:', newSocket.id)
             setIsConnected(true)
-            setBorder('2px solid #000')
         })
 
         newSocket.on('disconnect', (reason) => {
             console.log('Socket disconnected:', reason)
+            setIsConnected(false)
         })
+
         newSocket.on('processed_frame', (data) => {
-            if (outputRef.current) {
+            if (outputRef.current && data.image) {
                 outputRef.current.src = data.image
             }
-        })
-        setSocket(newSocket)
-        newSocket.emit('unit_selected', { unidad: unit })
-
-        const handleKeyPress = (event) => {
-
-            if (event.keyCode === 13) {
-                setReset(true)
-                setBorder('3px solid #039619')
+            if (data.word_detected && data.word_detected !== previousWordRef.current) {
+                setLastDetectedWord(data.word_detected)
+                previousWordRef.current = data.word_detected
+                setAnimateWord(true)
             }
-        }
-
-        document.addEventListener('keydown', handleKeyPress)
-
+            processingRef.current = false
+        })
 
         return () => {
             newSocket.disconnect()
-            document.removeEventListener('keydown', handleKeyPress)
             console.log('Socket disconnected:', newSocket.id)
         }
     }, [])
 
-    const sendFrame = () => {
-        if (webcamRef.current && canvasRef.current) {
+    useEffect(() => {
+        const cleanup = socketInitializer()
+        return cleanup
+    }, [socketInitializer])
+
+    useEffect(() => {
+        if (animateWord) {
+            const timer = setTimeout(() => setAnimateWord(false), 500)
+            return () => clearTimeout(timer)
+        }
+    }, [animateWord])
+
+    const sendUnitSelected = async (unidad: string | undefined) => {
+        try {
+            setIsLoadingUnit(true)
+            const response = await axios.post(
+                `https://${process.env.NEXT_PUBLIC_AI_SERVICE_URL}/unit_selected`,
+                { unidad },
+                {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }
+            )
+            console.log('Respuesta del servidor:', response.data)
+            if (response.data.status === 'success') {
+                setIsLoadingUnit(false)
+            }
+        } catch (error) {
+            console.error('Error al seleccionar la unidad:', error)
+            setIsLoadingUnit(false)
+        }
+    }
+
+    const captureAndSendFrame = useCallback(() => {
+        const now = performance.now()
+        if (now - lastCaptureTime.current < 150) {
+            animationFrameId.current = requestAnimationFrame(captureAndSendFrame)
+            return
+        }
+
+        if (webcamRef.current && canvasRef.current && socket && !processingRef.current) {
             const video = webcamRef.current.video
             const canvas = canvasRef.current
             const context = canvas.getContext('2d')
@@ -84,79 +177,89 @@ const FreeMode: React.FC = () => {
                 context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight)
 
                 const dataURL = canvas.toDataURL('image/jpeg', 0.5)
-                if (socket) {
-                    socket.emit('video_frame', { image: dataURL, reset: reset })
-                    setReset(false)
-                }
+                socket.emit('video_frame', { image: dataURL })
+                processingRef.current = true
+                lastCaptureTime.current = now
             }
         }
-    }
+
+        animationFrameId.current = requestAnimationFrame(captureAndSendFrame)
+    }, [socket])
 
     useEffect(() => {
-        const interval = setInterval(sendFrame, 250)
-        return () => clearInterval(interval)
-    }, [socket, sendFrame])
+        animationFrameId.current = requestAnimationFrame(captureAndSendFrame)
+        return () => {
+            if (animationFrameId.current) {
+                cancelAnimationFrame(animationFrameId.current)
+            }
+        }
+    }, [captureAndSendFrame])
 
-    const handleUnitChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const handleUnitChange = useCallback(async (e: React.ChangeEvent<HTMLSelectElement>) => {
         const newUnit = e.target.value as keyof typeof unitWords
-        setUnit(newUnit)
-        setSelectedWord(unitWords[newUnit][0])
-        socket?.emit('unit_selected', { unidad: newUnit })
-    }
+        setSelectedUnit(newUnit)
+        if (newUnit) {
+            await sendUnitSelected(newUnit)
+        }
+    }, [])
 
-    const handleModeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const newMode = e.target.value
-        setMode(newMode)
-        socket?.emit('reset_text')
-    }
-
-    const handleWordChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        setSelectedWord(e.target.value)
-        socket?.emit('reset_text')
-    }
+    const unitOptions = useMemo(() => [
+        { value: '', label: 'Seleccione una unidad para comenzar' },
+        { value: 'familiares', label: 'Familiares' },
+        { value: 'colores', label: 'Colores' },
+        { value: 'pronombres', label: 'Pronombres' },
+        { value: 'saludos', label: 'Saludos' },
+        { value: 'frases_i', label: 'Frases I' },
+        { value: 'frases_ii', label: 'Frases II' }
+    ], [])
 
     return (
-        <ProtectedRoute>
-            <HomeLayout activePage='/freeMode'>
-                {isConnected ? (
-                    <div>
-                        <Container>
-                            <div id="fpsDisplay">FPS Max: {fps}</div>
+        <div>
+            {isConnected ? (
+                <HomeLayout activePage={'/freeMode'}>
+                    <Container>
+                        <Title>Modo Libre</Title>
+                        <Description>En el modo libre puedes seleccionar una unidad y practicar las señales correspondientes.
+                            Selecciona una unidad para comenzar.</Description>
+                        <Select value={selectedUnit} onChange={handleUnitChange} disabled={isLoadingUnit}>
+                            {unitOptions.map(option => (
+                                <option key={option.value} value={option.value}>{option.label}</option>
+                            ))}
+                        </Select>
+                        <DetectedWord animate={animateWord}>
+                            Última seña detectada: {lastDetectedWord ||
+                                'Ninguna'}
+                        </DetectedWord>
 
-                            <SelectorsContainer>
-                                <StyledSelect value={unit} onChange={handleUnitChange}>
-                                    <option value="familiares">Familiares</option>
-                                    <option value="colores">Colores</option>
-                                </StyledSelect>
-
-                            </SelectorsContainer>
-
-                            <img ref={outputRef} style={{ width: '70%', height: '620px', border: border }} />
-
-                            <WebcamContainer>
-                                <Webcam
-                                    ref={webcamRef}
-                                    audio={false}
-                                    videoConstraints={{
-                                        facingMode: 'user',
-                                        width: 1920,
-                                        height: 1080
-                                    }}
-                                    style={{ opacity: 0 }}
+                        {isLoadingUnit && <Spinner />}
+                        {selectedUnit && !isLoadingUnit && (
+                            <MainImageContainer>
+                                <img
+                                    ref={outputRef}
+                                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                    alt='Processed output'
                                 />
-                            </WebcamContainer>
-
-                            <canvas ref={canvasRef} style={{ display: 'none' }} />
-
-                            <Overlay />
-                        </Container>
-                    </div>
-                ) : (
-                    <Spinner />
-                )}
-            </HomeLayout>
-        </ProtectedRoute>
+                                <PreviewContainer>
+                                    <Webcam
+                                        ref={webcamRef}
+                                        audio={false}
+                                        videoConstraints={{
+                                            facingMode: 'user',
+                                            width: 1280,
+                                            height: 720
+                                        }}
+                                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                    />
+                                </PreviewContainer>
+                            </MainImageContainer>
+                        )}
+                        <canvas ref={canvasRef} style={{ display: 'none' }} />
+                        <Overlay />
+                    </Container>
+                </HomeLayout>
+            ) : (
+                <Spinner />
+            )}
+        </div>
     )
 }
-
-export default FreeMode

@@ -17,44 +17,52 @@ export const authOptions: NextAuthOptions = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
       profile: async (profile) => {
         try {
-
           const response = await fetch(`${process.env.BACKEND_URL}/auth/google-login`, {
             method: 'POST',
-            body: {
-              'mail': profile.email,
-              'password': profile.at_hash,
-              'name': profile.given_name,
-              'surname': profile.family_name,
-              'birthDate': '',
-              'country': 'Argentina'
-            }
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              mail: profile.email,
+              password: "default_password",
+              name: profile.given_name,
+              surname: profile.family_name,
+              birthDate: "1997-06-17T06:35:49.661Z",
+              country: "Argentina"
+            })
 
           })
 
 
           if (response) {
             let json = await response.json()
+            let user = {
+              id: profile.sub,
+              email: json.mail,
+              name: json.name + ' ' + json.surname,
+              accessToken: json.access_token,
+              premium: false
+            } as User
 
+            let payments = await fetch(`${process.env.BACKEND_URL}/users/get-payment`, {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `bearer ${user.accessToken}`
+              },
+            })
 
-            if (json.status == 400 && json.message.includes('USER ALREADY REGISTERED')) {
-              return {
-                id: 'sdfsdf05421665',
-                email: 'ischerer@frba.utn.edu.ar',
-                name: 'Ivan Gabriel Scherer',
-                accessToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtYWlsIjoiaXZhbi5nLnNjaGVyZXJAZ21haWwu' +
-                  'Y29tIiwibmFtZSI6Ikl2YW4gIiwic3VybmFtZSI6IlNjaGVyZXIiLCJyb2xlIjpudWxsLCJpYXQiOjE3Mjg4NTMxNDA' +
-                  'sImV4cCI6MTcyODg1Njc0MH0.ahyPJEjdqD4P_LeUS7vCRSBu1nDR9ktkvKx3U3imZV4',
-                premium: false
-              } as User
-            } else {
-              return {
-                id: json.id,
-                email: json.mail,
-                name: json.name + ' ' + json.surname,
-                accessToken: '',
-                premium: false
-              } as User
+            let allPayments = await payments.json()
+            if (allPayments.length) {
+              const lastPayment = allPayments.reduce((masNuevo, actual) => {
+                return new Date(actual.date) > new Date(masNuevo.date) ? actual : masNuevo;
+              });
+
+              user['premium'] = lastPayment['suscription'] == "PREMIUM"
             }
+
+
+            return user as User
 
           }
 
@@ -63,7 +71,7 @@ export const authOptions: NextAuthOptions = {
 
           // }
 
-          // console.log(response, 'response')
+          // console.log(response, "response")
           // // Uncomment and implement this part when your backend is ready
           // // const res = await fetch(`${process.env.BACKEND_URL}/auth/google-login`, {
           // //   method: 'POST',
@@ -83,15 +91,15 @@ export const authOptions: NextAuthOptions = {
 
           // // const data = await res.json();
           // return {
-          //   id: '1',
+          //   id: "1",
           //   email: 'ischerer@frba.utn.edu.ar',
           //   name: 'Ivan Scherer',
           //   accessToken: 'aaasd',
           //   premium: false
           // } as User;
         } catch (error) {
-          console.error('Error in Google profile callback:', error)
-          throw error
+          console.error('Error in Google profile callback:', error);
+          throw error;
         }
       }
     }),
@@ -121,21 +129,21 @@ export const authOptions: NextAuthOptions = {
               headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `bearer ${data.access_token}`
-              }
+              },
             })
 
             let allPayments = await payments.json()
             if (allPayments.length) {
               const lastPayment = allPayments.reduce((masNuevo, actual) => {
-                return new Date(actual.date) > new Date(masNuevo.date) ? actual : masNuevo
-              })
+                return new Date(actual.date) > new Date(masNuevo.date) ? actual : masNuevo;
+              });
 
               return {
                 id: data.id,
                 email: credentials?.email || '',
                 name: data.name + ' ' + data.surname,
                 accessToken: data.access_token,
-                premium: lastPayment['suscription'] == 'PREMIUM'
+                premium: lastPayment['suscription'] == "PREMIUM"
               } as User
             }
             else return {
@@ -157,7 +165,7 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async jwt({ token, user, account, trigger, session }) {
-      if (trigger === 'update' && session?.user) {
+      if (trigger === "update" && session?.user) {
         return { ...token, ...session.user }
       }
       if (user) {
@@ -167,9 +175,9 @@ export const authOptions: NextAuthOptions = {
         token.accessToken = user.accessToken
         token.premium = user.premium
       }
-      if (account?.access_token) {
-        token.accessToken = account.access_token
-      }
+      // if (account?.access_token) {
+      //   token.accessToken = account.access_token
+      // }
       return token
     },
     async session({ session, token }) {
@@ -181,7 +189,7 @@ export const authOptions: NextAuthOptions = {
         session.user.premium = token.premium as boolean
       }
       return session
-    }
+    },
   },
   pages: {
     signIn: '/login'

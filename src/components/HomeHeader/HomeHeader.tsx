@@ -11,17 +11,24 @@ import { HeaderContainer, Logo, LogoutButton, SearchButton, SearchInput } from '
 import SearchResults from './SearchResult'
 
 const HomeHeader: React.FC = () => {
-
   const [searchTerm, setSearchTerm] = useState('')
-  const { currentLevel, setCurrentLevel, currentUnit, setCurrentUnit, currentLesson,
-    setCurrentLesson, levels, units, lessons } = useNavigation()
+  const {
+    currentLevel,
+    setCurrentLevel,
+    currentUnit,
+    setCurrentUnit,
+    currentLesson,
+    setCurrentLesson,
+    levels,
+    units,
+    lessons
+  } = useNavigation()
   const pathname = usePathname()
   const [currentPage, setCurrentPage] = useState<string>('')
   const router = useRouter()
 
   const getFirstPartString = (string: string): string | undefined => {
     return string.split(':')[0]?.trim().toLowerCase()
-
   }
 
   const getSecondPartString = (string: string): string | undefined => {
@@ -36,22 +43,25 @@ const HomeHeader: React.FC = () => {
     setSearchTerm(event.target.value)
   }
 
-  const filteredLessons = lessons!.filter(lesson =>
+  const filteredLessons = lessons!.filter((lesson) =>
     lesson.description.toLowerCase().includes(searchTerm.toLowerCase())
   )
 
   const handleSelectLesson = (selectedLesson: any) => {
     let level, unit, lesson
 
-    level = selectedLesson.title[0] == 'A' ? 'Nivel avanzado' : selectedLesson.title[0] == 'I' ?
-      'Nivel intermedio' : 'Nivel básico'
+    level =
+      selectedLesson.title[0] == 'A'
+        ? 'Nivel avanzado'
+        : selectedLesson.title[0] == 'I'
+          ? 'Nivel intermedio'
+          : 'Nivel básico'
     unit = `Unidad ${selectedLesson.title.split('-')[1]}: ${selectedLesson.description.split(':')[0]}`
     lesson = selectedLesson.description
 
-
-    setCurrentLesson(lessons!.find(e => e.id == selectedLesson.id)!)
-    setCurrentLevel(levels!.find(e => e.description == level)!)
-    setCurrentUnit(units!.find(e => e.description == unit)!)
+    setCurrentLesson(lessons!.find((e) => e.id == selectedLesson.id)!)
+    setCurrentLevel(levels!.find((e) => e.description == level)!)
+    setCurrentUnit(units!.find((e) => e.description == unit)!)
 
     setSearchTerm('')
     router.push(`/learning/levels/${level}/units/${unit}/lessons/${lesson}`)
@@ -72,7 +82,7 @@ const HomeHeader: React.FC = () => {
     localStorage.removeItem('currentUnit')
     localStorage.removeItem('currentLesson')
     localStorage.removeItem('hasShownModal')
-    signOut({ callbackUrl: '/' })
+    signOut({ redirect: false })
   }
 
   return (

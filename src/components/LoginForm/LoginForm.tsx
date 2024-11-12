@@ -6,6 +6,7 @@ import { useRouter } from 'next/router'
 import { signIn, useSession } from 'next-auth/react'
 import React, { useEffect, useState } from 'react'
 import { AiOutlineUnlock, AiOutlineUser } from 'react-icons/ai'
+import { useNavigation } from '../../context/NavigationLearningContext'
 
 import AppLogoTitle from '../AppLogoTitle'
 import Button from '../Button'
@@ -31,6 +32,7 @@ const LoginForm = () => {
     const [error, setError] = useState<string | null>(null)
     const router = useRouter()
     const { data: session, status } = useSession()
+    const { setAuthToken } = useNavigation()
 
     useEffect(() => {
         const handleAuthenticationResult = async () => {
@@ -38,6 +40,8 @@ const LoginForm = () => {
                 console.log("Authentication successful")
                 if (session.user.accessToken) {
                     localStorage.setItem('authToken', session.user.accessToken)
+                    setAuthToken(session.user.accessToken)
+
                     await router.push('/home')
                 } else {
                     console.error("Access token is missing from the session")
@@ -65,7 +69,6 @@ const LoginForm = () => {
                 console.error('Error en la autenticación con Google:', result.error)
                 setError('Error en la autenticación con Google')
             } else if (result?.ok) {
-                localStorage.setItem('isGoogleLogin', 'true')
             }
         } catch (error) {
             console.error('Error en la autenticación con Google:', error)
@@ -87,7 +90,6 @@ const LoginForm = () => {
 
             if (access_token) {
                 localStorage.setItem('authToken', access_token)
-                localStorage.setItem('isGoogleLogin', 'false')
                 const signInResponse = await signIn('credentials', {
                     redirect: false,
                     email,

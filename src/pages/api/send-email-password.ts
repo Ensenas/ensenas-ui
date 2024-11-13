@@ -9,8 +9,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(405).json({ message: 'Method not allowed' })
     }
 
-    const { email } = req.body
-
+    const { email, newPassword } = req.body
     try {
         const transporter = nodemailer.createTransport({
             host: process.env.SMTP_HOST,
@@ -22,23 +21,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             }
         })
 
-        const resetToken = generateResetToken()
-
-
-        //const resetLink = `${process.env.NEXTAUTH_URL}/reset-password?token=${resetToken}`
-        const resetLink = `${process.env.NEXTAUTH_URL}/reset-password?token=${resetToken}`
-
-
         const htmlTemplatePath = path.join(process.cwd(), 'src', 'styles', 'mail.html')
         let htmlContent = fs.readFileSync(htmlTemplatePath, 'utf-8')
 
-        htmlContent = htmlContent.replace(/\${resetLink}/g, resetLink)
+        htmlContent = htmlContent.replace(/\${newPassword}/g, newPassword)
 
         const info = await transporter.sendMail({
             from: `"Enseñas" <${process.env.SMTP_USER}>`,
             to: email,
             subject: 'Reestablecer Contraseña - Enseñas',
-            text: `Haz clic en el siguiente enlace para reestablecer tu contraseña: ${resetLink}`,
+            text: `Su nueva contraseña es: ${newPassword}.`,
             html: htmlContent
         })
 

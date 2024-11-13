@@ -16,16 +16,24 @@ export default function ForgotPasswordPage() {
     setMessage('')
 
     try {
-      // Replace this with your actual API call
-      const response = await fetch('/api/send-email-password', {
+      const response_recover = await fetch('/ens-api/auth/recover-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email })
       })
+      const data_recover = await response_recover.json()
+      const new_password = data_recover.newPassword
 
-      const data = await response.json()
+      // Replace this with your actual API call
+      const response_email = await fetch('/api/send-email-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, newPassword: new_password })
+      })
+      console.log(new_password)
+      const data = await response_email.json()
 
-      if (response.ok) {
+      if (response_email.ok) {
         setMessage('Se ha enviado un enlace para restablecer tu contraseña. Por favor, revisa tu correo.')
       } else {
         setMessage(data.error || 'Ha ocurrido un error. Por favor, intenta de nuevo.')

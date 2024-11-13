@@ -22,12 +22,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
     })
 
+
+
+
     const htmlTemplatePath = path.join(process.cwd(), 'src', 'styles', 'mail-support.html')
     let htmlContent = fs.readFileSync(htmlTemplatePath, 'utf-8')
 
     htmlContent = htmlContent.replace(/\${nombre}/g, name)
     htmlContent = htmlContent.replace(/\${mensaje}/g, message)
-    htmlContent = htmlContent.replace(/\${ensenas_url}/g, process.env.NEXTAUTH_URL || '')
+    htmlContent = htmlContent.replace(/\${ensenas_url}/g, process.env.NEXTAUTH_URL)
     const info = await transporter.sendMail({
       from: `"Enseñas" <${process.env.SMTP_USER}>`,
       to: mail,

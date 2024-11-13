@@ -1,10 +1,12 @@
-/* eslint-disable no-console */
+'use client'
+
 import axios from 'axios'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { signIn, useSession } from 'next-auth/react'
 import React, { useEffect, useState } from 'react'
 import { AiOutlineUnlock, AiOutlineUser } from 'react-icons/ai'
+import { useNavigation } from '../../context/NavigationLearningContext'
 
 import { useNavigation } from '../../context/NavigationLearningContext'
 import AppLogoTitle from '../AppLogoTitle'
@@ -34,19 +36,22 @@ const LoginForm = () => {
     const { setAuthToken } = useNavigation()
 
     useEffect(() => {
-        console.log('Current status:', status)
-        console.log('Current session:', session)
+        const handleAuthenticationResult = async () => {
+            if (status === 'authenticated' && session?.user?.email) {
+                console.log("Authentication successful")
+                if (session.user.accessToken) {
+                    localStorage.setItem('authToken', session.user.accessToken)
+                    setAuthToken(session.user.accessToken)
 
-        if (status === 'authenticated' && session?.user?.email) {
-            console.log('Authentication successful')
-            if (session.user.accessToken) {
-                localStorage.setItem('authToken', session.user.accessToken)
-                setAuthToken(session.user.accessToken)
-                router.push('/home')
-            } else {
-                console.error('Access token is missing from the session')
+                    await router.push('/home')
+                } else {
+                    console.error("Access token is missing from the session")
+                    setError('Error al obtener el token de acceso')
+                }
             }
         }
+
+        handleAuthenticationResult()
     }, [session, status, router])
 
     const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -58,20 +63,25 @@ const LoginForm = () => {
     }
 
     const handleGoogleClick = async () => {
-        setIsLoading(true) // Inicia el estado de carga
+        setIsLoading(true)
         try {
-            await signIn('google', { callbackUrl: '/home' })
+            const result = await signIn('google', { redirect: false })
+            if (result?.error) {
+                console.error('Error en la autenticación con Google:', result.error)
+                setError('Error en la autenticación con Google')
+            } else if (result?.ok) {
+            }
         } catch (error) {
             console.error('Error en la autenticación con Google:', error)
             setError('Error en la autenticación con Google')
         } finally {
-            setIsLoading(false) // Detén el estado de carga
+            setIsLoading(false)
         }
     }
 
     const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
-        setIsLoading(true) // Inicia el estado de carga
+        setIsLoading(true)
         try {
             const response = await axios.post('/ens-api/auth/login', {
                 mail: email,
@@ -81,7 +91,6 @@ const LoginForm = () => {
 
             if (access_token) {
                 localStorage.setItem('authToken', access_token)
-
                 const signInResponse = await signIn('credentials', {
                     redirect: false,
                     email,
@@ -91,7 +100,7 @@ const LoginForm = () => {
                 if (signInResponse?.error) {
                     setError('El usuario y/o la contraseña son incorrectos. ¡Probá de nuevo!')
                 } else if (signInResponse?.ok) {
-                    router.push('/home')
+                    // The useEffect hook will handle the redirection
                 } else {
                     setError('Error desconocido.')
                 }
@@ -100,9 +109,9 @@ const LoginForm = () => {
             }
         } catch (error) {
             console.error('Error de inicio de sesión:', error)
-            setError('El usuario y/o la contraseña son incorrectos. ¡Probá de nuevo!')
+            setError(`El usuario y/o la contraseña son incorrectos. ¡Probá de nuevo!`)
         } finally {
-            setIsLoading(false) // Detén el estado de carga
+            setIsLoading(false)
         }
     }
 
@@ -114,7 +123,7 @@ const LoginForm = () => {
                     <title>Enseñas - Iniciar Sesión</title>
                 </Head>
                 {isLoading ? (
-                    <LoadingSpinner /> // Aquí puedes poner un spinner o cualquier otro indicador de carga
+                    <LoadingSpinner />
                 ) : (
                     <Form onSubmit={handleLogin}>
                         <AppLogoTitle />
@@ -138,7 +147,7 @@ const LoginForm = () => {
                             required
                         />
 
-                        <Link style={{ marginBottom: '16px' }} href='/forgot-password'>
+                        <Link style={{ marginBottom: '16px' }} href="/forgot-password">
                             ¿Olvidaste tu contraseña?
                         </Link>
 

@@ -19,5 +19,3 @@ export const ResultItem = styled.div`
     background-color: #f0f0f0; /* Cambia el color al pasar el mouse */
   }
 `
-
-

@@ -2,8 +2,6 @@ import React from 'react'
 
 import { AppTitle, Container, LogoImage } from './AppLogoTitleElements'
 
-// type Props = {}
-
 const AppLogoTitle = () => {
   return (
     <Container href="/">

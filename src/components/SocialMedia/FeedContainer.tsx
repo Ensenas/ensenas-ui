@@ -90,10 +90,10 @@ const SearchIcon = styled.span`
 
 const IframeContainer = styled.div`
   position: relative;
-  width: 100%; 
-  max-width: 960px; 
-  margin: 0 auto; 
-  padding-top: 56.25%; 
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+  padding-top: 56.25%;
   background-color: #000;
 
   iframe {
@@ -118,9 +118,8 @@ export default function FeedContainer() {
   const getYouTubeId = (url: string) => {
     const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/
     const match = url.match(regExp)
-    return (match && match[2].length === 11) ? match[2] : null
+    return match && match[2].length === 11 ? match[2] : null
   }
-
 
   return (
     <FeedContainerStyled>
@@ -138,13 +137,16 @@ export default function FeedContainer() {
           <LoadingSpinner />
         </SpinnerContainer>
       ) : (
-        posts.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+        posts
+          .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
           .slice(0, 10)
           .map((post) => (
             <PostItem key={post.id}>
               <PostHeader>
                 <UserInfo>
-                  <Username>{post.user.name} {post.user.surname}</Username>
+                  <Username>
+                    {post.user.name} {post.user.surname}
+                  </Username>
                   <PostDate>{`${String(new Date(Date.parse(post.created_at)).getDate()).padStart(2, '0')}/
                   ${String(new Date(Date.parse(post.created_at)).getMonth() + 1).padStart(2, '0')}/
                   ${new Date(Date.parse(post.created_at)).getFullYear()} 
@@ -154,8 +156,8 @@ export default function FeedContainer() {
               </PostHeader>
               <PostTitle>{post.title}</PostTitle>
               <PostContent>{post.content}</PostContent>
-              {post.videoUrl && (
-                getYouTubeId(post.videoUrl) ? (
+              {post.videoUrl &&
+                (getYouTubeId(post.videoUrl) ? (
                   <IframeContainer>
                     <iframe
                       src={`https://www.youtube.com/embed/${getYouTubeId(post.videoUrl)}`}
@@ -169,12 +171,10 @@ export default function FeedContainer() {
                     <source src={post.videoUrl} type="video/mp4" />
                     Your browser does not support the video tag.
                   </video>
-                )
-              )}
+                ))}
             </PostItem>
           ))
       )}
-
     </FeedContainerStyled>
   )
 }

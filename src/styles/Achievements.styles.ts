@@ -21,16 +21,16 @@ export const AchievementsGrid = styled.div`
 `
 
 export const AchievementCard = styled.div`
- 
   padding: 20px;
   background-color: #fff;
   border-radius: 10px;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
   text-align: center;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 
   min-height: 300px;
-
 
   &:hover {
     transform: translateY(-5px);
@@ -54,10 +54,10 @@ export const CardContent = styled.p`
   margin-bottom: 10px;
 `
 
-export const Medal = styled.div<{ completed: boolean | undefined}>`
+export const Medal = styled.div<{ completed: boolean | undefined }>`
   width: 80px;
   height: 80px;
-  background-image: url('/medal.png');  /* Ruta desde la raíz de la carpeta public */
+  background-image: url('/medal.png'); /* Ruta desde la raíz de la carpeta public */
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;

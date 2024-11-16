@@ -10,7 +10,6 @@ Modal.setAppElement('#__next')
 const inter = Inter({ subsets: ['latin'] })
 
 export default function MyApp({ Component, pageProps: { ...pageProps } }) {
-
   useEffect(() => {
     // Set the app element for react-modal
     Modal.setAppElement('#__next')
@@ -18,9 +17,9 @@ export default function MyApp({ Component, pageProps: { ...pageProps } }) {
 
   return (
     <main className={inter.className}>
-        <Providers>
-          <Component {...pageProps} />
-        </Providers>
+      <Providers>
+        <Component {...pageProps} />
+      </Providers>
     </main>
   )
 }

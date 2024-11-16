@@ -1,22 +1,22 @@
 .button {
-    width: fit-content;
-    text-decoration: none;
-    background-color: #fff;
-    padding: 10px 15px;
-    border-radius: 6px;
-    border: 1px solid #9610ba;
-    border: none;
-    cursor: pointer;
-    color: #9610ba;
-    font-size: 0.9em;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
-    transition: background-color 0.3s ease;
+  width: fit-content;
+  text-decoration: none;
+  background-color: #fff;
+  padding: 10px 15px;
+  border-radius: 6px;
+  border: 1px solid #9610ba;
+  border: none;
+  cursor: pointer;
+  color: #9610ba;
+  font-size: 0.9em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  transition: background-color 0.3s ease;
 
-    &:hover {
-        background-color: #9610ba;
-        color: #fff;
-    }
+  &:hover {
+    background-color: #9610ba;
+    color: #fff;
+  }
 }

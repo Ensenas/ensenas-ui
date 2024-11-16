@@ -1,25 +1,38 @@
 import React from 'react'
 
 import {
-  CrossIcon, FeatureItem, FeatureList, ModalBody, ModalCloseButton, ModalContent,
-  ModalOverlay, ModalTitle, Status, StatusContent, TickIcon
+  CrossIcon,
+  FeatureItem,
+  FeatureList,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalOverlay,
+  ModalTitle,
+  Status,
+  StatusContent,
+  TickIcon
 } from './SuscriptionDetailModal.styles'
 
 interface SubscriptionDetailModalProps {
-  isVisible: boolean;
-  onClose: () => void;
+  isVisible: boolean
+  onClose: () => void
   subscription: {
-    name: string;
-    isPremium: boolean;
-    background: string;
-    logo: string;
-    status: string;
-    expirationDate: string;
-    detalle: string;
-  } | null;
+    name: string
+    isPremium: boolean
+    background: string
+    logo: string
+    status: string
+    expirationDate: string
+    detalle: string
+  } | null
 }
 
-const SubscriptionDetailModal: React.FC<SubscriptionDetailModalProps> = ({ isVisible, onClose, subscription }) => {
+const SubscriptionDetailModal: React.FC<SubscriptionDetailModalProps> = ({
+  isVisible,
+  onClose,
+  subscription
+}) => {
   if (!isVisible || !subscription) return null
 
   const features = [
@@ -36,11 +49,15 @@ const SubscriptionDetailModal: React.FC<SubscriptionDetailModalProps> = ({ isVis
         <ModalTitle>{subscription.name}</ModalTitle>
         <ModalBody>
           <StatusContent>
-            <p style={{ color: '#fff' }}><strong>Estado:</strong></p>
+            <p style={{ color: '#fff' }}>
+              <strong>Estado:</strong>
+            </p>
             <Status status={subscription.status}>{subscription.status}</Status>
           </StatusContent>
           {subscription.status === 'Activo' ? (
-            <p style={{ color: '#fff' }}><strong>Fecha de Expiración:</strong> {subscription.expirationDate}</p>
+            <p style={{ color: '#fff' }}>
+              <strong>Fecha de Expiración:</strong> {subscription.expirationDate}
+            </p>
           ) : (
             <></>
           )}
@@ -63,4 +80,3 @@ const SubscriptionDetailModal: React.FC<SubscriptionDetailModalProps> = ({ isVis
 }
 
 export default SubscriptionDetailModal
-

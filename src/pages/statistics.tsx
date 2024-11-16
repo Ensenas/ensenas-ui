@@ -18,32 +18,32 @@ import {
 const Statistics: React.FC = () => {
   const router = useRouter()
   const [Statistics, setStatistics] = useState<any[]>([])
-//   const [loading, setLoading] = useState<boolean>(true)
+  //   const [loading, setLoading] = useState<boolean>(true)
 
-//   useEffect(() => {
-//     // Función para obtener los logros del backend
-//     const fetchStatistics = async () => {
-//       try {
-//         const response = await fetch('/api/statistics') // URL de la API
-//         const data = await response.json()
-//         setStatistics(data)
-//       } catch (error) {
-//         console.error('Error al obtener los logros:', error)
-//       } finally {
-//         setLoading(false)
-//       }
-//     }
+  //   useEffect(() => {
+  //     // Función para obtener los logros del backend
+  //     const fetchStatistics = async () => {
+  //       try {
+  //         const response = await fetch('/api/statistics') // URL de la API
+  //         const data = await response.json()
+  //         setStatistics(data)
+  //       } catch (error) {
+  //         console.error('Error al obtener los logros:', error)
+  //       } finally {
+  //         setLoading(false)
+  //       }
+  //     }
 
-//     fetchStatistics()
-//   }, [])
+  //     fetchStatistics()
+  //   }, [])
 
-//   if (loading) {
-//     return <Section>Cargando...</Section>
-//   }
+  //   if (loading) {
+  //     return <Section>Cargando...</Section>
+  //   }
 
   return (
     <ProtectedRoute>
-      <HomeLayout activePage='/statistics'>
+      <HomeLayout activePage="/statistics">
         <Section>
           <Title>Estadisticas</Title>
           <StatisticsGrid>
@@ -79,4 +79,3 @@ const Statistics: React.FC = () => {
 }
 
 export default Statistics
-

@@ -1,17 +1,17 @@
 /* eslint-disable no-console */
 /* eslint-disable no-unused-vars */
-import NextAuth from 'next-auth'
+import NextAuth, { NextAuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import GoogleProvider from 'next-auth/providers/google'
 
 interface User {
-  id: string; // Opcional, ya que tu API solo devuelve un token
-  email?: string;
-  name?: string;
-  accessToken?: string;
+  id: string // Opcional, ya que tu API solo devuelve un token
+  email?: string
+  name?: string
+  accessToken?: string
 }
 
-export const authOptions: NextAuthOptions = {
+const authOptions = {
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID as string,
@@ -25,15 +25,13 @@ export const authOptions: NextAuthOptions = {
             },
             body: JSON.stringify({
               mail: profile.email,
-              password: "default_password",
+              password: 'default_password',
               name: profile.given_name,
               surname: profile.family_name,
-              birthDate: "1997-06-17T06:35:49.661Z",
-              country: "Argentina"
+              birthDate: '1997-06-17T06:35:49.661Z',
+              country: 'Argentina'
             })
-
           })
-
 
           if (response) {
             let json = await response.json()
@@ -49,58 +47,26 @@ export const authOptions: NextAuthOptions = {
               method: 'GET',
               headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `bearer ${user.accessToken}`
-              },
+                Authorization: `bearer ${user.accessToken}`
+              }
             })
 
             let allPayments = await payments.json()
             if (allPayments.length) {
               const lastPayment = allPayments.reduce((masNuevo, actual) => {
-                return new Date(actual.date) > new Date(masNuevo.date) ? actual : masNuevo;
-              });
+                return new Date(actual.date) > new Date(masNuevo.date) ? actual : masNuevo
+              })
 
-              user['premium'] = lastPayment['suscription'] == "PREMIUM"
+              user['premium'] = lastPayment['suscription'] == 'PREMIUM'
             }
 
-
             return user as User
-
+          } else {
+            return {} as User
           }
-
-
-          // if(response.status == 400){
-
-          // }
-
-          // console.log(response, "response")
-          // // Uncomment and implement this part when your backend is ready
-          // // const res = await fetch(`${process.env.BACKEND_URL}/auth/google-login`, {
-          // //   method: 'POST',
-          // //   headers: { 'Content-Type': 'application/json' },
-          // //   body: JSON.stringify({
-          // //     googleId: profile.sub,
-          // //     email: profile.email,
-          // //     name: profile.name,
-          // //     picture: profile.picture
-          // //   })
-          // // })
-
-          // // if (!res.ok) {
-          // //   console.error('Error fetching user data:', res.statusText);
-          // //   throw new Error('Failed to fetch user data');
-          // // }
-
-          // // const data = await res.json();
-          // return {
-          //   id: "1",
-          //   email: 'ischerer@frba.utn.edu.ar',
-          //   name: 'Ivan Scherer',
-          //   accessToken: 'aaasd',
-          //   premium: false
-          // } as User;
         } catch (error) {
-          console.error('Error in Google profile callback:', error);
-          throw error;
+          console.error('Error in Google profile callback:', error)
+          throw error
         }
       }
     }),
@@ -124,36 +90,35 @@ export const authOptions: NextAuthOptions = {
           const data = await res.json()
 
           if (res.ok && data.access_token) {
-
             let payments = await fetch(`${process.env.BACKEND_URL}/users/get-payment`, {
               method: 'GET',
               headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `bearer ${data.access_token}`
-              },
+                Authorization: `bearer ${data.access_token}`
+              }
             })
 
             let allPayments = await payments.json()
             if (allPayments.length) {
               const lastPayment = allPayments.reduce((masNuevo, actual) => {
-                return new Date(actual.date) > new Date(masNuevo.date) ? actual : masNuevo;
-              });
+                return new Date(actual.date) > new Date(masNuevo.date) ? actual : masNuevo
+              })
 
               return {
                 id: data.id,
                 email: credentials?.email || '',
                 name: data.name + ' ' + data.surname,
                 accessToken: data.access_token,
-                premium: lastPayment['suscription'] == "PREMIUM"
+                premium: lastPayment['suscription'] == 'PREMIUM'
               } as User
-            }
-            else return {
-              id: data.id,
-              email: credentials?.email || '',
-              name: data.name + ' ' + data.surname,
-              accessToken: data.access_token,
-              premium: false
-            } as User
+            } else
+              return {
+                id: data.id,
+                email: credentials?.email || '',
+                name: data.name + ' ' + data.surname,
+                accessToken: data.access_token,
+                premium: false
+              } as User
           } else {
             return null
           }
@@ -166,19 +131,16 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async jwt({ token, user, account, trigger, session }) {
-      if (trigger === "update" && session?.user) {
+      if (trigger === 'update' && session?.user) {
         return { ...token, ...session.user }
       }
       if (user) {
         token.id = user.id
         token.email = user.email
         token.name = user.name
-        token.accessToken = user.accessToken
-        token.premium = user.premium
+        token.accessToken = (user as any).accessToken as string
+        token.premium = (user as any).premium as boolean
       }
-      // if (account?.access_token) {
-      //   token.accessToken = account.access_token
-      // }
       return token
     },
     async session({ session, token }) {
@@ -190,7 +152,7 @@ export const authOptions: NextAuthOptions = {
         session.user.premium = token.premium as boolean
       }
       return session
-    },
+    }
   },
   pages: {
     signIn: '/login'

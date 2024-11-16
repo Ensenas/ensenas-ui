@@ -25,14 +25,24 @@ import {
   WelcomeTitle
 } from '../styles/HomePage.styles'
 
-
 const HomePage: React.FC = () => {
-
   const { data: session } = useSession()
 
   const [filteredLessons, setfilteredLessons] = useState<Lesson[]>()
-  const { currentLevel, setCurrentLevel, currentUnit, setCurrentUnit, currentLesson, setCurrentLesson,
-    levels, units, lessons, isLoading, hasShownModal, setHasShownModal } = useNavigation()
+  const {
+    currentLevel,
+    setCurrentLevel,
+    currentUnit,
+    setCurrentUnit,
+    currentLesson,
+    setCurrentLesson,
+    levels,
+    units,
+    lessons,
+    isLoading,
+    hasShownModal,
+    setHasShownModal
+  } = useNavigation()
   const [isModalVisible, setIsModalVisible] = useState(true) // Estado para controlar la visibilidad del modal
   const [activePage, setActivePage] = useState('/home')
   const [test, setTest] = useState<Boolean>(false)
@@ -49,10 +59,15 @@ const HomePage: React.FC = () => {
     }
   }, [])
 
-
   useEffect(() => {
-    setfilteredLessons(lessons?.filter(lesson => lesson.title.startsWith('E-01') ||
-      lesson.title.startsWith('B-01') || lesson.title.startsWith('I-01')))
+    setfilteredLessons(
+      lessons?.filter(
+        (lesson) =>
+          lesson.title.startsWith('E-01') ||
+          lesson.title.startsWith('B-01') ||
+          lesson.title.startsWith('I-01')
+      )
+    )
   }, [lessons])
 
   const handleLessonClick = (lesson: Lesson) => {
@@ -61,32 +76,35 @@ const HomePage: React.FC = () => {
     setCurrentUnit(findUnit(lesson))
     router.push(`/learning/levels/${currentLevel?.description}/units/${currentUnit?.description}
       /lessons/${currentLesson?.description}`)
-    setActivePage(`/learning/levels/${currentLevel?.description}/units/${currentUnit?.description}/${currentLesson?.description}`)
+    setActivePage(
+      `/learning/levels/${currentLevel?.description}/units/${currentUnit?.description}/${currentLesson?.description}`
+    )
   }
 
   const findLevel = (lesson: Lesson): Level | null => {
     console.log('substringgg', lesson.title.substring(0, 1))
-    const currLevel = levels?.find((level: Level) => level.title.startsWith(lesson.title.substring(0, 1)))
-    if (currLevel != undefined)
-      return currLevel
-    else
-      return null
+    const currLevel = levels?.find((level: Level) =>
+      level.title.startsWith(lesson.title.substring(0, 1))
+    )
+    if (currLevel != undefined) return currLevel
+    else return null
   }
 
   const findUnit = (lesson: Lesson): Unit | null => {
     console.log('substringgg', lesson.title.substring(0, 1))
-    const currUnit = units?.find((level: Level) => level.title.startsWith(lesson.title.substring(0, 3)))
-    if (currUnit != undefined)
-      return currUnit
-    else
-      return null
+    const currUnit = units?.find((level: Level) =>
+      level.title.startsWith(lesson.title.substring(0, 3))
+    )
+    if (currUnit != undefined) return currUnit
+    else return null
   }
-
 
   useEffect(() => {
     if (activePage.startsWith('/learning') && currentLevel) {
       if (currentUnit) {
-        setActivePage(`/learning/levels/${currentLevel.description}/units/${currentUnit.description}`)
+        setActivePage(
+          `/learning/levels/${currentLevel.description}/units/${currentUnit.description}`
+        )
         if (currentLesson) {
           setActivePage(`/learning/levels/${currentLevel.description}
             /units/${currentUnit.description}/${currentLesson.description}`)
@@ -110,8 +128,6 @@ const HomePage: React.FC = () => {
   const getSecondPartString = (string: string): string | undefined => {
     return string.split(':')[1]?.trim()
   }
-
-
 
   return (
     <ProtectedRoute>
@@ -141,7 +157,7 @@ const HomePage: React.FC = () => {
                 {isLoading ? (
                   <LoadingSpinner /> // Muestra el spinner mientras se está cargando
                 ) : (
-                  filteredLessons?.map(lesson => (
+                  filteredLessons?.map((lesson) => (
                     <VideoItem key={lesson.id}>
                       <LessonItem key={lesson.id} onClick={() => handleLessonClick(lesson)}>
                         <LessonCard>
@@ -151,8 +167,9 @@ const HomePage: React.FC = () => {
                         </LessonCard>
                       </LessonItem>
                     </VideoItem>
-                  )))}
-              </ VideoList>
+                  ))
+                )}
+              </VideoList>
             </Recommendations>
           </Section>
           {/* Aquí puedes agregar más componentes según sea necesario */}

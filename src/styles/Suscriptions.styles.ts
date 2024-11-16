@@ -15,7 +15,10 @@ export const Title = styled.h2`
 
 export const SubscriptionsGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Ajusta el tamaño mínimo y máximo de las columnas */
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(250px, 1fr)
+  ); /* Ajusta el tamaño mínimo y máximo de las columnas */
   gap: 20px;
   justify-content: center; /* Centra horizontalmente la grilla */
   align-content: center; /* Centra verticalmente el contenido si hay espacio extra */
@@ -25,7 +28,11 @@ export const SubscriptionsGrid = styled.div`
   padding-bottom: 40px;
 `
 
-export const SubscriptionCard = styled.div<{ background: string, isPremium?: boolean, status?: string  }>`
+export const SubscriptionCard = styled.div<{
+  background: string
+  isPremium?: boolean
+  status?: string
+}>`
   display: flex;
   flex-direction: column; /* Establece la dirección del flex para apilar elementos verticalmente */
   justify-content: space-between; /* Espacia los elementos para que el contenido y las acciones estén en extremos opuestos */
@@ -37,15 +44,17 @@ export const SubscriptionCard = styled.div<{ background: string, isPremium?: boo
   opacity: 0.95; /* Opacidad de la imagen */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   text-align: center;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
   position: relative;
-  
+
   &:hover {
     transform: translateY(-5px);
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
   }
-    &:before {
-    content: ${({ isPremium }) => isPremium ? '" "': 'none'};
+  &:before {
+    content: ${({ isPremium }) => (isPremium ? '" "' : 'none')};
     position: absolute;
     top: -20px; /* Ajusta la posición vertical de la corona */
     right: 10px; /* Ajusta la posición horizontal de la corona */
@@ -53,7 +62,7 @@ export const SubscriptionCard = styled.div<{ background: string, isPremium?: boo
     height: 40px;
     background: url('/crown.png') no-repeat center center;
     background-size: contain; /* Mantiene el tamaño de la imagen dentro del contenedor */
-    display: ${({ isPremium }) => isPremium ? 'block' : 'none'};
+    display: ${({ isPremium }) => (isPremium ? 'block' : 'none')};
   }
 `
 
@@ -78,7 +87,10 @@ export const Status = styled.button<{ status: string }>`
   padding: 10px 20px; /* Espaciado interno para hacerlo más grande y cómodo */
   text-align: center; /* Centra el texto dentro del botón */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Añade una sombra para darle profundidad */
-  transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
   opacity: 85%;
 
   &:focus {
@@ -108,7 +120,7 @@ export const PriceContent = styled.div`
   text-align: center;
 `
 export const CardPrice = styled.p`
-  display:flex;
+  display: flex;
   text-align: center;
   align-items: center;
   font-size: 2.5em;
@@ -142,9 +154,9 @@ export const ActionButton = styled.button`
   border: 1px solid #9610ba; /* Borde azul */
 
   &:hover {
-      background-color: #9610ba; /* Fondo azul al hacer hover */
-      color: #fff; /* Color del texto blanco */
-    }
+    background-color: #9610ba; /* Fondo azul al hacer hover */
+    color: #fff; /* Color del texto blanco */
+  }
 
   &:disabled {
     background-color: #cccccc;

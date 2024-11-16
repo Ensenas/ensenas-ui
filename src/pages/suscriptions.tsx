@@ -30,22 +30,22 @@ import {
 } from '../styles/Suscriptions.styles'
 
 interface NotificationType {
-  isOpen: boolean;
-  type: 'approved' | 'failure' | null;
-  content: string;
+  isOpen: boolean
+  type: 'approved' | 'failure' | null
+  content: string
 }
 
 interface Subscription {
-  id: number;
-  name: string;
-  isPremium: boolean;
-  background: string;
-  logo: string;
-  status: string;
-  expirationDate: string;
-  detalle: string;
-  plan: any;
-  price: string;
+  id: number
+  name: string
+  isPremium: boolean
+  background: string
+  logo: string
+  status: string
+  expirationDate: string
+  detalle: string
+  plan: any
+  price: string
 }
 
 export default function Subscriptions() {
@@ -79,11 +79,11 @@ export default function Subscriptions() {
         await fetch('/ens-api/users/register-payment', {
           method: 'POST',
           body: JSON.stringify({
-            'suscriptionType': value ? 'PREMIUM' : 'BASIC'
+            suscriptionType: value ? 'PREMIUM' : 'BASIC'
           }),
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `bearer ${session?.user.accessToken}`
+            Authorization: `bearer ${session?.user.accessToken}`
           }
         })
         setNotification({
@@ -212,25 +212,36 @@ export default function Subscriptions() {
 
   return (
     <ProtectedRoute>
-      <HomeLayout activePage='/suscriptions'>
+      <HomeLayout activePage="/suscriptions">
         <Section>
           <Title>Administrar Suscripciones</Title>
           <SubscriptionsGrid>
-            {subscriptions.map(sub => (
-              <SubscriptionCard key={sub.id} background={sub.background} isPremium={sub.isPremium} status={sub.status}>
+            {subscriptions.map((sub) => (
+              <SubscriptionCard
+                key={sub.id}
+                background={sub.background}
+                isPremium={sub.isPremium}
+                status={sub.status}
+              >
                 <CardTitle>{sub.name}</CardTitle>
                 <PriceContent>
                   <CardPrice>{sub.isPremium ? sub.price : 'Gratis'}</CardPrice>
-                  {sub.isPremium && <p style={{ fontSize: '20px', color: '#fff', marginLeft: '10px' }}>/ mes</p>}
+                  {sub.isPremium && (
+                    <p style={{ fontSize: '20px', color: '#fff', marginLeft: '10px' }}>/ mes</p>
+                  )}
                 </PriceContent>
-                <CardContent><Status status={sub.status}>{sub.status}</Status></CardContent>
+                <CardContent>
+                  <Status status={sub.status}>{sub.status}</Status>
+                </CardContent>
                 <CardLogo>
-                  <LogoImage src={sub.logo} alt='Logo' />
+                  <LogoImage src={sub.logo} alt="Logo" />
                 </CardLogo>
                 <CardActions>
                   <ActionButton onClick={() => handleViewDetails(sub)}>Ver Detalles</ActionButton>
                   {sub.status === 'Activo' && (
-                    <ActionButton onClick={() => handleCancelSubscription(sub)}>Cancelar Suscripción</ActionButton>
+                    <ActionButton onClick={() => handleCancelSubscription(sub)}>
+                      Cancelar Suscripción
+                    </ActionButton>
                   )}
                   {sub.status === 'Inactivo' && sub.isPremium && (
                     <MercadoPagoButton product={sub.plan} />
@@ -253,8 +264,10 @@ export default function Subscriptions() {
       />
       {notification.isOpen && (
         <div className={PaymentStyles.notification}>
-          <div className={PaymentStyles.iconContainer}
-            style={{ backgroundColor: notification.type === 'approved' ? '#00cc99' : '#ee4646' }}>
+          <div
+            className={PaymentStyles.iconContainer}
+            style={{ backgroundColor: notification.type === 'approved' ? '#00cc99' : '#ee4646' }}
+          >
             <Image
               src={`/${notification.type}.svg`}
               alt={notification.type!}

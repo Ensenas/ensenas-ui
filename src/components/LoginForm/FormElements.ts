@@ -89,8 +89,8 @@ export const Link = styled(NextLink)`
   color: #2b3a47;
   align-self: flex-end;
   transition: all 0.5s;
-  font-size: 0.9rem;  
-  
+  font-size: 0.9rem;
+
   &:hover {
     color: #010606;
   }

@@ -15,7 +15,7 @@ const SocialContainer = styled.div`
 export default function App() {
   return (
     <ProtectedRoute>
-      <HomeLayout activePage='/social'>
+      <HomeLayout activePage="/social">
         <PostProvider>
           <SocialContainer>
             <CreatePost />

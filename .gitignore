@@ -45,3 +45,5 @@ tasks.md
 #idea
 
 .idea/
+
+.env

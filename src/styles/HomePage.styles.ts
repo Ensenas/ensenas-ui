@@ -23,7 +23,7 @@ export const TextContainer = styled.div`
   overflow: hidden; /* Oculta cualquier contenido que se desborde */
 
   &::before {
-    content: "";
+    content: '';
     position: absolute;
     top: 0;
     left: 0;
@@ -42,8 +42,6 @@ export const TextContainer = styled.div`
     z-index: 2; /* Asegura que el contenido esté sobre el pseudo-elemento */
     color: #fff; /* Color del texto para que sea legible sobre el fondo */
   }
-
-
 `
 
 export const WelcomeTitle = styled.h1`
@@ -108,19 +106,21 @@ export const LessonCard = styled.a`
   &:hover {
     background: #0567b1;
   }
-  
+
   h1 {
     font-size: 1.4em;
     color: #0567b1; /* Color del h1 por defecto */
     transition: color 0.3s; /* Opcional: añade transición al color del h1 */
   }
-  
+
   h3 {
     font-size: 1em;
     transition: color 0.3s; /* Opcional: añade transición al color del h1 */
   }
 
-  &:hover h1, &:hover h3, &:hover h5 {
+  &:hover h1,
+  &:hover h3,
+  &:hover h5 {
     color: #ffffff; /* Color del h1 cuando se hace hover */
   }
 `

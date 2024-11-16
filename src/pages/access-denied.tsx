@@ -10,21 +10,16 @@ export default function AccessDeniedPage() {
     <div className="access-denied-container">
       <div className="access-denied-form">
         <div className="logo-container">
-          <Image
-            src="/logo.png"
-            alt="Enseñas"
-            width={120}
-            height={120}
-            priority
-          />
+          <Image src="/logo.png" alt="Enseñas" width={120} height={120} priority />
         </div>
         <h1>Acceso Restringido</h1>
-        <p>¡Uy! No tenés permiso para entrar a esta página. Esta sección es exclusiva para usuarios Premium.</p>
+        <p>
+          ¡Uy! No tenés permiso para entrar a esta página. Esta sección es exclusiva para usuarios
+          Premium.
+        </p>
         <p>¡Actualizá tu suscripción y desbloqueá más contenido!</p>
         <div className="button-container">
-          <button onClick={() => router.push('/suscriptions')}>
-            Actualizar a Premium
-          </button>
+          <button onClick={() => router.push('/suscriptions')}>Actualizar a Premium</button>
         </div>
         <button onClick={() => router.push('/home')} className="back-button">
           Volver al home

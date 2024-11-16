@@ -1,0 +1,13 @@
+#version: '3.8
+services:
+  ui:
+    image: alejol2019/ensenas-ui:latest
+    env_file:
+      - .env
+    ports:
+      - '3003:3000'
+    networks:
+      - ensenas-network
+
+networks:
+  ensenas-network

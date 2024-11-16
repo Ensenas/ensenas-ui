@@ -11,7 +11,7 @@ export const HeaderContainer = styled.header`
   background-color: #f0f0f0; /* Color de fondo gris claro */
   color: #333; /* Color del texto */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  z-index: 1000; 
+  z-index: 1000;
 `
 
 export const Logo = styled.div`

@@ -24,7 +24,7 @@ const ContentContainer = styled.div`
 
 const Title = styled.h2<{ isSuccess: boolean }>`
   font-size: 1.5rem;
-  color: ${props => props.isSuccess ? '#38a169' : '#d72828'};
+  color: ${(props) => (props.isSuccess ? '#38a169' : '#d72828')};
   margin-bottom: 1rem;
 `
 

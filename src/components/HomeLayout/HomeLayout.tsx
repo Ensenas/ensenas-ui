@@ -4,7 +4,14 @@ import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
 
 import HomeHeader from '../HomeHeader/HomeHeader'
-import { ContentContainer, HomePageWrapper, NavIcon, NavItem, SidebarContainer, SidebarNav } from './HomeLayout.styles'
+import {
+  ContentContainer,
+  HomePageWrapper,
+  NavIcon,
+  NavItem,
+  SidebarContainer,
+  SidebarNav
+} from './HomeLayout.styles'
 
 interface NavItem {
   label: string
@@ -12,7 +19,13 @@ interface NavItem {
   href: string
 }
 
-export default function HomeLayout({ children, activePage }: { children: React.ReactNode, activePage: string }) {
+export default function HomeLayout({
+  children,
+  activePage
+}: {
+  children: React.ReactNode
+  activePage: string
+}) {
   const router = useRouter()
   const [navItems] = useState<NavItem[]>([
     { label: 'Inicio', icon: '/icons/home-icon.png', href: '/home' },
@@ -63,9 +76,7 @@ export default function HomeLayout({ children, activePage }: { children: React.R
             ))}
           </SidebarNav>
         </SidebarContainer>
-        <ContentContainer>
-          {children}
-        </ContentContainer>
+        <ContentContainer>{children}</ContentContainer>
       </HomePageWrapper>
     </div>
   )

@@ -18,7 +18,7 @@ const Contact: React.FC = () => {
         const response = await fetch('/ens-api/users/profile', {
           method: 'GET',
           headers: {
-            'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+            Authorization: `Bearer ${localStorage.getItem('authToken')}`
           }
         })
         if (!response.ok) {
@@ -41,7 +41,7 @@ const Contact: React.FC = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
-    setFormData(prev => ({ ...prev, [name]: value }))
+    setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -72,7 +72,6 @@ const Contact: React.FC = () => {
     }
 
     setLoading(false)
-
   }
 
   return (
@@ -83,24 +82,37 @@ const Contact: React.FC = () => {
           <form onSubmit={handleSubmit}>
             <FormGroup>
               <Label>Nombre</Label>
-              <Input type="text" name="name" value={formData.name} onChange={handleChange} required />
-            </FormGroup>
-            <FormGroup>
-              <Label>Apellido</Label>
-              <Input type="text" name="surname" value={formData.surname} onChange={handleChange} required />
-            </FormGroup>
-            <FormGroup>
-              <Label>Email</Label>
-              <Input type="email" name="email" value={formData.email} onChange={handleChange} required />
-            </FormGroup>
-            <FormGroup>
-              <Label>Mensaje</Label>
-              <TextArea
-                name="message"
-                value={formData.message}
+              <Input
+                type="text"
+                name="name"
+                value={formData.name}
                 onChange={handleChange}
                 required
               />
+            </FormGroup>
+            <FormGroup>
+              <Label>Apellido</Label>
+              <Input
+                type="text"
+                name="surname"
+                value={formData.surname}
+                onChange={handleChange}
+                required
+              />
+            </FormGroup>
+            <FormGroup>
+              <Label>Email</Label>
+              <Input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+              />
+            </FormGroup>
+            <FormGroup>
+              <Label>Mensaje</Label>
+              <TextArea name="message" value={formData.message} onChange={handleChange} required />
             </FormGroup>
             <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
               <Button type="submit" disabled={loading}>
@@ -118,7 +130,8 @@ const Contact: React.FC = () => {
                   transition: 'opacity 2s ease-out' // Transición de opacidad
                 }}
               >
-                ¡Recibimos tu mensaje! En breve nos pondremos en contacto con vos. <br />Equipo Enseñas.
+                ¡Recibimos tu mensaje! En breve nos pondremos en contacto con vos. <br />
+                Equipo Enseñas.
               </p>
             )}
 

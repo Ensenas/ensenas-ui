@@ -214,17 +214,17 @@ export const Subsection = styled.div<SubsectionProps>`
         top: 40%;
         transform: translateY(-50%);
         color: ${({ num }) => {
-    switch (num) {
-      case '1.':
-        return '#df464f'
-      case '2.':
-        return '#e67537'
-      case '3.':
-        return '#eda939'
-      default:
-        return 'black'
-    }
-  }};
+          switch (num) {
+            case '1.':
+              return '#df464f'
+            case '2.':
+              return '#e67537'
+            case '3.':
+              return '#eda939'
+            default:
+              return 'black'
+          }
+        }};
       }
     }
 

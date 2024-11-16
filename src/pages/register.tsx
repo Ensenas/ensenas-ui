@@ -1,7 +1,7 @@
 import axios from 'axios'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import React, { useEffect,useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 
 const PageContainer = styled.div`
@@ -106,7 +106,7 @@ const SuccessMessage = styled.div`
   color: #10b981;
   text-align: center;
   margin-bottom: 1rem;
-  font-weight:600;
+  font-weight: 600;
 `
 const Spinner = styled.div`
   border: 2px solid #f3f3f3;
@@ -118,8 +118,12 @@ const Spinner = styled.div`
   margin-right: 8px;
 
   @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
   }
 `
 
@@ -170,7 +174,9 @@ const RegisterPage: React.FC = () => {
     const isValidLength = password.length > 6
 
     if (!isValidLength || !hasLetter || !hasNumber) {
-      setPasswordError('La contraseña debe tener más de 6 caracteres, contener al menos una letra y un número.')
+      setPasswordError(
+        'La contraseña debe tener más de 6 caracteres, contener al menos una letra y un número.'
+      )
     } else {
       setPasswordError('')
     }
@@ -223,9 +229,7 @@ const RegisterPage: React.FC = () => {
           router.push('/login')
         }, 2000)
       } else {
-
         throw new Error(status.toString())
-
       }
     } catch (error) {
       setSuccessMessage(null)
@@ -251,7 +255,6 @@ const RegisterPage: React.FC = () => {
       </Head>
       <FormContainer>
         <Form onSubmit={handleRegister}>
-
           <FormTitleContainer>
             {/* Ruta de la imagen */}
             <FormTitle>Crea tu cuenta en Enseñas</FormTitle>

@@ -35,15 +35,15 @@ export default function ForgotPasswordPage() {
         console.log(new_password)
         const data = await response_email.json()
         if (response_email.ok) {
-          setMessage('Se ha enviado un enlace para restablecer tu contraseña. Por favor, revisa tu correo.')
+          setMessage(
+            'Se ha enviado un enlace para restablecer tu contraseña. Por favor, revisa tu correo.'
+          )
         } else {
           setMessage(data.error || 'Ha ocurrido un error. Por favor, intenta de nuevo.')
         }
-      }
-      else {
+      } else {
         setMessage('El usuario no existe. Por favor intente con otro.')
       }
-
     } catch (error) {
       setMessage('Ha ocurrido un error. Por favor, intenta de nuevo.')
     }
@@ -55,16 +55,12 @@ export default function ForgotPasswordPage() {
     <div className="forgot-password-container">
       <div className="forgot-password-form">
         <div className="logo-container">
-          <Image
-            src="/logo.png"
-            alt="Enseñas"
-            width={120}
-            height={120}
-            priority
-          />
+          <Image src="/logo.png" alt="Enseñas" width={120} height={120} priority />
         </div>
         <h1>¿Olvidaste tu contraseña?</h1>
-        <p>Ingresá tu correo electrónico y te enviaremos un enlace para restablecer tu contraseña.</p>
+        <p>
+          Ingresá tu correo electrónico y te enviaremos un enlace para restablecer tu contraseña.
+        </p>
         <form onSubmit={onSubmit}>
           <div className="input-group">
             <input
@@ -175,7 +171,7 @@ export default function ForgotPasswordPage() {
           background-color: transparent;
           color: #0567b1;
           text-decoration: underline;
-          width:100%;
+          width: 100%;
         }
         .back-button:hover {
           color: #045291;

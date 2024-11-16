@@ -9,8 +9,8 @@ export const Section = styled.section`
 `
 
 export const Title = styled.h2`
-   margin: 0;
-   margin-bottom: 20px;
+  margin: 0;
+  margin-bottom: 20px;
 `
 
 export const LevelCard = styled.a`
@@ -26,13 +26,14 @@ export const LevelCard = styled.a`
   &:hover {
     background: #0567b1;
   }
-  
+
   h1 {
     color: #0567b1; /* Color del h1 por defecto */
     transition: color 0.3s; /* Opcional: añade transición al color del h1 */
   }
 
-  &:hover h1, &:hover h3 {
+  &:hover h1,
+  &:hover h3 {
     color: #ffffff; /* Color del h1 cuando se hace hover */
   }
 `
@@ -54,13 +55,14 @@ export const UnitCard = styled.a`
   &:hover {
     background: #0567b1;
   }
-  
+
   h1 {
     color: #0567b1; /* Color del h1 por defecto */
     transition: color 0.3s; /* Opcional: añade transición al color del h1 */
   }
 
-  &:hover h1, &:hover h3 {
+  &:hover h1,
+  &:hover h3 {
     color: #ffffff; /* Color del h1 cuando se hace hover */
   }
 `
@@ -96,7 +98,7 @@ export const LessonCard = styled.a<{ backgroundColor: string }>`
   &:hover {
     background: #0567b1;
   }
-  
+
   h1 {
     color: #0567b1; /* Color del h1 por defecto */
     transition: color 0.3s; /* Opcional: añade transición al color del h1 */
@@ -104,7 +106,8 @@ export const LessonCard = styled.a<{ backgroundColor: string }>`
     padding: 0;
   }
 
-  &:hover h1, &:hover h3 {
+  &:hover h1,
+  &:hover h3 {
     color: #ffffff; /* Color del h1 cuando se hace hover */
   }
 `

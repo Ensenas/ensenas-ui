@@ -9,7 +9,6 @@ export const HomePageWrapper = styled.div`
 // Contenedor del contenido principal
 export const ContentContainer = styled.div`
   width: 100%;
-
 `
 
 // Contenedor de la barra lateral

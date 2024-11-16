@@ -17,7 +17,6 @@ export const LessonTitle = styled.h3`
   margin: 0;
   font-size: 1.2em;
   margin-bottom: 20px;
-
 `
 
 export const VideoContainer = styled.div`
@@ -41,7 +40,7 @@ export const TestButton = styled.button`
   margin: 20px auto; /* Espacio alrededor del botón */
   width: fit-content; /* Ajusta el ancho del botón al contenido */
   position: relative; /* Necesario para el posicionamiento del tooltip */
-  
+
   &:disabled {
     background-color: #ccc;
     cursor: not-allowed;
@@ -61,7 +60,9 @@ export const Tooltip = styled.div<{ show: boolean }>`
   transform: translateX(-50%);
   white-space: nowrap;
   z-index: 10;
-  transition: visibility 0.3s ease, opacity 0.3s ease;
+  transition:
+    visibility 0.3s ease,
+    opacity 0.3s ease;
   opacity: ${({ show }) => (show ? 1 : 0)};
 `
 

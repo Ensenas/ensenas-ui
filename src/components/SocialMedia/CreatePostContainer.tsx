@@ -19,7 +19,7 @@ const TitleInput = styled.input`
   padding: 8px;
   border: 1px solid #ddd;
   border-radius: 4px;
-  width: 60%
+  width: 60%;
 `
 
 const Form = styled.form`
@@ -35,12 +35,12 @@ const TextArea = styled.textarea`
   border: 1px solid #ddd;
   border-radius: 4px;
   resize: vertical;
-  font-family:inherit;  
+  font-family: inherit;
 `
 
 const FileInput = styled.input`
   margin-bottom: 10px;
-  font-family:inherit;
+  font-family: inherit;
 `
 
 const Button = styled.button`
@@ -126,12 +126,7 @@ export default function CreatePost() {
           placeholder="¿Qué estás pensando?"
           required
         />
-        <FileInput
-          type="file"
-          accept="video/*"
-          onChange={handleFileChange}
-          ref={fileInputRef}
-        />
+        <FileInput type="file" accept="video/*" onChange={handleFileChange} ref={fileInputRef} />
         {video && (
           <VideoPreview controls>
             <source src={URL.createObjectURL(video)} type={video.type} />

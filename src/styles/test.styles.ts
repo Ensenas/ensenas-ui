@@ -9,8 +9,8 @@ export const Section = styled.section`
 `
 
 export const Title = styled.h2`
-   margin: 0;
-   margin-bottom: 20px;
+  margin: 0;
+  margin-bottom: 20px;
 `
 
 export const LessonTitle = styled.h3`

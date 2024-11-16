@@ -26,18 +26,18 @@ const MisLogros: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false)
   const { lessons, userProgress } = useNavigation()
 
-
   useEffect(() => {
-    const lessonList = lessons?.sort((a, b) => {
-      const firstLetterA = a.title.charAt(0).toUpperCase()
-      const firstLetterB = b.title.charAt(0).toUpperCase()
-      
-      const order = ['B', 'I', 'A']
-      const indexA = order.indexOf(firstLetterA)
-      const indexB = order.indexOf(firstLetterB)
+    const lessonList =
+      lessons?.sort((a, b) => {
+        const firstLetterA = a.title.charAt(0).toUpperCase()
+        const firstLetterB = b.title.charAt(0).toUpperCase()
 
-      return indexA - indexB // Ordena según el índice
-    }) || []
+        const order = ['B', 'I', 'A']
+        const indexA = order.indexOf(firstLetterA)
+        const indexB = order.indexOf(firstLetterB)
+
+        return indexA - indexB // Ordena según el índice
+      }) || []
 
     // Filtrar lecciones y asociar progreso
     const achievementsWithProgress = lessonList.map((lesson) => {
@@ -55,41 +55,37 @@ const MisLogros: React.FC = () => {
   const getFirstPartString = (string: string): string | undefined => {
     return string.split(':')[0]?.trim()
   }
-  
+
   const getSecondPartString = (string: string): string | undefined => {
     return string.split(':')[1]?.trim()
   }
 
   return (
     <ProtectedRoute>
-      <HomeLayout activePage='/achievements'>
+      <HomeLayout activePage="/achievements">
         <div>
           {loading ? (
-              <LoadingSpinner /> // Muestra el spinner mientras se está cargando
-            ) : (
-          <Section>
-          <Title>Mis Logros</Title>
-          <AchievementsGrid>
-            {achievements.length === 0 ? (
-              <CardContent>No hay logros para mostrar.</CardContent>
-            ) : (
-              achievements.map((achievement) => (
-                <AchievementCard key={achievement.id}>
-                  <CardUnit>
-                    {getFirstPartString(achievement.description)}
-                  </CardUnit>
-                  <CardLesson>
-                  {getSecondPartString(achievement.description)}
-                  </CardLesson>
-                  <Medal completed={achievement.completed} />
-                  <CardContent>{achievement.title}</CardContent>
-                </AchievementCard>
-              ))
-            )}
-          </AchievementsGrid>
-        </Section>
-        )}
-      </div>
+            <LoadingSpinner /> // Muestra el spinner mientras se está cargando
+          ) : (
+            <Section>
+              <Title>Mis Logros</Title>
+              <AchievementsGrid>
+                {achievements.length === 0 ? (
+                  <CardContent>No hay logros para mostrar.</CardContent>
+                ) : (
+                  achievements.map((achievement) => (
+                    <AchievementCard key={achievement.id}>
+                      <CardUnit>{getFirstPartString(achievement.description)}</CardUnit>
+                      <CardLesson>{getSecondPartString(achievement.description)}</CardLesson>
+                      <Medal completed={achievement.completed} />
+                      <CardContent>{achievement.title}</CardContent>
+                    </AchievementCard>
+                  ))
+                )}
+              </AchievementsGrid>
+            </Section>
+          )}
+        </div>
       </HomeLayout>
     </ProtectedRoute>
   )

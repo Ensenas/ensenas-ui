@@ -8,75 +8,76 @@ import React, { createContext, ReactNode, useContext, useEffect, useState } from
 import { LessonList } from '../styles/Learning.styles'
 
 export interface Level {
-  id: number,
-  title: string,
+  id: number
+  title: string
   description: string
 }
 
 export interface Unit {
-  id: number,
-  title: string,
-  description: string,
+  id: number
+  title: string
+  description: string
   order: number
 }
 
 export interface Lesson {
-  id: number,
-  title: string,
-  description: string,
-  detailedDescription: string,
-  order: number,
-  completed?: boolean,
+  id: number
+  title: string
+  description: string
+  detailedDescription: string
+  order: number
+  completed?: boolean
   videoSrc: string
 }
 
 interface Challenge {
-  id: number;
-  description: string;
-  video: string;
-  title: string;
+  id: number
+  description: string
+  video: string
+  title: string
 }
 
 interface UserChallengeProgress {
-  id: string;
-  challenge: Challenge;
-  started: boolean;
-  completed: boolean;
+  id: string
+  challenge: Challenge
+  started: boolean
+  completed: boolean
 }
 
-
 interface NavigationLearningContextType {
-  authToken: string | null;
-  setAuthToken: (token: string | null) => void;
-  currentLevel: Level | null;
-  setCurrentLevel: (level: Level | null) => void;
-  currentUnit: Unit | null;
-  setCurrentUnit: (unit: Unit | null) => void;
-  currentLesson: Lesson | null;
-  setCurrentLesson: (lessons: Lesson | null) => void;
-  levels: [Level] | null;
-  setLevels: (lessons: [Level] | null) => void;
-  units: [Unit] | null;
-  setUnits: (lessons: [Unit] | null) => void;
-  lessons: [Lesson] | null;
-  setLessons: (lessons: [Lesson] | null) => void;
-  isLoading: boolean | null;
-  setIsLoading: (loading: boolean | null) => void;
-  hasShownModal: boolean | null;
-  setHasShownModal: (hsm: boolean | null) => void;
-  test: boolean | null;
-  setTest: (test: boolean | null) => void;
-  userProgress: [UserChallengeProgress] | null;
+  authToken: string | null
+  setAuthToken: (token: string | null) => void
+  currentLevel: Level | null
+  setCurrentLevel: (level: Level | null) => void
+  currentUnit: Unit | null
+  setCurrentUnit: (unit: Unit | null) => void
+  currentLesson: Lesson | null
+  setCurrentLesson: (lessons: Lesson | null) => void
+  levels: [Level] | null
+  setLevels: (lessons: [Level] | null) => void
+  units: [Unit] | null
+  setUnits: (lessons: [Unit] | null) => void
+  lessons: [Lesson] | null
+  setLessons: (lessons: [Lesson] | null) => void
+  isLoading: boolean | null
+  setIsLoading: (loading: boolean | null) => void
+  hasShownModal: boolean | null
+  setHasShownModal: (hsm: boolean | null) => void
+  test: boolean | null
+  setTest: (test: boolean | null) => void
+  userProgress: [UserChallengeProgress] | null
   setUserProgress: (userProgress: [UserChallengeProgress] | null) => void
 }
 
-const NavigationLearningContext = createContext<NavigationLearningContextType | undefined>(undefined)
+const NavigationLearningContext = createContext<NavigationLearningContextType | undefined>(
+  undefined
+)
 
 export const NavigationProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const isBrowser = typeof window !== 'undefined' && typeof window.localStorage !== 'undefined'
 
   const [authToken, setAuthToken] = useState<string | null>(() => {
-    return isBrowser ? (localStorage.getItem('authToken') || 'null') : null
+    return isBrowser ? localStorage.getItem('authToken') || 'null' : null
   })
 
   const [currentLevel, setCurrentLevel] = useState<Level | null>(() => {
@@ -107,7 +108,6 @@ export const NavigationProvider: React.FC<{ children: ReactNode }> = ({ children
     return isBrowser ? JSON.parse(localStorage.getItem('isLoading') || 'null') : null
   })
 
-
   const [hasShownModal, setHasShownModal] = useState<boolean | null>(() => {
     return isBrowser ? JSON.parse(localStorage.getItem('hasShownModal') || 'null') : null
   })
@@ -132,8 +132,18 @@ export const NavigationProvider: React.FC<{ children: ReactNode }> = ({ children
     localStorage.setItem('hasShownModal', JSON.stringify(hasShownModal))
     localStorage.setItem('test', JSON.stringify(test))
     localStorage.setItem('userProgress', JSON.stringify(userProgress))
-  }, [currentLevel, currentUnit, currentLesson, hasShownModal, levels, units, lessons, isLoading, test, userProgress])
-
+  }, [
+    currentLevel,
+    currentUnit,
+    currentLesson,
+    hasShownModal,
+    levels,
+    units,
+    lessons,
+    isLoading,
+    test,
+    userProgress
+  ])
 
   useEffect(() => {
     const fetchLevels = async () => {
@@ -205,7 +215,6 @@ export const NavigationProvider: React.FC<{ children: ReactNode }> = ({ children
 
   const getFirstPartString = (string: string): string | undefined => {
     return string.split(':')[0]?.trim().toLowerCase()
-
   }
 
   const getSecondPartString = (string: string): string | undefined => {
@@ -242,15 +251,31 @@ export const NavigationProvider: React.FC<{ children: ReactNode }> = ({ children
     }
   }, [userProgress, authToken])
 
-
   return (
     <NavigationLearningContext.Provider
       value={{
-        currentLevel, setCurrentLevel, currentUnit, setCurrentUnit, currentLesson, setCurrentLesson,
-        levels, setLevels, units, setUnits, lessons, setLessons,
-        isLoading, setIsLoading, hasShownModal, setHasShownModal, test, setTest, userProgress, setUserProgress,
-        setAuthToken, authToken
-
+        currentLevel,
+        setCurrentLevel,
+        currentUnit,
+        setCurrentUnit,
+        currentLesson,
+        setCurrentLesson,
+        levels,
+        setLevels,
+        units,
+        setUnits,
+        lessons,
+        setLessons,
+        isLoading,
+        setIsLoading,
+        hasShownModal,
+        setHasShownModal,
+        test,
+        setTest,
+        userProgress,
+        setUserProgress,
+        setAuthToken,
+        authToken
       }}
     >
       {children}

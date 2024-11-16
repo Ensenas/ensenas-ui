@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 
-import { CloseButton,ModalContent, ModalImage, ModalOverlay } from './HomeModal.styles'
+import { CloseButton, ModalContent, ModalImage, ModalOverlay } from './HomeModal.styles'
 
 interface ModalProps {
   isVisible: boolean

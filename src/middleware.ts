@@ -6,8 +6,10 @@ export default withAuth(
     const { pathname } = req.nextUrl
     const isAuthorized = req.nextauth?.token?.premium
     if (
-      (pathname.startsWith('/learning/levels/') && (pathname.includes('intermedio') || pathname.includes('avanzado'))) ||
-      pathname.includes('/freeMode') || pathname.includes('/social')
+      (pathname.startsWith('/learning/levels/') &&
+        (pathname.includes('intermedio') || pathname.includes('avanzado'))) ||
+      pathname.includes('/freeMode') ||
+      pathname.includes('/social')
     ) {
       if (!isAuthorized) {
         return NextResponse.redirect(new URL('/access-denied', req.url))

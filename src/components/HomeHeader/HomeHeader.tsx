@@ -1,7 +1,4 @@
-/* eslint-disable no-unused-vars */
 /* eslint-disable @next/next/no-img-element */
-/* eslint-disable no-console */
-import axios from 'axios'
 import { usePathname, useRouter } from 'next/navigation'
 import { signOut } from 'next-auth/react'
 import React, { useEffect, useState } from 'react'
@@ -12,19 +9,11 @@ import SearchResults from './SearchResult'
 
 const HomeHeader: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('')
-  const { currentLevel, setCurrentLevel, currentUnit, setCurrentUnit, currentLesson,
-    setCurrentLesson, levels, units, lessons } = useNavigation()
+  const { setCurrentLevel, setCurrentUnit, setCurrentLesson, levels, units, lessons } =
+    useNavigation()
   const pathname = usePathname()
   const [currentPage, setCurrentPage] = useState<string>('')
   const router = useRouter()
-
-  const getFirstPartString = (string: string): string | undefined => {
-    return string.split(':')[0]?.trim().toLowerCase()
-  }
-
-  const getSecondPartString = (string: string): string | undefined => {
-    return string.split(':')[1]?.trim().toLowerCase()
-  }
 
   useEffect(() => {
     setCurrentPage(pathname || '')
@@ -41,8 +30,12 @@ const HomeHeader: React.FC = () => {
   const handleSelectLesson = (selectedLesson: any) => {
     let level, unit, lesson
 
-    level = selectedLesson.title[0] == 'A' ? 'Nivel avanzado' : selectedLesson.title[0] == 'I' ?
-      'Nivel intermedio' : 'Nivel básico'
+    level =
+      selectedLesson.title[0] == 'A'
+        ? 'Nivel avanzado'
+        : selectedLesson.title[0] == 'I'
+          ? 'Nivel intermedio'
+          : 'Nivel básico'
     unit = `Unidad ${selectedLesson.title.split('-')[1]}: ${selectedLesson.description.split(':')[0]}`
     lesson = selectedLesson.description
 
@@ -53,14 +46,6 @@ const HomeHeader: React.FC = () => {
     setSearchTerm('')
     router.push(`/learning/levels/${level}/units/${unit}/lessons/${lesson}`)
   }
-
-  // const determineLevel :  (number | null) = (lesson : any) => {
-  //   return 0;
-  // }
-
-  // const determineUnit :  (number | null) = (lesson : any) => {
-  //   return 0;
-  // }
 
   const handleSignOut = () => {
     localStorage.removeItem('userProgress')

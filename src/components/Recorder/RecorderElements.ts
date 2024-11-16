@@ -8,10 +8,10 @@ export const Container = styled.div`
   margin: 0 10px;
 `
 export const WebcamContainer = styled.div`
-    border-radius: 15px; // Ajusta el radio para redondear los bordes
-    overflow: hidden; // Asegura que el contenido se ajuste a los bordes redondeados
-    width: 600px; // Ajusta el ancho como desees
-    height: 520px; // Ajusta la altura como desees
+  border-radius: 15px; // Ajusta el radio para redondear los bordes
+  overflow: hidden; // Asegura que el contenido se ajuste a los bordes redondeados
+  width: 600px; // Ajusta el ancho como desees
+  height: 520px; // Ajusta la altura como desees
 `
 
 export const Overlay = styled.div`

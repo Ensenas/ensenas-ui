@@ -9,8 +9,18 @@ import HomeLayout from '../components/HomeLayout/HomeLayout'
 import ProtectedRoute from '../components/ProtectedRoute'
 import LoadingSpinner from '../components/Spinner/Spinner'
 import {
-  EditButton, Form, FormColumn, FormGroup, FormRow, FormSection, FormSectionTitle,
-  Header, Input, Label, Section, Title
+  EditButton,
+  Form,
+  FormColumn,
+  FormGroup,
+  FormRow,
+  FormSection,
+  FormSectionTitle,
+  Header,
+  Input,
+  Label,
+  Section,
+  Title
 } from '../styles/Profile.Styles'
 
 const Profile: React.FC = () => {
@@ -34,7 +44,7 @@ const Profile: React.FC = () => {
         const response = await fetch('/ens-api/users/profile', {
           method: 'GET',
           headers: {
-            'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+            Authorization: `Bearer ${localStorage.getItem('authToken')}`
           }
         })
         if (!response.ok) {
@@ -64,7 +74,7 @@ const Profile: React.FC = () => {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+          Authorization: `Bearer ${localStorage.getItem('authToken')}`
         },
         body: JSON.stringify({
           name: profileData.name,
@@ -92,7 +102,7 @@ const Profile: React.FC = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target
-    setProfileData(prevState => ({
+    setProfileData((prevState) => ({
       ...prevState,
       [name]: value
     }))
@@ -108,7 +118,7 @@ const Profile: React.FC = () => {
 
   return (
     <ProtectedRoute>
-      <HomeLayout activePage='/profile'>
+      <HomeLayout activePage="/profile">
         <div>
           {loading ? (
             <LoadingSpinner />
@@ -119,7 +129,11 @@ const Profile: React.FC = () => {
               <Header>
                 <Title>Mi Perfil</Title>
                 <EditButton onClick={handleEditButton}>
-                  {isEditing ? <FaSave style={{ marginRight: '5px' }} /> : <FaEdit style={{ marginRight: '5px' }} />}
+                  {isEditing ? (
+                    <FaSave style={{ marginRight: '5px' }} />
+                  ) : (
+                    <FaEdit style={{ marginRight: '5px' }} />
+                  )}
                   {isEditing ? 'Guardar' : 'Editar'}
                 </EditButton>
               </Header>
@@ -143,7 +157,9 @@ const Profile: React.FC = () => {
                         <Input
                           type="date"
                           name="birthDate"
-                          value={new Date(Date.parse(profileData.birthDate)).toISOString().split('T')[0]}
+                          value={
+                            new Date(Date.parse(profileData.birthDate)).toISOString().split('T')[0]
+                          }
                           onChange={handleChange}
                           disabled={!isEditing}
                         />

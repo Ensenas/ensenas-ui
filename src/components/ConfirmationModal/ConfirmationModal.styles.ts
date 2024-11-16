@@ -37,9 +37,9 @@ export const Button = styled.button`
   border: 1px solid #9610ba; /* Borde azul */
 
   &:hover {
-      background-color: #9610ba; /* Fondo azul al hacer hover */
-      color: #fff; /* Color del texto blanco */
-    }
+    background-color: #9610ba; /* Fondo azul al hacer hover */
+    color: #fff; /* Color del texto blanco */
+  }
 
   &:disabled {
     background-color: #cccccc;

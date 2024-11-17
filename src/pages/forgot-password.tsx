@@ -1,5 +1,6 @@
 'use client'
 
+import Head from 'next/head'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
@@ -53,6 +54,13 @@ export default function ForgotPasswordPage() {
 
   return (
     <div className="forgot-password-container">
+      <Head>
+        <title>Enseñas - Olvidaste tu contraseña</title>
+        <meta
+          name="description"
+          content="Bienvenido a Enseñas, la mejor plataforma para aprender lenguaje de señas."
+        />
+      </Head>
       <div className="forgot-password-form">
         <div className="logo-container">
           <Image src="/logo.png" alt="Enseñas" width={120} height={120} priority />

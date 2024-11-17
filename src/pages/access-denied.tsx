@@ -1,5 +1,6 @@
 'use client'
 
+import Head from 'next/head'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 
@@ -7,7 +8,15 @@ export default function AccessDeniedPage() {
   const router = useRouter()
 
   return (
+
     <div className="access-denied-container">
+      <Head>
+        <title>Enseñas - Access Denied</title>
+        <meta
+          name="description"
+          content="Bienvenido a Enseñas, la mejor plataforma para aprender lenguaje de señas."
+        />
+      </Head>
       <div className="access-denied-form">
         <div className="logo-container">
           <Image src="/logo.png" alt="Enseñas" width={120} height={120} priority />

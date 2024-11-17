@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 /* eslint-disable no-unused-vars */
 import axios from 'axios'
+import Head from 'next/head'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 
@@ -62,6 +63,13 @@ const MisLogros: React.FC = () => {
 
   return (
     <ProtectedRoute>
+      <Head>
+        <title>Enseñas - Mis Logros</title>
+        <meta
+          name="description"
+          content="Bienvenido a Enseñas, la mejor plataforma para aprender lenguaje de señas."
+        />
+      </Head>
       <HomeLayout activePage="/achievements">
         <div>
           {loading ? (

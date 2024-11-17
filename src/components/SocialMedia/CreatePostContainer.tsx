@@ -41,6 +41,40 @@ const TextArea = styled.textarea`
 const FileInput = styled.input`
   margin-bottom: 10px;
   font-family: inherit;
+  font-size: 16px;
+  padding: 10px 15px;
+
+  background-color: #f8f9fa;
+  color: #495057;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: #e9ecef;
+    border-color: #0056b3;
+  }
+
+  &:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+  }
+
+  &::-webkit-file-upload-button {
+    font-size: 14px;
+    font-weight: 600;
+    padding: 5px 10px;
+    border: 1px solid #007BFF;
+    border-radius: 5px;
+    background-color: #007BFF;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background-color: #0056b3;
+    }
+  }
 `
 
 const Button = styled.button`

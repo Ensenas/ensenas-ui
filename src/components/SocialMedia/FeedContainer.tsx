@@ -105,6 +105,23 @@ const IframeContainer = styled.div`
   }
 `
 
+const VideoContainer = styled.div`
+  position: relative;
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+  padding-top: 56.25%;
+  background-color: #000;
+
+  video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+`
+
 export default function FeedContainer() {
   const [searchQuery, setSearchQuery] = useState('')
   const { posts, searchPosts } = usePostContext()
@@ -167,10 +184,12 @@ export default function FeedContainer() {
                     />
                   </IframeContainer>
                 ) : (
-                  <video controls className="w-full">
-                    <source src={post.videoUrl} type="video/mp4" />
-                    Your browser does not support the video tag.
-                  </video>
+                  <VideoContainer>
+                    <video controls className="w-full">
+                      <source src={post.videoUrl} type="video/mp4" />
+                      Your browser does not support the video tag.
+                    </video>
+                  </VideoContainer>
                 ))}
             </PostItem>
           ))

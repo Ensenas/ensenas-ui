@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 /* eslint-disable no-unused-vars */
 import axios from 'axios'
+import Head from 'next/head'
 import router, { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 
@@ -10,7 +11,7 @@ import LoadingSpinner from '../../components/Spinner/Spinner'
 import { Level, useNavigation } from '../../context/NavigationLearningContext'
 import { BackButton, Label, LevelCard, Section, Title } from '../../styles/Learning.styles'
 
-const MyLearning: React.FC = ({}) => {
+const MyLearning: React.FC = ({ }) => {
   const {
     currentLevel,
     setCurrentLevel,
@@ -77,6 +78,13 @@ const MyLearning: React.FC = ({}) => {
 
   return (
     <ProtectedRoute>
+      <Head>
+        <title>Enseñas - Lecciones</title>
+        <meta
+          name="description"
+          content="Bienvenido a Enseñas, la mejor plataforma para aprender lenguaje de señas."
+        />
+      </Head>
       <HomeLayout activePage="/learning">
         <Section>
           <Title>Niveles de Aprendizaje</Title>

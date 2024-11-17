@@ -1,4 +1,5 @@
 /* eslint-disable no-unused-vars */
+import Head from 'next/head'
 import React from 'react'
 import styled from 'styled-components'
 
@@ -15,6 +16,13 @@ const SocialContainer = styled.div`
 export default function App() {
   return (
     <ProtectedRoute>
+      <Head>
+        <title>Enseñas - Foro</title>
+        <meta
+          name="description"
+          content="Bienvenido a Enseñas, la mejor plataforma para aprender lenguaje de señas."
+        />
+      </Head>
       <HomeLayout activePage="/social">
         <PostProvider>
           <SocialContainer>

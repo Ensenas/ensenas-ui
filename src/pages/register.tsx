@@ -252,6 +252,13 @@ const RegisterPage: React.FC = () => {
     <PageContainer>
       <Head>
         <title>Enseñas - Registrate</title>
+        <meta
+          name="description"
+          content="Bienvenido a Enseñas, la mejor plataforma para aprender lenguaje de señas."
+        />
+      </Head>
+      <Head>
+        <title>Enseñas - Registrate</title>
       </Head>
       <FormContainer>
         <Form onSubmit={handleRegister}>

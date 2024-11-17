@@ -105,6 +105,9 @@ export default function VideoStreamRemoto({ level, unit, lesson, onComplete }) {
         if (data.palabra_detectada === expectedFrase[fraseIndex]) {
           checkWords(data.palabra_detectada)
         } else {
+          const video = webcamRef.current?.video
+          if (video)
+            video.pause()
           setIsSuccess(false)
           setShowResultScreen(true)
         }
@@ -165,6 +168,9 @@ export default function VideoStreamRemoto({ level, unit, lesson, onComplete }) {
       setShowResultScreen(true)
       // Llamar a onComplete cuando se complete la lección
       if (onComplete) {
+        const video = webcamRef.current?.video
+        if (video)
+          video.pause()
         onComplete()
       }
     }
@@ -180,6 +186,9 @@ export default function VideoStreamRemoto({ level, unit, lesson, onComplete }) {
     setShowResultScreen(false)
     setAttempts(0)
     setReset(true)
+    const video = webcamRef.current?.video
+    if (video)
+      video.play()
     if (fraseIndex === expectedFrase.length) {
       setFraseIndex(0)
       setFrase([])

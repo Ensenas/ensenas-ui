@@ -1,3 +1,4 @@
+import Head from 'next/head'
 import React, { useEffect, useState } from 'react'
 
 import HomeLayout from '../components/HomeLayout/HomeLayout'
@@ -76,6 +77,13 @@ const Contact: React.FC = () => {
 
   return (
     <ProtectedRoute>
+      <Head>
+        <title>Enseñas - Contacto</title>
+        <meta
+          name="description"
+          content="Bienvenido a Enseñas, la mejor plataforma para aprender lenguaje de señas."
+        />
+      </Head>
       <HomeLayout activePage="/contact">
         <Section>
           <Title>Contactanos</Title>

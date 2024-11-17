@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 'use client'
 
+import Head from 'next/head'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
@@ -56,6 +57,13 @@ export default function ResetPasswordPage() {
 
   return (
     <div className="reset-password-container">
+      <Head>
+        <title>Enseñas - Restablecer la contraseña</title>
+        <meta
+          name="description"
+          content="Bienvenido a Enseñas, la mejor plataforma para aprender lenguaje de señas."
+        />
+      </Head>
       <div className="reset-password-form">
         <div className="logo-container">
           <Image src="/logo.png" alt="Enseñas" width={120} height={120} priority />

@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 /* eslint-disable no-unused-vars */
 import axios from 'axios'
+import Head from 'next/head'
 import router from 'next/router'
 import React, { useEffect, useState } from 'react'
 
@@ -22,7 +23,7 @@ import {
 import { InstructionText } from '../../../../../../../../styles/test.styles'
 import { getFirstPartString } from '../../../../../../../../utils/index'
 
-const Lesson: React.FC = ({}) => {
+const Lesson: React.FC = ({ }) => {
   const [lesson, setLesson] = useState<any>(null)
   const [videoCompleted, setVideoCompleted] = useState(false)
   const [showTooltip, setShowTooltip] = useState(false)
@@ -57,6 +58,13 @@ const Lesson: React.FC = ({}) => {
 
   return (
     <ProtectedRoute>
+      <Head>
+        <title>Enseñas - Lecciones</title>
+        <meta
+          name="description"
+          content="Bienvenido a Enseñas, la mejor plataforma para aprender lenguaje de señas."
+        />
+      </Head>
       <HomeLayout activePage={'/learning'}>
         <Section>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>

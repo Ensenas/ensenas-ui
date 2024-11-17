@@ -1,5 +1,6 @@
 'use client'
 
+import Head from 'next/head'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
@@ -148,10 +149,10 @@ export default function Subscriptions() {
             background: '/BasicPlan.jpg',
             logo: '/hot-air-balloon.png',
             status: isPremium ? 'Inactivo' : 'Activo',
-            expirationDate: '31/12/2024',
+            expirationDate: '-',
             detalle: 'Detalle Plan Basico',
             plan: PlanBasico,
-            price: '$15000'
+            price: '$0'
           },
           {
             id: 2,
@@ -160,10 +161,10 @@ export default function Subscriptions() {
             background: '/PremiumPlan.jpg',
             logo: '/air-plane.png',
             status: isPremium ? 'Activo' : 'Inactivo',
-            expirationDate: '30/06/2024',
+            expirationDate: '19/12/2024',
             detalle: 'Detalle Plan Premium',
             plan: PlanPremium,
-            price: '$22000'
+            price: '$12000'
           }
         ]
 
@@ -212,6 +213,13 @@ export default function Subscriptions() {
 
   return (
     <ProtectedRoute>
+      <Head>
+        <title>Enseñas - Suscripciones</title>
+        <meta
+          name="description"
+          content="Bienvenido a Enseñas, la mejor plataforma para aprender lenguaje de señas."
+        />
+      </Head>
       <HomeLayout activePage="/suscriptions">
         <Section>
           <Title>Administrar Suscripciones</Title>

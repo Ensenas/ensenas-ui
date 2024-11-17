@@ -2,6 +2,7 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable no-console */
 import axios from 'axios'
+import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useSession } from 'next-auth/react'
 import React, { useEffect, useState } from 'react'
@@ -131,6 +132,13 @@ const HomePage: React.FC = () => {
 
   return (
     <ProtectedRoute>
+      <Head>
+        <title>Enseñas - Home</title>
+        <meta
+          name="description"
+          content="Bienvenido a Enseñas, la mejor plataforma para aprender lenguaje de señas."
+        />
+      </Head>
       {!hasShownModal ? (
         <HomeModal isVisible={isModalVisible} onClose={handleCloseModal} />
       ) : (

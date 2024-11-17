@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 /* eslint-disable no-unused-vars */
 import axios from 'axios'
+import Head from 'next/head'
 import router, { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 
@@ -10,7 +11,7 @@ import LoadingSpinner from '../../../../components/Spinner/Spinner'
 import { Unit, useNavigation } from '../../../../context/NavigationLearningContext'
 import { BackButton, Label, Section, Title, UnitCard } from '../../../../styles/Learning.styles'
 
-const LevelUnits: React.FC = ({}) => {
+const LevelUnits: React.FC = ({ }) => {
   const [filteredUnits, setFilteredUnits] = useState<Unit[]>()
   const [lastSelectedUnit, setLastSelectedUnit] = useState<string | null>(null) // Estado para la última unidad seleccionada
   const {
@@ -100,6 +101,13 @@ const LevelUnits: React.FC = ({}) => {
 
   return (
     <ProtectedRoute>
+      <Head>
+        <title>Enseñas - Lecciones</title>
+        <meta
+          name="description"
+          content="Bienvenido a Enseñas, la mejor plataforma para aprender lenguaje de señas."
+        />
+      </Head>
       <HomeLayout activePage={'/learning'}>
         <Section>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>

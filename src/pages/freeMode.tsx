@@ -2,6 +2,7 @@
 'use client'
 
 import axios from 'axios'
+import Head from 'next/head'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import Webcam from 'react-webcam'
 import { io, Socket } from 'socket.io-client'
@@ -219,13 +220,22 @@ export default function VideoStreamRemoto() {
 
   return (
     <div>
+      <Head>
+        <title>Enseñas - Modo Libre</title>
+        <meta
+          name="description"
+          content="Bienvenido a Enseñas, la mejor plataforma para aprender lenguaje de señas."
+        />
+      </Head>
       {isConnected ? (
         <HomeLayout activePage={'/freeMode'}>
           <Container>
             <Title>Modo Libre</Title>
             <Description>
               En el modo libre puedes seleccionar una unidad y practicar las señales
-              correspondientes. Selecciona una unidad para comenzar.
+              correspondientes. Selecciona una unidad para comenzar. Es importante estar aproximadamente a
+              2 metros de distancia de la camara, donde se vea hasta el torso.
+              Idealmente, la camra debe estar situada a la altura de la cabeza.
             </Description>
             <Select value={selectedUnit} onChange={handleUnitChange} disabled={isLoadingUnit}>
               {unitOptions.map((option) => (

@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 /* eslint-disable no-unused-vars */
 import axios from 'axios'
+import Head from 'next/head'
 import router from 'next/router'
 import React, { useEffect } from 'react'
 
@@ -82,6 +83,13 @@ const LessonTest: React.FC<LessonProps> = () => {
 
   return (
     <ProtectedRoute>
+      <Head>
+        <title>Enseñas - Lecciones</title>
+        <meta
+          name="description"
+          content="Bienvenido a Enseñas, la mejor plataforma para aprender lenguaje de señas."
+        />
+      </Head>
       <HomeLayout activePage={'/learning'}>
         <Section>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -95,7 +103,8 @@ const LessonTest: React.FC<LessonProps> = () => {
           <InstructionText>Para reintentar, presioná la tecla Enter.</InstructionText>
           <InstructionText>
             Es necesario que para la realización de la seña se encuentre sentado, con una distancia
-            de aproximadamente 2 metros de la cámara de manera que se vea hasta la mitad del torso.
+            de aproximadamente 2 metros de la cámara de manera que se vea todo el torso hasta la cintura.
+            Idealmente, la camara debe estar situada a la altura de la cabeza.
           </InstructionText>
 
           {/* Agregar callback para cuando el desafío sea completado */}

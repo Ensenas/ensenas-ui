@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 /* eslint-disable no-unused-vars */
+import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useSession } from 'next-auth/react'
 import React, { useEffect, useState } from 'react'
@@ -37,6 +38,9 @@ const Profile: React.FC = () => {
   })
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [newPassword, setNewPassword] = useState('')
+  const [passwordError, setPasswordError] = useState('')
+  const [successMessage, setSuccessMessage] = useState('')
 
   useEffect(() => {
     const fetchProfileData = async () => {
@@ -51,7 +55,6 @@ const Profile: React.FC = () => {
           throw new Error('Error al obtener los datos del perfil')
         }
         const data = await response.json()
-
         setProfileData(data)
         setLoading(false)
       } catch (error) {
@@ -108,6 +111,42 @@ const Profile: React.FC = () => {
     }))
   }
 
+  const handleChangePassword = async (e) => {
+    e.preventDefault()
+    setPasswordError('')
+    const hasLetter = /[a-zA-Z]/.test(newPassword)
+    const hasNumber = /[0-9]/.test(newPassword)
+    const isValidLength = newPassword.length > 6
+
+    if (!isValidLength || !hasLetter || !hasNumber) {
+      setPasswordError(
+        'La contraseña debe tener más de 6 caracteres, contener al menos una letra y un número.'
+      )
+      return
+    } else {
+      setPasswordError('')
+    }
+    try {
+      const response = await fetch('/ens-api/users/update-password', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('authToken')}`
+        },
+        body: JSON.stringify({
+          password: newPassword
+        })
+      })
+      if (!response.ok) {
+        throw new Error('Error al actualizar la contraseña')
+      }
+      setNewPassword('')
+      setSuccessMessage('Contraseña actualizada con éxito')
+    } catch (error) {
+      setPasswordError(error.message)
+    }
+  }
+
   const handleEditButton = (e) => {
     if (isEditing) {
       handleSave(e)
@@ -118,6 +157,13 @@ const Profile: React.FC = () => {
 
   return (
     <ProtectedRoute>
+      <Head>
+        <title>Enseñas - Mi Perfil</title>
+        <meta
+          name="description"
+          content="Bienvenido a Enseñas, la mejor plataforma para aprender lenguaje de señas."
+        />
+      </Head>
       <HomeLayout activePage="/profile">
         <div>
           {loading ? (
@@ -200,20 +246,46 @@ const Profile: React.FC = () => {
                           name="email"
                           value={profileData.mail}
                           onChange={handleChange}
-                          disabled={!isEditing}
+                          disabled={true}
                         />
                       </FormGroup>
                     </FormColumn>
                     <FormColumn>
                       <FormGroup>
-                        <Label>Contraseña</Label>
-                        <Input
-                          type="password"
-                          name="password"
-                          value={isEditing ? profileData.password : '******'}
-                          onChange={handleChange}
-                          disabled={!isEditing}
-                        />
+                        <Label>Nueva contraseña</Label>
+                        <div style={{ position: 'relative' }}>
+                          <Input
+                            type="password"
+                            name="newPassword"
+                            value={newPassword}
+                            onChange={(e) => setNewPassword(e.target.value)}
+                            disabled={!isEditing}
+                          />
+                          {isEditing && (
+                            <button
+                              onClick={handleChangePassword}
+                              style={{
+                                marginLeft: '30px',
+                                padding: '8px 16px',
+                                backgroundColor: '#4F46E5',
+                                color: 'white',
+                                border: 'none',
+                                borderRadius: '6px',
+                                cursor: 'pointer',
+                                width: '35%',
+                                fontSize: '14px',
+                                fontWeight: '500',
+                                transition: 'background-color 0.2s'
+                              }}
+                              onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#4338CA'}
+                              onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#4F46E5'}
+                            >
+                              Cambiar contraseña
+                            </button>
+                          )}
+                        </div>
+                        {passwordError && <p style={{ color: 'red' }}>{passwordError}</p>}
+                        {successMessage && <p style={{ color: 'green', marginTop: '10px' }}>{successMessage}</p>}
                       </FormGroup>
                     </FormColumn>
                   </FormRow>

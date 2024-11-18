@@ -21,8 +21,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
     })
 
-    const htmlTemplatePath = path.join(process.cwd(), 'src', 'styles', 'mail.html')
-    let htmlContent = fs.readFileSync(htmlTemplatePath, 'utf-8')
+    const htmlTemplatePath = '/public/mail.html'
+    let htmlContent = fs.readFileSync(process.cwd() + htmlTemplatePath, 'utf-8')
 
     htmlContent = htmlContent.replace(/\${newPassword}/g, newPassword)
 

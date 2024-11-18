@@ -13,12 +13,12 @@ docker tag ensenas-ui:latest alejol2019/ensenas-ui:latest
 ```
 
 ```bash
-docker push alejol2019/ensenas-ui:tagname
+docker push alejol2019/ensenas-ui:latest
 ```
 
 - Run
 
 ```bash
 # Run the Docker container
-docker run -p 3000:3000 nextjs-app
+docker run -p 3001:3001 ensenas-ui
 ```

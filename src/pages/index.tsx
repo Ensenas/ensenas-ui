@@ -31,14 +31,14 @@ const LandingPage: React.FC = () => {
         <title>Enseñas - Landing Page</title>
         <meta
           name="description"
-          content="Bienvenido a Enseñas, la mejor plataforma para aprender lenguaje de señas."
+          content="Bienvenido a Enseñas, la mejor plataforma para aprender lengua de señas Argentina."
         />
       </Head>
       <LandingHeader />
       <LandingPageContainer>
         <FirstSection>
           <LeftSide>
-            <strong>La plataforma ideal para aprender lenguaje de señas</strong>
+            <strong>La plataforma ideal para aprender lengua de señas Argentina</strong>
             <p>Descubrí este fascinante mundo con la ayuda de la Inteligencia Artificial</p>
             <Link href="/register" passHref>
               <button>¡Registrate ya!</button>
@@ -57,7 +57,7 @@ const LandingPage: React.FC = () => {
           <SectionTitle>¿Qué es Enseñas?</SectionTitle>
           <Section2Content>
             <p>
-              Enseñas es una innovadora plataforma diseñada para enseñarte lenguaje de señas de
+              Enseñas es una innovadora plataforma diseñada para enseñarte lengua de señas de
               manera efectiva y divertida. Utilizamos la última tecnología en inteligencia
               artificial para ofrecerte una experiencia de aprendizaje personalizada y accesible
               desde cualquier lugar.
@@ -76,7 +76,7 @@ const LandingPage: React.FC = () => {
             <p className="start-today">¡Comienza hoy mismo!</p>
             <p>
               Únete a miles de estudiantes que ya están transformando su forma de comunicarse.
-              Regístrate ahora y comienza tu viaje para dominar el lenguaje de señas con la ayuda de
+              Regístrate ahora y comienza tu viaje para dominar el lengua de señas con la ayuda de
               la inteligencia artificial.
             </p>
           </Section2Content>
@@ -118,8 +118,8 @@ const LandingPage: React.FC = () => {
               <div className="text" data-number="3">
                 <h3>Práctica y Evaluación</h3>
                 <ul>
-                  <li>Participa en evaluaciones periódicas para medir tu progreso.</li>
-                  <li>Practica con ejercicios específicos y retos diarios.</li>
+                  <li>Participa en evaluaciones para medir tu progreso.</li>
+                  <li>Practica con ejercicios específicos.</li>
                 </ul>
               </div>
               <div className="image">
@@ -132,7 +132,7 @@ const LandingPage: React.FC = () => {
           <SectionTitle>Impacto Social</SectionTitle>
           <ImpactContent>
             <ImpactDescription>
-              Enseñas está comprometido a facilitar el aprendizaje del lenguaje de señas,
+              Enseñas está comprometido a facilitar el aprendizaje de la lengua de señas Argentina,
               promoviendo la inclusión y accesibilidad para personas sordas o con dificultades
               auditivas.
             </ImpactDescription>

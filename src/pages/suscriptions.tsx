@@ -4,7 +4,7 @@ import Head from 'next/head'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 
 import ConfirmationModal from '../components/ConfirmationModal/ConfirmationModal'
 import HomeLayout from '../components/HomeLayout/HomeLayout'
@@ -64,81 +64,93 @@ export default function Subscriptions() {
   const [isProcessingPayment, setIsProcessingPayment] = useState<boolean>(false)
   const router = useRouter()
 
-  const { data: session, update } = useSession()
+  const { data: session, status, update } = useSession()
 
-  const updatePlan = async (value: boolean) => {
-    if (session) {
-      setIsProcessingPayment(true)
-      try {
-        await update({
-          ...session,
-          user: {
-            ...session.user,
-            premium: value
-          }
-        })
-        await fetch('/ens-api/users/register-payment', {
-          method: 'POST',
-          body: JSON.stringify({
-            suscriptionType: value ? 'PREMIUM' : 'BASIC'
-          }),
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `bearer ${session?.user.accessToken}`
-          }
-        })
-        setNotification({
-          content: value ? 'Plan actualizado a Premium!' : 'Plan cambiado a Básico',
-          isOpen: true,
-          type: 'approved'
-        })
-      } catch (error) {
-        console.error('Error updating plan:', error)
-        setNotification({
-          content: 'Error al actualizar el plan',
-          isOpen: true,
-          type: 'failure'
-        })
-      } finally {
-        setIsProcessingPayment(false)
+  const updatePlan = useCallback(async (value: boolean) => {
+    setIsProcessingPayment(true)
+    try {
+      if (status !== 'authenticated' || !session) {
+        throw new Error('No hay sesión activa')
       }
+
+      // Registrar el pago
+      const paymentResponse = await fetch('/ens-api/users/register-payment', {
+        method: 'POST',
+        body: JSON.stringify({
+          suscriptionType: value ? 'PREMIUM' : 'BASIC'
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `bearer ${session.user.accessToken}`
+        }
+      })
+
+      if (!paymentResponse.ok) {
+        throw new Error('Error al registrar el pago')
+      }
+
+      // Actualizar la sesión
+      await update({
+        ...session,
+        user: {
+          ...session.user,
+          premium: value
+        }
+      })
+
+      setNotification({
+        content: value ? 'Plan actualizado a Premium!' : 'Plan cambiado a Básico',
+        isOpen: true,
+        type: 'approved'
+      })
+    } catch (error) {
+      console.error('Error updating plan:', error)
+      setNotification({
+        content: error instanceof Error ? error.message : 'Error al actualizar el plan',
+        isOpen: true,
+        type: 'failure'
+      })
+    } finally {
+      setIsProcessingPayment(false)
     }
-  }
+  }, [session, status, update])
 
   useEffect(() => {
     const handlePaymentStatus = async () => {
-      if (typeof window !== 'undefined') {
-        const urlParams = new URLSearchParams(window.location.search)
-        const status = urlParams.get('status')
-        console.log(urlParams)
-        if (status === 'approved' || status === undefined) {
-          if (!session?.user?.premium) {
-            setIsProcessingPayment(true)
-            await updatePlan(true)
-          }
-        } else if (status === 'failure') {
-          setNotification({
-            content: 'Pago fallido!',
-            isOpen: true,
-            type: 'failure'
-          })
+      if (typeof window === 'undefined' || status !== 'authenticated') return
+      const urlParams = new URLSearchParams(window.location.search)
+      const paymentStatus = urlParams.get('status')
+
+      if (paymentStatus === 'approved' || paymentStatus === undefined) {
+        if (!session?.user?.premium) {
+          await updatePlan(true)
         }
-
-        //        window.history.pushState({}, document.title, window.location.pathname)
-
-        setTimeout(() => {
-          setNotification({ isOpen: false, type: null, content: '' })
-        }, 5000)
+      } else if (paymentStatus === 'failure') {
+        setNotification({
+          content: 'Pago fallido!',
+          isOpen: true,
+          type: 'failure'
+        })
       }
+
+      // Limpiar los parámetros de la URL
+      router.replace('/suscriptions', undefined)
     }
 
     handlePaymentStatus()
-  }, [router, session])
+
+    // Limpiar la notificación después de 5 segundos
+    const timer = setTimeout(() => {
+      setNotification({ isOpen: false, type: null, content: '' })
+    }, 5000)
+
+    // Limpiar el temporizador cuando el componente se desmonte
+    return () => clearTimeout(timer)
+  }, [router, session, status, updatePlan])
 
   useEffect(() => {
     const fetchSubscriptions = () => {
       try {
-        console.log('session', session)
         const isPremium = session?.user?.premium
 
         const subs: Subscription[] = [
@@ -177,8 +189,10 @@ export default function Subscriptions() {
       }
     }
 
-    fetchSubscriptions()
-  }, [session])
+    if (status === 'authenticated') {
+      fetchSubscriptions()
+    }
+  }, [session, status])
 
   const handleViewDetails = (subscription: Subscription) => {
     setSelectedSubscription(subscription)
@@ -208,7 +222,11 @@ export default function Subscriptions() {
     setSelectedSubscription(null)
   }
 
-  if (loading || isProcessingPayment) return <LoadingSpinner />
+  if (status === 'loading' || loading || isProcessingPayment) return <LoadingSpinner />
+  if (status === 'unauthenticated') {
+    router.push('/login')
+    return null
+  }
   if (error) return <Section>{error}</Section>
 
   return (

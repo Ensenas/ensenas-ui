@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import { useCallback,useEffect, useState } from 'react'
 
+
 import ConfirmationModal from '../components/ConfirmationModal/ConfirmationModal'
 import HomeLayout from '../components/HomeLayout/HomeLayout'
 import { MercadoPagoButton } from '../components/MercadoPagoButton'

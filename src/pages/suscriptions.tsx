@@ -110,8 +110,8 @@ export default function Subscriptions() {
       if (typeof window !== 'undefined') {
         const urlParams = new URLSearchParams(window.location.search)
         const status = urlParams.get('status')
-
-        if (status === 'approved') {
+        console.log(urlParams)
+        if (status === 'approved' || status === undefined) {
           if (!session?.user?.premium) {
             setIsProcessingPayment(true)
             await updatePlan(true)
@@ -124,7 +124,7 @@ export default function Subscriptions() {
           })
         }
 
-        window.history.pushState({}, document.title, window.location.pathname)
+        //        window.history.pushState({}, document.title, window.location.pathname)
 
         setTimeout(() => {
           setNotification({ isOpen: false, type: null, content: '' })

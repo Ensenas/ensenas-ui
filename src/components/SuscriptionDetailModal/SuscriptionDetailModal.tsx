@@ -36,7 +36,7 @@ const SubscriptionDetailModal: React.FC<SubscriptionDetailModalProps> = ({
   if (!isVisible || !subscription) return null
 
   const features = [
-    { label: 'Acceso a lecciones intermedias', isPremiumFeature: false },
+    { label: 'Acceso a lecciones intermedias', isPremiumFeature: true },
     { label: 'Acceso a lecciones avanzadas', isPremiumFeature: true },
     { label: 'Soporte prioritario', isPremiumFeature: true },
     { label: 'Material adicional', isPremiumFeature: true }

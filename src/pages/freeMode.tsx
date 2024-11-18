@@ -233,9 +233,9 @@ export default function VideoStreamRemoto() {
             <Title>Modo Libre</Title>
             <Description>
               En el modo libre puedes seleccionar una unidad y practicar las señales
-              correspondientes. Selecciona una unidad para comenzar. Es importante estar aproximadamente a
-              2 metros de distancia de la camara, donde se vea hasta el torso.
-              Idealmente, la camra debe estar situada a la altura de la cabeza.
+              correspondientes. Selecciona una unidad para comenzar. Es importante estar
+              aproximadamente a 2 metros de distancia de la cámara, donde se vea hasta el torso.
+              Idealmente, la cámara debe estar situada a la altura de la cabeza.
             </Description>
             <Select value={selectedUnit} onChange={handleUnitChange} disabled={isLoadingUnit}>
               {unitOptions.map((option) => (
